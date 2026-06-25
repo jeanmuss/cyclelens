@@ -1,0 +1,33 @@
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+secrets/
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Local caches and logs
+node_modules/
+.npmrc
+.npm-cache/
+app/.npm-cache/
+.venv/
+.venv-*/
+.cache/
+.vercel/
+coverage/
+dist/
+*.log
+__pycache__/
+*.pyc
+app/qa/
+
+# Generated private data
+data/private/
+tmp/
+temp/
+.reference/
+
+.vercel

@@ -1,0 +1,4255 @@
+{
+  "version": 1,
+  "page": "equity-macro",
+  "timezone": "America/New_York for trading dates; FRED observations use provider dates",
+  "generatedAt": "2026-06-25T09:41:25Z",
+  "startDate": "2025-01-20",
+  "methodology": "Weekly price rows are derived from daily OHLC and grouped by Friday week-end. QQQ minus SPY is shown in percentage points. Event fields are intentionally empty in the MVP.",
+  "priceSourcePreference": "akshare",
+  "failures": [],
+  "assets": {
+    "QQQ": {
+      "symbol": "QQQ",
+      "name": "Invesco QQQ Trust",
+      "role": "Nasdaq 100 proxy",
+      "sourceLabel": "AKShare / Sina US stock daily (unadjusted)",
+      "rows": 358,
+      "firstDate": "2025-01-21",
+      "lastDate": "2026-06-24"
+    },
+    "SPY": {
+      "symbol": "SPY",
+      "name": "SPDR S&P 500 ETF Trust",
+      "role": "S&P 500 proxy",
+      "sourceLabel": "AKShare / Sina US stock daily (unadjusted)",
+      "rows": 358,
+      "firstDate": "2025-01-21",
+      "lastDate": "2026-06-24"
+    }
+  },
+  "macroSeries": {
+    "DGS10": {
+      "label": "10Y Treasury",
+      "unit": "%",
+      "kind": "yield"
+    },
+    "VIXCLS": {
+      "label": "VIX",
+      "unit": "index",
+      "kind": "volatility"
+    },
+    "DFF": {
+      "label": "Effective Fed Funds",
+      "unit": "%",
+      "kind": "policy_rate"
+    }
+  },
+  "sources": {
+    "QQQ": "AKShare/Sina US daily by default; yfinance supported via EQUITY_PRICE_SOURCE=yfinance",
+    "SPY": "AKShare/Sina US daily by default; yfinance supported via EQUITY_PRICE_SOURCE=yfinance",
+    "FRED": "https://fred.stlouisfed.org/docs/api/fred/",
+    "events": "Reserved for curated future event annotations; no external event source enabled"
+  },
+  "weeks": [
+    {
+      "weekKey": "2025-01-24",
+      "weekStart": "2025-01-18",
+      "weekEnd": "2025-01-24",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-01-21",
+          "tradingEnd": "2025-01-24",
+          "open": 524.48,
+          "high": 533.82,
+          "low": 520.06,
+          "close": 529.63,
+          "volume": 100195690.0,
+          "pct": 0.9819249542403862
+        },
+        "SPY": {
+          "tradingStart": "2025-01-21",
+          "tradingEnd": "2025-01-24",
+          "open": 600.67,
+          "high": 610.78,
+          "low": 598.67,
+          "close": 607.97,
+          "volume": 166485280.0,
+          "pct": 1.2153095709790849
+        }
+      },
+      "relativePct": -0.2333846167386987,
+      "leader": "SPY",
+      "macro": {
+        "DGS10": {
+          "start": 4.57,
+          "end": 4.63,
+          "change": 0.05999999999999961,
+          "changeBp": 5.999999999999961,
+          "observationStart": "2025-01-21",
+          "observationEnd": "2025-01-24"
+        },
+        "VIXCLS": {
+          "start": 15.81,
+          "end": 14.85,
+          "change": -0.9600000000000009,
+          "changeBp": -96.00000000000009,
+          "observationStart": "2025-01-20",
+          "observationEnd": "2025-01-24"
+        },
+        "DFF": {
+          "start": 4.33,
+          "end": 4.33,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2025-01-20",
+          "observationEnd": "2025-01-24"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-01-31",
+      "weekStart": "2025-01-25",
+      "weekEnd": "2025-01-31",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-01-27",
+          "tradingEnd": "2025-01-31",
+          "open": 511.0,
+          "high": 531.5178,
+          "low": 510.15,
+          "close": 522.29,
+          "volume": 186891503.0,
+          "pct": 2.209393346379641
+        },
+        "SPY": {
+          "tradingStart": "2025-01-27",
+          "tradingEnd": "2025-01-31",
+          "open": 594.81,
+          "high": 609.96,
+          "low": 594.64,
+          "close": 601.82,
+          "volume": 257923837.0,
+          "pct": 1.1785275970478146
+        }
+      },
+      "relativePct": 1.0308657493318263,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.53,
+          "end": 4.58,
+          "change": 0.04999999999999982,
+          "changeBp": 4.999999999999982,
+          "observationStart": "2025-01-27",
+          "observationEnd": "2025-01-31"
+        },
+        "VIXCLS": {
+          "start": 17.9,
+          "end": 16.43,
+          "change": -1.4699999999999989,
+          "changeBp": -146.9999999999999,
+          "observationStart": "2025-01-27",
+          "observationEnd": "2025-01-31"
+        },
+        "DFF": {
+          "start": 4.33,
+          "end": 4.33,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2025-01-25",
+          "observationEnd": "2025-01-31"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-02-07",
+      "weekStart": "2025-02-01",
+      "weekEnd": "2025-02-07",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-02-03",
+          "tradingEnd": "2025-02-07",
+          "open": 513.47,
+          "high": 532.1,
+          "low": 511.05,
+          "close": 522.92,
+          "volume": 136800936.0,
+          "pct": 1.840419109198187
+        },
+        "SPY": {
+          "tradingStart": "2025-02-03",
+          "tradingEnd": "2025-02-07",
+          "open": 592.67,
+          "high": 608.13,
+          "low": 590.49,
+          "close": 600.77,
+          "volume": 216528097.0,
+          "pct": 1.3666964752729214
+        }
+      },
+      "relativePct": 0.4737226339252656,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.54,
+          "end": 4.49,
+          "change": -0.04999999999999982,
+          "changeBp": -4.999999999999982,
+          "observationStart": "2025-02-03",
+          "observationEnd": "2025-02-07"
+        },
+        "VIXCLS": {
+          "start": 18.62,
+          "end": 16.54,
+          "change": -2.080000000000002,
+          "changeBp": -208.00000000000017,
+          "observationStart": "2025-02-03",
+          "observationEnd": "2025-02-07"
+        },
+        "DFF": {
+          "start": 4.33,
+          "end": 4.33,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2025-02-01",
+          "observationEnd": "2025-02-07"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-02-14",
+      "weekStart": "2025-02-08",
+      "weekEnd": "2025-02-14",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-02-10",
+          "tradingEnd": "2025-02-14",
+          "open": 527.22,
+          "high": 538.84,
+          "low": 521.95,
+          "close": 538.15,
+          "volume": 111764822.0,
+          "pct": 2.0731383483175807
+        },
+        "SPY": {
+          "tradingStart": "2025-02-10",
+          "tradingEnd": "2025-02-14",
+          "open": 604.03,
+          "high": 610.99,
+          "low": 598.51,
+          "close": 609.7,
+          "volume": 169012812.0,
+          "pct": 0.9386950979256119
+        }
+      },
+      "relativePct": 1.1344432503919688,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.51,
+          "end": 4.47,
+          "change": -0.040000000000000036,
+          "changeBp": -4.0000000000000036,
+          "observationStart": "2025-02-10",
+          "observationEnd": "2025-02-14"
+        },
+        "VIXCLS": {
+          "start": 15.81,
+          "end": 14.77,
+          "change": -1.040000000000001,
+          "changeBp": -104.00000000000009,
+          "observationStart": "2025-02-10",
+          "observationEnd": "2025-02-14"
+        },
+        "DFF": {
+          "start": 4.33,
+          "end": 4.33,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2025-02-08",
+          "observationEnd": "2025-02-14"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-02-21",
+      "weekStart": "2025-02-15",
+      "weekEnd": "2025-02-21",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-02-18",
+          "tradingEnd": "2025-02-21",
+          "open": 539.73,
+          "high": 540.81,
+          "low": 525.71,
+          "close": 526.08,
+          "volume": 113876313.0,
+          "pct": -2.529042298927237
+        },
+        "SPY": {
+          "tradingStart": "2025-02-18",
+          "tradingEnd": "2025-02-21",
+          "open": 610.88,
+          "high": 613.23,
+          "low": 599.47,
+          "close": 599.94,
+          "volume": 170833687.0,
+          "pct": -1.7908590885280153
+        }
+      },
+      "relativePct": -0.7381832103992219,
+      "leader": "SPY",
+      "macro": {
+        "DGS10": {
+          "start": 4.55,
+          "end": 4.42,
+          "change": -0.1299999999999999,
+          "changeBp": -12.99999999999999,
+          "observationStart": "2025-02-18",
+          "observationEnd": "2025-02-21"
+        },
+        "VIXCLS": {
+          "start": 15.37,
+          "end": 18.21,
+          "change": 2.8400000000000016,
+          "changeBp": 284.00000000000017,
+          "observationStart": "2025-02-17",
+          "observationEnd": "2025-02-21"
+        },
+        "DFF": {
+          "start": 4.33,
+          "end": 4.33,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2025-02-15",
+          "observationEnd": "2025-02-21"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-02-28",
+      "weekStart": "2025-02-22",
+      "weekEnd": "2025-02-28",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-02-24",
+          "tradingEnd": "2025-02-28",
+          "open": 527.88,
+          "high": 529.069,
+          "low": 496.93,
+          "close": 508.17,
+          "volume": 222767948.0,
+          "pct": -3.7338031370766043
+        },
+        "SPY": {
+          "tradingStart": "2025-02-24",
+          "tradingEnd": "2025-02-28",
+          "open": 602.02,
+          "high": 603.03,
+          "low": 582.44,
+          "close": 594.18,
+          "volume": 315265369.0,
+          "pct": -1.3022823162021249
+        }
+      },
+      "relativePct": -2.4315208208744794,
+      "leader": "SPY",
+      "macro": {
+        "DGS10": {
+          "start": 4.4,
+          "end": 4.24,
+          "change": -0.16000000000000014,
+          "changeBp": -16.000000000000014,
+          "observationStart": "2025-02-24",
+          "observationEnd": "2025-02-28"
+        },
+        "VIXCLS": {
+          "start": 18.98,
+          "end": 19.63,
+          "change": 0.6499999999999986,
+          "changeBp": 64.99999999999986,
+          "observationStart": "2025-02-24",
+          "observationEnd": "2025-02-28"
+        },
+        "DFF": {
+          "start": 4.33,
+          "end": 4.33,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2025-02-22",
+          "observationEnd": "2025-02-28"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-03-07",
+      "weekStart": "2025-03-01",
+      "weekEnd": "2025-03-07",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-03-03",
+          "tradingEnd": "2025-03-07",
+          "open": 511.52,
+          "high": 513.04,
+          "low": 480.53,
+          "close": 491.79,
+          "volume": 271075277.0,
+          "pct": -3.857131685955576
+        },
+        "SPY": {
+          "tradingStart": "2025-03-03",
+          "tradingEnd": "2025-03-07",
+          "open": 596.18,
+          "high": 597.34,
+          "low": 565.63,
+          "close": 575.92,
+          "volume": 416381112.0,
+          "pct": -3.3983025260827255
+        }
+      },
+      "relativePct": -0.45882915987285067,
+      "leader": "SPY",
+      "macro": {
+        "DGS10": {
+          "start": 4.16,
+          "end": 4.32,
+          "change": 0.16000000000000014,
+          "changeBp": 16.000000000000014,
+          "observationStart": "2025-03-03",
+          "observationEnd": "2025-03-07"
+        },
+        "VIXCLS": {
+          "start": 22.78,
+          "end": 23.37,
+          "change": 0.5899999999999999,
+          "changeBp": 58.999999999999986,
+          "observationStart": "2025-03-03",
+          "observationEnd": "2025-03-07"
+        },
+        "DFF": {
+          "start": 4.33,
+          "end": 4.33,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2025-03-01",
+          "observationEnd": "2025-03-07"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-03-14",
+      "weekStart": "2025-03-08",
+      "weekEnd": "2025-03-14",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-03-10",
+          "tradingEnd": "2025-03-14",
+          "open": 483.45,
+          "high": 483.97,
+          "low": 466.43,
+          "close": 479.66,
+          "volume": 282526049.0,
+          "pct": -0.7839487020374317
+        },
+        "SPY": {
+          "tradingStart": "2025-03-10",
+          "tradingEnd": "2025-03-14",
+          "open": 567.59,
+          "high": 569.54,
+          "low": 549.68,
+          "close": 562.81,
+          "volume": 393756164.0,
+          "pct": -0.8421571909300879
+        }
+      },
+      "relativePct": 0.058208488892656174,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.22,
+          "end": 4.31,
+          "change": 0.08999999999999986,
+          "changeBp": 8.999999999999986,
+          "observationStart": "2025-03-10",
+          "observationEnd": "2025-03-14"
+        },
+        "VIXCLS": {
+          "start": 27.86,
+          "end": 21.77,
+          "change": -6.09,
+          "changeBp": -609.0,
+          "observationStart": "2025-03-10",
+          "observationEnd": "2025-03-14"
+        },
+        "DFF": {
+          "start": 4.33,
+          "end": 4.33,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2025-03-08",
+          "observationEnd": "2025-03-14"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-03-21",
+      "weekStart": "2025-03-15",
+      "weekEnd": "2025-03-21",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-03-17",
+          "tradingEnd": "2025-03-21",
+          "open": 479.61,
+          "high": 485.84,
+          "low": 472.41,
+          "close": 480.84,
+          "volume": 200262291.0,
+          "pct": 0.25645837242758934
+        },
+        "SPY": {
+          "tradingStart": "2025-03-17",
+          "tradingEnd": "2025-03-21",
+          "open": 562.79,
+          "high": 570.95,
+          "low": 558.03,
+          "close": 563.98,
+          "volume": 328326998.0,
+          "pct": 0.21144654311555902
+        }
+      },
+      "relativePct": 0.04501182931203032,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.31,
+          "end": 4.25,
+          "change": -0.05999999999999961,
+          "changeBp": -5.999999999999961,
+          "observationStart": "2025-03-17",
+          "observationEnd": "2025-03-21"
+        },
+        "VIXCLS": {
+          "start": 20.51,
+          "end": 19.28,
+          "change": -1.2300000000000004,
+          "changeBp": -123.00000000000004,
+          "observationStart": "2025-03-17",
+          "observationEnd": "2025-03-21"
+        },
+        "DFF": {
+          "start": 4.33,
+          "end": 4.33,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2025-03-15",
+          "observationEnd": "2025-03-21"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-03-28",
+      "weekStart": "2025-03-22",
+      "weekEnd": "2025-03-28",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-03-24",
+          "tradingEnd": "2025-03-28",
+          "open": 487.74,
+          "high": 493.62,
+          "low": 468.05,
+          "close": 468.94,
+          "volume": 175479106.0,
+          "pct": -3.854512650182477
+        },
+        "SPY": {
+          "tradingStart": "2025-03-24",
+          "tradingEnd": "2025-03-28",
+          "open": 570.8,
+          "high": 576.41,
+          "low": 555.07,
+          "close": 555.66,
+          "volume": 263177873.0,
+          "pct": -2.6524176594253657
+        }
+      },
+      "relativePct": -1.2020949907571112,
+      "leader": "SPY",
+      "macro": {
+        "DGS10": {
+          "start": 4.34,
+          "end": 4.27,
+          "change": -0.07000000000000028,
+          "changeBp": -7.000000000000028,
+          "observationStart": "2025-03-24",
+          "observationEnd": "2025-03-28"
+        },
+        "VIXCLS": {
+          "start": 17.48,
+          "end": 21.65,
+          "change": 4.169999999999998,
+          "changeBp": 416.99999999999983,
+          "observationStart": "2025-03-24",
+          "observationEnd": "2025-03-28"
+        },
+        "DFF": {
+          "start": 4.33,
+          "end": 4.33,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2025-03-22",
+          "observationEnd": "2025-03-28"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-04-04",
+      "weekStart": "2025-03-29",
+      "weekEnd": "2025-04-04",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-03-31",
+          "tradingEnd": "2025-04-04",
+          "open": 461.92,
+          "high": 479.56,
+          "low": 422.67,
+          "close": 422.67,
+          "volume": 331595634.0,
+          "pct": -8.49714236231382
+        },
+        "SPY": {
+          "tradingStart": "2025-03-31",
+          "tradingEnd": "2025-04-04",
+          "open": 549.83,
+          "high": 567.42,
+          "low": 505.06,
+          "close": 505.28,
+          "volume": 569903058.0,
+          "pct": -8.102504410454152
+        }
+      },
+      "relativePct": -0.3946379518596679,
+      "leader": "SPY",
+      "macro": {
+        "DGS10": {
+          "start": 4.23,
+          "end": 4.01,
+          "change": -0.22000000000000064,
+          "changeBp": -22.000000000000064,
+          "observationStart": "2025-03-31",
+          "observationEnd": "2025-04-04"
+        },
+        "VIXCLS": {
+          "start": 22.28,
+          "end": 45.31,
+          "change": 23.03,
+          "changeBp": 2303.0,
+          "observationStart": "2025-03-31",
+          "observationEnd": "2025-04-04"
+        },
+        "DFF": {
+          "start": 4.33,
+          "end": 4.33,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2025-03-29",
+          "observationEnd": "2025-04-04"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-04-11",
+      "weekStart": "2025-04-05",
+      "weekEnd": "2025-04-11",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-04-07",
+          "tradingEnd": "2025-04-11",
+          "open": 408.66,
+          "high": 467.83,
+          "low": 402.39,
+          "close": 454.4,
+          "volume": 566549477.0,
+          "pct": 11.19267851025301
+        },
+        "SPY": {
+          "tradingStart": "2025-04-07",
+          "tradingEnd": "2025-04-11",
+          "open": 489.19,
+          "high": 548.62,
+          "low": 481.8,
+          "close": 533.94,
+          "volume": 924492532.0,
+          "pct": 9.147774893190796
+        }
+      },
+      "relativePct": 2.0449036170622144,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.15,
+          "end": 4.48,
+          "change": 0.33000000000000007,
+          "changeBp": 33.00000000000001,
+          "observationStart": "2025-04-07",
+          "observationEnd": "2025-04-11"
+        },
+        "VIXCLS": {
+          "start": 46.98,
+          "end": 37.56,
+          "change": -9.419999999999995,
+          "changeBp": -941.9999999999994,
+          "observationStart": "2025-04-07",
+          "observationEnd": "2025-04-11"
+        },
+        "DFF": {
+          "start": 4.33,
+          "end": 4.33,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2025-04-05",
+          "observationEnd": "2025-04-11"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-04-18",
+      "weekStart": "2025-04-12",
+      "weekEnd": "2025-04-18",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-04-14",
+          "tradingEnd": "2025-04-17",
+          "open": 464.46,
+          "high": 465.05,
+          "low": 437.76,
+          "close": 444.1,
+          "volume": 173162870.0,
+          "pct": -4.383585238771898
+        },
+        "SPY": {
+          "tradingStart": "2025-04-14",
+          "tradingEnd": "2025-04-17",
+          "open": 544.05,
+          "high": 544.28,
+          "low": 520.29,
+          "close": 526.41,
+          "volume": 288279648.0,
+          "pct": -3.2423490488006594
+        }
+      },
+      "relativePct": -1.1412361899712389,
+      "leader": "SPY",
+      "macro": {
+        "DGS10": {
+          "start": 4.38,
+          "end": 4.34,
+          "change": -0.040000000000000036,
+          "changeBp": -4.0000000000000036,
+          "observationStart": "2025-04-14",
+          "observationEnd": "2025-04-17"
+        },
+        "VIXCLS": {
+          "start": 30.89,
+          "end": 29.65,
+          "change": -1.240000000000002,
+          "changeBp": -124.0000000000002,
+          "observationStart": "2025-04-14",
+          "observationEnd": "2025-04-17"
+        },
+        "DFF": {
+          "start": 4.33,
+          "end": 4.33,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2025-04-12",
+          "observationEnd": "2025-04-18"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-04-25",
+      "weekStart": "2025-04-19",
+      "weekEnd": "2025-04-25",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-04-21",
+          "tradingEnd": "2025-04-25",
+          "open": 438.23,
+          "high": 473.09,
+          "low": 427.93,
+          "close": 472.56,
+          "volume": 236907781.0,
+          "pct": 7.833785911507651
+        },
+        "SPY": {
+          "tradingStart": "2025-04-21",
+          "tradingEnd": "2025-04-25",
+          "open": 521.16,
+          "high": 551.05,
+          "low": 508.46,
+          "close": 550.64,
+          "volume": 361176634.0,
+          "pct": 5.656612172845196
+        }
+      },
+      "relativePct": 2.1771737386624554,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.42,
+          "end": 4.29,
+          "change": -0.1299999999999999,
+          "changeBp": -12.99999999999999,
+          "observationStart": "2025-04-21",
+          "observationEnd": "2025-04-25"
+        },
+        "VIXCLS": {
+          "start": 33.82,
+          "end": 24.84,
+          "change": -8.98,
+          "changeBp": -898.0,
+          "observationStart": "2025-04-21",
+          "observationEnd": "2025-04-25"
+        },
+        "DFF": {
+          "start": 4.33,
+          "end": 4.33,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2025-04-19",
+          "observationEnd": "2025-04-25"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-05-02",
+      "weekStart": "2025-04-26",
+      "weekEnd": "2025-05-02",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-04-28",
+          "tradingEnd": "2025-05-02",
+          "open": 473.03,
+          "high": 490.91,
+          "low": 462.43,
+          "close": 488.83,
+          "volume": 193508963.0,
+          "pct": 3.340168699659644
+        },
+        "SPY": {
+          "tradingStart": "2025-04-28",
+          "tradingEnd": "2025-05-02",
+          "open": 551.39,
+          "high": 568.38,
+          "low": 541.52,
+          "close": 566.76,
+          "volume": 312393362.0,
+          "pct": 2.7875006800993862
+        }
+      },
+      "relativePct": 0.5526680195602576,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.23,
+          "end": 4.33,
+          "change": 0.09999999999999964,
+          "changeBp": 9.999999999999964,
+          "observationStart": "2025-04-28",
+          "observationEnd": "2025-05-02"
+        },
+        "VIXCLS": {
+          "start": 25.15,
+          "end": 22.68,
+          "change": -2.469999999999999,
+          "changeBp": -246.9999999999999,
+          "observationStart": "2025-04-28",
+          "observationEnd": "2025-05-02"
+        },
+        "DFF": {
+          "start": 4.33,
+          "end": 4.33,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2025-04-26",
+          "observationEnd": "2025-05-02"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-05-09",
+      "weekStart": "2025-05-03",
+      "weekEnd": "2025-05-09",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-05-05",
+          "tradingEnd": "2025-05-09",
+          "open": 484.6,
+          "high": 492.7,
+          "low": 476.782,
+          "close": 487.97,
+          "volume": 166550215.0,
+          "pct": 0.6954189021873719
+        },
+        "SPY": {
+          "tradingStart": "2025-05-05",
+          "tradingEnd": "2025-05-09",
+          "open": 562.57,
+          "high": 570.31,
+          "low": 556.04,
+          "close": 564.34,
+          "volume": 245391287.0,
+          "pct": 0.3146275130205986
+        }
+      },
+      "relativePct": 0.3807913891667733,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.36,
+          "end": 4.37,
+          "change": 0.009999999999999787,
+          "changeBp": 0.9999999999999787,
+          "observationStart": "2025-05-05",
+          "observationEnd": "2025-05-09"
+        },
+        "VIXCLS": {
+          "start": 23.64,
+          "end": 21.9,
+          "change": -1.740000000000002,
+          "changeBp": -174.0000000000002,
+          "observationStart": "2025-05-05",
+          "observationEnd": "2025-05-09"
+        },
+        "DFF": {
+          "start": 4.33,
+          "end": 4.33,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2025-05-03",
+          "observationEnd": "2025-05-09"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-05-16",
+      "weekStart": "2025-05-10",
+      "weekEnd": "2025-05-16",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-05-12",
+          "tradingEnd": "2025-05-16",
+          "open": 506.99,
+          "high": 521.93,
+          "low": 501.48,
+          "close": 521.51,
+          "volume": 243922523.0,
+          "pct": 2.8639618138424785
+        },
+        "SPY": {
+          "tradingStart": "2025-05-12",
+          "tradingEnd": "2025-05-16",
+          "open": 581.47,
+          "high": 594.5,
+          "low": 577.04,
+          "close": 594.2,
+          "volume": 360544311.0,
+          "pct": 2.189278896589681
+        }
+      },
+      "relativePct": 0.6746829172527975,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.45,
+          "end": 4.43,
+          "change": -0.020000000000000462,
+          "changeBp": -2.000000000000046,
+          "observationStart": "2025-05-12",
+          "observationEnd": "2025-05-16"
+        },
+        "VIXCLS": {
+          "start": 18.39,
+          "end": 17.24,
+          "change": -1.1500000000000021,
+          "changeBp": -115.00000000000021,
+          "observationStart": "2025-05-12",
+          "observationEnd": "2025-05-16"
+        },
+        "DFF": {
+          "start": 4.33,
+          "end": 4.33,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2025-05-10",
+          "observationEnd": "2025-05-16"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-05-23",
+      "weekStart": "2025-05-17",
+      "weekEnd": "2025-05-23",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-05-19",
+          "tradingEnd": "2025-05-23",
+          "open": 514.24,
+          "high": 523.0,
+          "low": 505.58,
+          "close": 509.24,
+          "volume": 280321572.0,
+          "pct": -0.9723086496577474
+        },
+        "SPY": {
+          "tradingStart": "2025-05-19",
+          "tradingEnd": "2025-05-23",
+          "open": 588.1,
+          "high": 595.54,
+          "low": 575.6,
+          "close": 579.11,
+          "volume": 370869622.0,
+          "pct": -1.5286515898656705
+        }
+      },
+      "relativePct": 0.5563429402079231,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.46,
+          "end": 4.51,
+          "change": 0.04999999999999982,
+          "changeBp": 4.999999999999982,
+          "observationStart": "2025-05-19",
+          "observationEnd": "2025-05-23"
+        },
+        "VIXCLS": {
+          "start": 18.14,
+          "end": 22.29,
+          "change": 4.149999999999999,
+          "changeBp": 414.9999999999999,
+          "observationStart": "2025-05-19",
+          "observationEnd": "2025-05-23"
+        },
+        "DFF": {
+          "start": 4.33,
+          "end": 4.33,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2025-05-17",
+          "observationEnd": "2025-05-23"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-05-30",
+      "weekStart": "2025-05-24",
+      "weekEnd": "2025-05-30",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-05-27",
+          "tradingEnd": "2025-05-30",
+          "open": 516.15,
+          "high": 526.48,
+          "low": 511.93,
+          "close": 519.11,
+          "volume": 220250376.0,
+          "pct": 0.5734767025089677
+        },
+        "SPY": {
+          "tradingStart": "2025-05-27",
+          "tradingEnd": "2025-05-30",
+          "open": 586.07,
+          "high": 593.2,
+          "low": 578.43,
+          "close": 589.39,
+          "volume": 301708958.0,
+          "pct": 0.5664852321394946
+        }
+      },
+      "relativePct": 0.006991470369473007,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.43,
+          "end": 4.41,
+          "change": -0.019999999999999574,
+          "changeBp": -1.9999999999999574,
+          "observationStart": "2025-05-27",
+          "observationEnd": "2025-05-30"
+        },
+        "VIXCLS": {
+          "start": 20.57,
+          "end": 18.57,
+          "change": -2.0,
+          "changeBp": -200.0,
+          "observationStart": "2025-05-26",
+          "observationEnd": "2025-05-30"
+        },
+        "DFF": {
+          "start": 4.33,
+          "end": 4.33,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2025-05-24",
+          "observationEnd": "2025-05-30"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-06-06",
+      "weekStart": "2025-05-31",
+      "weekEnd": "2025-06-06",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-06-02",
+          "tradingEnd": "2025-06-06",
+          "open": 517.24,
+          "high": 533.05,
+          "low": 515.97,
+          "close": 529.92,
+          "volume": 233945943.0,
+          "pct": 2.451473203928534
+        },
+        "SPY": {
+          "tradingStart": "2025-06-02",
+          "tradingEnd": "2025-06-06",
+          "open": 587.76,
+          "high": 600.83,
+          "low": 585.06,
+          "close": 599.14,
+          "volume": 341575791.0,
+          "pct": 1.9361644208520477
+        }
+      },
+      "relativePct": 0.5153087830764864,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.46,
+          "end": 4.51,
+          "change": 0.04999999999999982,
+          "changeBp": 4.999999999999982,
+          "observationStart": "2025-06-02",
+          "observationEnd": "2025-06-06"
+        },
+        "VIXCLS": {
+          "start": 18.36,
+          "end": 16.77,
+          "change": -1.5899999999999999,
+          "changeBp": -159.0,
+          "observationStart": "2025-06-02",
+          "observationEnd": "2025-06-06"
+        },
+        "DFF": {
+          "start": 4.33,
+          "end": 4.33,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2025-05-31",
+          "observationEnd": "2025-06-06"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-06-13",
+      "weekStart": "2025-06-07",
+      "weekEnd": "2025-06-13",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-06-09",
+          "tradingEnd": "2025-06-13",
+          "open": 530.14,
+          "high": 536.78,
+          "low": 525.73,
+          "close": 526.96,
+          "volume": 217973214.0,
+          "pct": -0.5998415512883295
+        },
+        "SPY": {
+          "tradingStart": "2025-06-09",
+          "tradingEnd": "2025-06-13",
+          "open": 599.72,
+          "high": 605.06,
+          "low": 595.48,
+          "close": 597.0,
+          "volume": 346555819.0,
+          "pct": -0.45354498766091295
+        }
+      },
+      "relativePct": -0.14629656362741655,
+      "leader": "SPY",
+      "macro": {
+        "DGS10": {
+          "start": 4.49,
+          "end": 4.41,
+          "change": -0.08000000000000007,
+          "changeBp": -8.000000000000007,
+          "observationStart": "2025-06-09",
+          "observationEnd": "2025-06-13"
+        },
+        "VIXCLS": {
+          "start": 17.16,
+          "end": 20.82,
+          "change": 3.66,
+          "changeBp": 366.0,
+          "observationStart": "2025-06-09",
+          "observationEnd": "2025-06-13"
+        },
+        "DFF": {
+          "start": 4.33,
+          "end": 4.33,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2025-06-07",
+          "observationEnd": "2025-06-13"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-06-20",
+      "weekStart": "2025-06-14",
+      "weekEnd": "2025-06-20",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-06-16",
+          "tradingEnd": "2025-06-20",
+          "open": 530.5,
+          "high": 535.37,
+          "low": 524.88,
+          "close": 526.83,
+          "volume": 185429482.0,
+          "pct": -0.691800188501406
+        },
+        "SPY": {
+          "tradingStart": "2025-06-16",
+          "tradingEnd": "2025-06-20",
+          "open": 600.4,
+          "high": 604.45,
+          "low": 592.86,
+          "close": 594.28,
+          "volume": 332849784.0,
+          "pct": -1.0193204530313134
+        }
+      },
+      "relativePct": 0.32752026452990735,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.46,
+          "end": 4.38,
+          "change": -0.08000000000000007,
+          "changeBp": -8.000000000000007,
+          "observationStart": "2025-06-16",
+          "observationEnd": "2025-06-20"
+        },
+        "VIXCLS": {
+          "start": 19.11,
+          "end": 20.62,
+          "change": 1.5100000000000016,
+          "changeBp": 151.00000000000017,
+          "observationStart": "2025-06-16",
+          "observationEnd": "2025-06-20"
+        },
+        "DFF": {
+          "start": 4.33,
+          "end": 4.33,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2025-06-14",
+          "observationEnd": "2025-06-20"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-06-27",
+      "weekStart": "2025-06-21",
+      "weekEnd": "2025-06-27",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-06-23",
+          "tradingEnd": "2025-06-27",
+          "open": 526.81,
+          "high": 549.99,
+          "low": 523.65,
+          "close": 548.09,
+          "volume": 242300750.0,
+          "pct": 4.039406996829994
+        },
+        "SPY": {
+          "tradingStart": "2025-06-23",
+          "tradingEnd": "2025-06-27",
+          "open": 595.04,
+          "high": 616.39,
+          "low": 591.89,
+          "close": 614.91,
+          "volume": 382082578.0,
+          "pct": 3.3392713094918003
+        }
+      },
+      "relativePct": 0.7001356873381939,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.34,
+          "end": 4.29,
+          "change": -0.04999999999999982,
+          "changeBp": -4.999999999999982,
+          "observationStart": "2025-06-23",
+          "observationEnd": "2025-06-27"
+        },
+        "VIXCLS": {
+          "start": 19.83,
+          "end": 16.32,
+          "change": -3.509999999999998,
+          "changeBp": -350.9999999999998,
+          "observationStart": "2025-06-23",
+          "observationEnd": "2025-06-27"
+        },
+        "DFF": {
+          "start": 4.33,
+          "end": 4.33,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2025-06-21",
+          "observationEnd": "2025-06-27"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-07-04",
+      "weekStart": "2025-06-28",
+      "weekEnd": "2025-07-04",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-06-30",
+          "tradingEnd": "2025-07-03",
+          "open": 551.26,
+          "high": 557.2,
+          "low": 544.66,
+          "close": 556.22,
+          "volume": 163293863.0,
+          "pct": 0.8997569205093852
+        },
+        "SPY": {
+          "tradingStart": "2025-06-30",
+          "tradingEnd": "2025-07-03",
+          "open": 617.38,
+          "high": 626.28,
+          "low": 615.04,
+          "close": 625.36,
+          "volume": 277867627.0,
+          "pct": 1.2925588778386112
+        }
+      },
+      "relativePct": -0.39280195732922607,
+      "leader": "SPY",
+      "macro": {
+        "DGS10": {
+          "start": 4.24,
+          "end": 4.35,
+          "change": 0.10999999999999943,
+          "changeBp": 10.999999999999943,
+          "observationStart": "2025-06-30",
+          "observationEnd": "2025-07-03"
+        },
+        "VIXCLS": {
+          "start": 16.73,
+          "end": 17.48,
+          "change": 0.75,
+          "changeBp": 75.0,
+          "observationStart": "2025-06-30",
+          "observationEnd": "2025-07-04"
+        },
+        "DFF": {
+          "start": 4.33,
+          "end": 4.33,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2025-06-28",
+          "observationEnd": "2025-07-04"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-07-11",
+      "weekStart": "2025-07-05",
+      "weekEnd": "2025-07-11",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-07-07",
+          "tradingEnd": "2025-07-11",
+          "open": 553.52,
+          "high": 557.63,
+          "low": 549.58,
+          "close": 554.2,
+          "volume": 198876717.0,
+          "pct": 0.12285012285013436
+        },
+        "SPY": {
+          "tradingStart": "2025-07-07",
+          "tradingEnd": "2025-07-11",
+          "open": 623.36,
+          "high": 626.8701,
+          "low": 617.87,
+          "close": 623.62,
+          "volume": 321151492.0,
+          "pct": 0.041709445585214146
+        }
+      },
+      "relativePct": 0.08114067726492022,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.4,
+          "end": 4.43,
+          "change": 0.02999999999999936,
+          "changeBp": 2.999999999999936,
+          "observationStart": "2025-07-07",
+          "observationEnd": "2025-07-11"
+        },
+        "VIXCLS": {
+          "start": 17.79,
+          "end": 16.4,
+          "change": -1.3900000000000006,
+          "changeBp": -139.00000000000006,
+          "observationStart": "2025-07-07",
+          "observationEnd": "2025-07-11"
+        },
+        "DFF": {
+          "start": 4.33,
+          "end": 4.33,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2025-07-05",
+          "observationEnd": "2025-07-11"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-07-18",
+      "weekStart": "2025-07-12",
+      "weekEnd": "2025-07-18",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-07-14",
+          "tradingEnd": "2025-07-18",
+          "open": 553.99,
+          "high": 564.7262,
+          "low": 551.56,
+          "close": 561.26,
+          "volume": 222954093.0,
+          "pct": 1.3122980559215838
+        },
+        "SPY": {
+          "tradingStart": "2025-07-14",
+          "tradingEnd": "2025-07-18",
+          "open": 623.16,
+          "high": 629.47,
+          "low": 618.05,
+          "close": 627.58,
+          "volume": 349710439.0,
+          "pct": 0.7092881442968215
+        }
+      },
+      "relativePct": 0.6030099116247623,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.43,
+          "end": 4.44,
+          "change": 0.010000000000000675,
+          "changeBp": 1.0000000000000675,
+          "observationStart": "2025-07-14",
+          "observationEnd": "2025-07-18"
+        },
+        "VIXCLS": {
+          "start": 17.2,
+          "end": 16.41,
+          "change": -0.7899999999999991,
+          "changeBp": -78.99999999999991,
+          "observationStart": "2025-07-14",
+          "observationEnd": "2025-07-18"
+        },
+        "DFF": {
+          "start": 4.33,
+          "end": 4.33,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2025-07-12",
+          "observationEnd": "2025-07-18"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-07-25",
+      "weekStart": "2025-07-19",
+      "weekEnd": "2025-07-25",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-07-21",
+          "tradingEnd": "2025-07-25",
+          "open": 562.09,
+          "high": 567.695,
+          "low": 558.61,
+          "close": 566.37,
+          "volume": 195986972.0,
+          "pct": 0.7614438968848356
+        },
+        "SPY": {
+          "tradingStart": "2025-07-21",
+          "tradingEnd": "2025-07-25",
+          "open": 628.77,
+          "high": 637.5799,
+          "low": 626.19,
+          "close": 637.1,
+          "volume": 322104695.0,
+          "pct": 1.3248087535983017
+        }
+      },
+      "relativePct": -0.5633648567134661,
+      "leader": "SPY",
+      "macro": {
+        "DGS10": {
+          "start": 4.38,
+          "end": 4.4,
+          "change": 0.020000000000000462,
+          "changeBp": 2.000000000000046,
+          "observationStart": "2025-07-21",
+          "observationEnd": "2025-07-25"
+        },
+        "VIXCLS": {
+          "start": 16.65,
+          "end": 14.93,
+          "change": -1.7199999999999989,
+          "changeBp": -171.9999999999999,
+          "observationStart": "2025-07-21",
+          "observationEnd": "2025-07-25"
+        },
+        "DFF": {
+          "start": 4.33,
+          "end": 4.33,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2025-07-19",
+          "observationEnd": "2025-07-25"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-08-01",
+      "weekStart": "2025-07-26",
+      "weekEnd": "2025-08-01",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-07-28",
+          "tradingEnd": "2025-08-01",
+          "open": 567.74,
+          "high": 574.63,
+          "low": 551.68,
+          "close": 553.88,
+          "volume": 254409416.0,
+          "pct": -2.4412583224715565
+        },
+        "SPY": {
+          "tradingStart": "2025-07-28",
+          "tradingEnd": "2025-08-01",
+          "open": 637.48,
+          "high": 639.85,
+          "low": 619.29,
+          "close": 621.72,
+          "volume": 439380571.0,
+          "pct": -2.4722344230407214
+        }
+      },
+      "relativePct": 0.03097610056916489,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.42,
+          "end": 4.23,
+          "change": -0.1899999999999995,
+          "changeBp": -18.99999999999995,
+          "observationStart": "2025-07-28",
+          "observationEnd": "2025-08-01"
+        },
+        "VIXCLS": {
+          "start": 15.03,
+          "end": 20.38,
+          "change": 5.35,
+          "changeBp": 535.0,
+          "observationStart": "2025-07-28",
+          "observationEnd": "2025-08-01"
+        },
+        "DFF": {
+          "start": 4.33,
+          "end": 4.33,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2025-07-26",
+          "observationEnd": "2025-08-01"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-08-08",
+      "weekStart": "2025-08-02",
+      "weekEnd": "2025-08-08",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-08-04",
+          "tradingEnd": "2025-08-08",
+          "open": 559.05,
+          "high": 574.77,
+          "low": 558.95,
+          "close": 574.55,
+          "volume": 217878071.0,
+          "pct": 2.7725605938645916
+        },
+        "SPY": {
+          "tradingStart": "2025-08-04",
+          "tradingEnd": "2025-08-08",
+          "open": 625.67,
+          "high": 637.645,
+          "low": 625.58,
+          "close": 637.18,
+          "volume": 343884210.0,
+          "pct": 1.8396279188709688
+        }
+      },
+      "relativePct": 0.9329326749936229,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.22,
+          "end": 4.27,
+          "change": 0.04999999999999982,
+          "changeBp": 4.999999999999982,
+          "observationStart": "2025-08-04",
+          "observationEnd": "2025-08-08"
+        },
+        "VIXCLS": {
+          "start": 17.52,
+          "end": 15.15,
+          "change": -2.369999999999999,
+          "changeBp": -236.99999999999991,
+          "observationStart": "2025-08-04",
+          "observationEnd": "2025-08-08"
+        },
+        "DFF": {
+          "start": 4.33,
+          "end": 4.33,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2025-08-02",
+          "observationEnd": "2025-08-08"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-08-15",
+      "weekStart": "2025-08-09",
+      "weekEnd": "2025-08-15",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-08-11",
+          "tradingEnd": "2025-08-15",
+          "open": 574.69,
+          "high": 583.3199,
+          "low": 571.57,
+          "close": 577.34,
+          "volume": 211498526.0,
+          "pct": 0.4611181680558174
+        },
+        "SPY": {
+          "tradingStart": "2025-08-11",
+          "tradingEnd": "2025-08-15",
+          "open": 637.46,
+          "high": 646.19,
+          "low": 634.66,
+          "close": 643.44,
+          "volume": 311576097.0,
+          "pct": 0.9380980767420728
+        }
+      },
+      "relativePct": -0.4769799086862554,
+      "leader": "SPY",
+      "macro": {
+        "DGS10": {
+          "start": 4.27,
+          "end": 4.33,
+          "change": 0.0600000000000005,
+          "changeBp": 6.00000000000005,
+          "observationStart": "2025-08-11",
+          "observationEnd": "2025-08-15"
+        },
+        "VIXCLS": {
+          "start": 16.25,
+          "end": 15.09,
+          "change": -1.1600000000000001,
+          "changeBp": -116.00000000000001,
+          "observationStart": "2025-08-11",
+          "observationEnd": "2025-08-15"
+        },
+        "DFF": {
+          "start": 4.33,
+          "end": 4.33,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2025-08-09",
+          "observationEnd": "2025-08-15"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-08-22",
+      "weekStart": "2025-08-16",
+      "weekEnd": "2025-08-22",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-08-18",
+          "tradingEnd": "2025-08-22",
+          "open": 576.44,
+          "high": 577.765,
+          "low": 558.84,
+          "close": 571.97,
+          "volume": 258303627.0,
+          "pct": -0.7754493095552055
+        },
+        "SPY": {
+          "tradingStart": "2025-08-18",
+          "tradingEnd": "2025-08-22",
+          "open": 642.86,
+          "high": 646.5,
+          "low": 632.95,
+          "close": 645.31,
+          "volume": 341334790.0,
+          "pct": 0.3811094172914681
+        }
+      },
+      "relativePct": -1.1565587268466735,
+      "leader": "SPY",
+      "macro": {
+        "DGS10": {
+          "start": 4.34,
+          "end": 4.26,
+          "change": -0.08000000000000007,
+          "changeBp": -8.000000000000007,
+          "observationStart": "2025-08-18",
+          "observationEnd": "2025-08-22"
+        },
+        "VIXCLS": {
+          "start": 14.99,
+          "end": 14.22,
+          "change": -0.7699999999999996,
+          "changeBp": -76.99999999999996,
+          "observationStart": "2025-08-18",
+          "observationEnd": "2025-08-22"
+        },
+        "DFF": {
+          "start": 4.33,
+          "end": 4.33,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2025-08-16",
+          "observationEnd": "2025-08-22"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-08-29",
+      "weekStart": "2025-08-23",
+      "weekEnd": "2025-08-29",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-08-25",
+          "tradingEnd": "2025-08-29",
+          "open": 570.4,
+          "high": 578.0,
+          "low": 568.54,
+          "close": 570.4,
+          "volume": 207892798.0,
+          "pct": 0.0
+        },
+        "SPY": {
+          "tradingStart": "2025-08-25",
+          "tradingEnd": "2025-08-29",
+          "open": 644.04,
+          "high": 649.48,
+          "low": 641.57,
+          "close": 645.05,
+          "volume": 287238430.0,
+          "pct": 0.1568225576051163
+        }
+      },
+      "relativePct": -0.1568225576051163,
+      "leader": "SPY",
+      "macro": {
+        "DGS10": {
+          "start": 4.28,
+          "end": 4.23,
+          "change": -0.04999999999999982,
+          "changeBp": -4.999999999999982,
+          "observationStart": "2025-08-25",
+          "observationEnd": "2025-08-29"
+        },
+        "VIXCLS": {
+          "start": 14.79,
+          "end": 15.36,
+          "change": 0.5700000000000003,
+          "changeBp": 57.00000000000003,
+          "observationStart": "2025-08-25",
+          "observationEnd": "2025-08-29"
+        },
+        "DFF": {
+          "start": 4.33,
+          "end": 4.33,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2025-08-23",
+          "observationEnd": "2025-08-29"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-09-05",
+      "weekStart": "2025-08-30",
+      "weekEnd": "2025-09-05",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-09-02",
+          "tradingEnd": "2025-09-05",
+          "open": 561.31,
+          "high": 581.12,
+          "low": 559.535,
+          "close": 576.06,
+          "volume": 235975575.0,
+          "pct": 2.627781439846075
+        },
+        "SPY": {
+          "tradingStart": "2025-09-02",
+          "tradingEnd": "2025-09-05",
+          "open": 637.5,
+          "high": 652.21,
+          "low": 634.92,
+          "close": 647.24,
+          "volume": 303202391.0,
+          "pct": 1.5278431372549033
+        }
+      },
+      "relativePct": 1.0999383025911715,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.28,
+          "end": 4.1,
+          "change": -0.1800000000000006,
+          "changeBp": -18.00000000000006,
+          "observationStart": "2025-09-02",
+          "observationEnd": "2025-09-05"
+        },
+        "VIXCLS": {
+          "start": 16.12,
+          "end": 15.18,
+          "change": -0.9400000000000013,
+          "changeBp": -94.00000000000013,
+          "observationStart": "2025-09-01",
+          "observationEnd": "2025-09-05"
+        },
+        "DFF": {
+          "start": 4.33,
+          "end": 4.33,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2025-08-30",
+          "observationEnd": "2025-09-05"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-09-12",
+      "weekStart": "2025-09-06",
+      "weekEnd": "2025-09-12",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-09-08",
+          "tradingEnd": "2025-09-12",
+          "open": 578.37,
+          "high": 587.86,
+          "low": 577.04,
+          "close": 586.66,
+          "volume": 235178128.0,
+          "pct": 1.4333385203243536
+        },
+        "SPY": {
+          "tradingStart": "2025-09-08",
+          "tradingEnd": "2025-09-12",
+          "open": 648.62,
+          "high": 659.11,
+          "low": 647.22,
+          "close": 657.41,
+          "volume": 350015610.0,
+          "pct": 1.3551848539977125
+        }
+      },
+      "relativePct": 0.07815366632664111,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.05,
+          "end": 4.06,
+          "change": 0.009999999999999787,
+          "changeBp": 0.9999999999999787,
+          "observationStart": "2025-09-08",
+          "observationEnd": "2025-09-12"
+        },
+        "VIXCLS": {
+          "start": 15.11,
+          "end": 14.76,
+          "change": -0.34999999999999964,
+          "changeBp": -34.999999999999964,
+          "observationStart": "2025-09-08",
+          "observationEnd": "2025-09-12"
+        },
+        "DFF": {
+          "start": 4.33,
+          "end": 4.33,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2025-09-06",
+          "observationEnd": "2025-09-12"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-09-19",
+      "weekStart": "2025-09-13",
+      "weekEnd": "2025-09-19",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-09-15",
+          "tradingEnd": "2025-09-19",
+          "open": 588.44,
+          "high": 600.05,
+          "low": 584.365,
+          "close": 599.35,
+          "volume": 269952613.0,
+          "pct": 1.8540547889334453
+        },
+        "SPY": {
+          "tradingStart": "2025-09-15",
+          "tradingEnd": "2025-09-19",
+          "open": 659.64,
+          "high": 664.89,
+          "low": 654.3,
+          "close": 663.7,
+          "volume": 415298457.0,
+          "pct": 0.615487235461776
+        }
+      },
+      "relativePct": 1.2385675534716694,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.05,
+          "end": 4.14,
+          "change": 0.08999999999999986,
+          "changeBp": 8.999999999999986,
+          "observationStart": "2025-09-15",
+          "observationEnd": "2025-09-19"
+        },
+        "VIXCLS": {
+          "start": 15.69,
+          "end": 15.45,
+          "change": -0.2400000000000002,
+          "changeBp": -24.00000000000002,
+          "observationStart": "2025-09-15",
+          "observationEnd": "2025-09-19"
+        },
+        "DFF": {
+          "start": 4.33,
+          "end": 4.08,
+          "change": -0.25,
+          "changeBp": -25.0,
+          "observationStart": "2025-09-13",
+          "observationEnd": "2025-09-19"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-09-26",
+      "weekStart": "2025-09-20",
+      "weekEnd": "2025-09-26",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-09-22",
+          "tradingEnd": "2025-09-26",
+          "open": 597.74,
+          "high": 602.87,
+          "low": 588.5,
+          "close": 595.97,
+          "volume": 296897671.0,
+          "pct": -0.29611536788569975
+        },
+        "SPY": {
+          "tradingStart": "2025-09-22",
+          "tradingEnd": "2025-09-26",
+          "open": 662.2,
+          "high": 667.34,
+          "low": 654.405,
+          "close": 661.82,
+          "volume": 378044556.0,
+          "pct": -0.05738447598912646
+        }
+      },
+      "relativePct": -0.2387308918965733,
+      "leader": "SPY",
+      "macro": {
+        "DGS10": {
+          "start": 4.15,
+          "end": 4.2,
+          "change": 0.04999999999999982,
+          "changeBp": 4.999999999999982,
+          "observationStart": "2025-09-22",
+          "observationEnd": "2025-09-26"
+        },
+        "VIXCLS": {
+          "start": 16.1,
+          "end": 15.29,
+          "change": -0.8100000000000023,
+          "changeBp": -81.00000000000023,
+          "observationStart": "2025-09-22",
+          "observationEnd": "2025-09-26"
+        },
+        "DFF": {
+          "start": 4.08,
+          "end": 4.09,
+          "change": 0.009999999999999787,
+          "changeBp": 0.9999999999999787,
+          "observationStart": "2025-09-20",
+          "observationEnd": "2025-09-26"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-10-03",
+      "weekStart": "2025-09-27",
+      "weekEnd": "2025-10-03",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-09-29",
+          "tradingEnd": "2025-10-03",
+          "open": 599.11,
+          "high": 607.3255,
+          "low": 596.1,
+          "close": 603.18,
+          "volume": 232013563.0,
+          "pct": 0.6793410225167225
+        },
+        "SPY": {
+          "tradingStart": "2025-09-29",
+          "tradingEnd": "2025-10-03",
+          "open": 664.36,
+          "high": 672.675,
+          "low": 661.61,
+          "close": 669.21,
+          "volume": 359722189.0,
+          "pct": 0.7300258895779431
+        }
+      },
+      "relativePct": -0.05068486706122066,
+      "leader": "SPY",
+      "macro": {
+        "DGS10": {
+          "start": 4.15,
+          "end": 4.13,
+          "change": -0.020000000000000462,
+          "changeBp": -2.000000000000046,
+          "observationStart": "2025-09-29",
+          "observationEnd": "2025-10-03"
+        },
+        "VIXCLS": {
+          "start": 16.12,
+          "end": 16.65,
+          "change": 0.5299999999999976,
+          "changeBp": 52.99999999999976,
+          "observationStart": "2025-09-29",
+          "observationEnd": "2025-10-03"
+        },
+        "DFF": {
+          "start": 4.09,
+          "end": 4.09,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2025-09-27",
+          "observationEnd": "2025-10-03"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-10-10",
+      "weekStart": "2025-10-04",
+      "weekEnd": "2025-10-10",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-10-06",
+          "tradingEnd": "2025-10-10",
+          "open": 608.45,
+          "high": 613.18,
+          "low": 589.05,
+          "close": 589.5,
+          "volume": 293966930.0,
+          "pct": -3.1144711973046335
+        },
+        "SPY": {
+          "tradingStart": "2025-10-06",
+          "tradingEnd": "2025-10-10",
+          "open": 671.62,
+          "high": 673.95,
+          "low": 652.84,
+          "close": 653.02,
+          "volume": 413269835.0,
+          "pct": -2.7694231857300293
+        }
+      },
+      "relativePct": -0.3450480115746042,
+      "leader": "SPY",
+      "macro": {
+        "DGS10": {
+          "start": 4.18,
+          "end": 4.05,
+          "change": -0.1299999999999999,
+          "changeBp": -12.99999999999999,
+          "observationStart": "2025-10-06",
+          "observationEnd": "2025-10-10"
+        },
+        "VIXCLS": {
+          "start": 16.37,
+          "end": 21.66,
+          "change": 5.289999999999999,
+          "changeBp": 528.9999999999999,
+          "observationStart": "2025-10-06",
+          "observationEnd": "2025-10-10"
+        },
+        "DFF": {
+          "start": 4.09,
+          "end": 4.1,
+          "change": 0.009999999999999787,
+          "changeBp": 0.9999999999999787,
+          "observationStart": "2025-10-04",
+          "observationEnd": "2025-10-10"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-10-17",
+      "weekStart": "2025-10-11",
+      "weekEnd": "2025-10-17",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-10-13",
+          "tradingEnd": "2025-10-17",
+          "open": 599.68,
+          "high": 608.31,
+          "low": 590.13,
+          "close": 603.93,
+          "volume": 340887785.0,
+          "pct": 0.7087113127001068
+        },
+        "SPY": {
+          "tradingStart": "2025-10-13",
+          "tradingEnd": "2025-10-17",
+          "open": 660.65,
+          "high": 670.23,
+          "low": 653.17,
+          "close": 664.39,
+          "volume": 457105979.0,
+          "pct": 0.5661091349428606
+        }
+      },
+      "relativePct": 0.14260217775724615,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.03,
+          "end": 4.02,
+          "change": -0.010000000000000675,
+          "changeBp": -1.0000000000000675,
+          "observationStart": "2025-10-14",
+          "observationEnd": "2025-10-17"
+        },
+        "VIXCLS": {
+          "start": 19.03,
+          "end": 20.78,
+          "change": 1.75,
+          "changeBp": 175.0,
+          "observationStart": "2025-10-13",
+          "observationEnd": "2025-10-17"
+        },
+        "DFF": {
+          "start": 4.1,
+          "end": 4.11,
+          "change": 0.010000000000000675,
+          "changeBp": 1.0000000000000675,
+          "observationStart": "2025-10-11",
+          "observationEnd": "2025-10-17"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-10-24",
+      "weekStart": "2025-10-18",
+      "weekEnd": "2025-10-24",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-10-20",
+          "tradingEnd": "2025-10-24",
+          "open": 607.14,
+          "high": 618.42,
+          "low": 599.74,
+          "close": 617.1,
+          "volume": 242254976.0,
+          "pct": 1.6404783081332208
+        },
+        "SPY": {
+          "tradingStart": "2025-10-20",
+          "tradingEnd": "2025-10-24",
+          "open": 667.32,
+          "high": 678.47,
+          "low": 663.3,
+          "close": 677.25,
+          "volume": 337267083.0,
+          "pct": 1.4880417191152593
+        }
+      },
+      "relativePct": 0.15243658901796153,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.0,
+          "end": 4.02,
+          "change": 0.019999999999999574,
+          "changeBp": 1.9999999999999574,
+          "observationStart": "2025-10-20",
+          "observationEnd": "2025-10-24"
+        },
+        "VIXCLS": {
+          "start": 18.23,
+          "end": 16.37,
+          "change": -1.8599999999999994,
+          "changeBp": -185.99999999999994,
+          "observationStart": "2025-10-20",
+          "observationEnd": "2025-10-24"
+        },
+        "DFF": {
+          "start": 4.11,
+          "end": 4.11,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2025-10-18",
+          "observationEnd": "2025-10-24"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-10-31",
+      "weekStart": "2025-10-25",
+      "weekEnd": "2025-10-31",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-10-27",
+          "tradingEnd": "2025-10-31",
+          "open": 624.52,
+          "high": 637.01,
+          "low": 624.03,
+          "close": 629.07,
+          "volume": 310650636.0,
+          "pct": 0.7285595337219094
+        },
+        "SPY": {
+          "tradingStart": "2025-10-27",
+          "tradingEnd": "2025-10-31",
+          "open": 682.73,
+          "high": 689.7,
+          "low": 679.24,
+          "close": 682.06,
+          "volume": 373939560.0,
+          "pct": -0.09813542688911762
+        }
+      },
+      "relativePct": 0.826694960611027,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.01,
+          "end": 4.11,
+          "change": 0.10000000000000053,
+          "changeBp": 10.000000000000053,
+          "observationStart": "2025-10-27",
+          "observationEnd": "2025-10-31"
+        },
+        "VIXCLS": {
+          "start": 15.79,
+          "end": 17.44,
+          "change": 1.6500000000000021,
+          "changeBp": 165.00000000000023,
+          "observationStart": "2025-10-27",
+          "observationEnd": "2025-10-31"
+        },
+        "DFF": {
+          "start": 4.11,
+          "end": 3.86,
+          "change": -0.25000000000000044,
+          "changeBp": -25.000000000000043,
+          "observationStart": "2025-10-25",
+          "observationEnd": "2025-10-31"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-11-07",
+      "weekStart": "2025-11-01",
+      "weekEnd": "2025-11-07",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-11-03",
+          "tradingEnd": "2025-11-07",
+          "open": 635.11,
+          "high": 635.82,
+          "low": 598.67,
+          "close": 609.74,
+          "volume": 303624033.0,
+          "pct": -3.9945836154366967
+        },
+        "SPY": {
+          "tradingStart": "2025-11-03",
+          "tradingEnd": "2025-11-07",
+          "open": 685.67,
+          "high": 685.8,
+          "low": 661.205,
+          "close": 670.97,
+          "volume": 395772086.0,
+          "pct": -2.143888459462997
+        }
+      },
+      "relativePct": -1.8506951559736997,
+      "leader": "SPY",
+      "macro": {
+        "DGS10": {
+          "start": 4.13,
+          "end": 4.11,
+          "change": -0.019999999999999574,
+          "changeBp": -1.9999999999999574,
+          "observationStart": "2025-11-03",
+          "observationEnd": "2025-11-07"
+        },
+        "VIXCLS": {
+          "start": 17.17,
+          "end": 19.08,
+          "change": 1.9099999999999966,
+          "changeBp": 190.99999999999966,
+          "observationStart": "2025-11-03",
+          "observationEnd": "2025-11-07"
+        },
+        "DFF": {
+          "start": 3.86,
+          "end": 3.87,
+          "change": 0.010000000000000231,
+          "changeBp": 1.000000000000023,
+          "observationStart": "2025-11-01",
+          "observationEnd": "2025-11-07"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-11-14",
+      "weekStart": "2025-11-08",
+      "weekEnd": "2025-11-14",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-11-10",
+          "tradingEnd": "2025-11-14",
+          "open": 618.92,
+          "high": 624.86,
+          "low": 597.17,
+          "close": 608.86,
+          "volume": 299654055.0,
+          "pct": -1.625412008013951
+        },
+        "SPY": {
+          "tradingStart": "2025-11-10",
+          "tradingEnd": "2025-11-14",
+          "open": 677.235,
+          "high": 684.96,
+          "low": 663.265,
+          "close": 671.93,
+          "volume": 397413061.0,
+          "pct": -0.7833322258891026
+        }
+      },
+      "relativePct": -0.8420797821248484,
+      "leader": "SPY",
+      "macro": {
+        "DGS10": {
+          "start": 4.13,
+          "end": 4.14,
+          "change": 0.009999999999999787,
+          "changeBp": 0.9999999999999787,
+          "observationStart": "2025-11-10",
+          "observationEnd": "2025-11-14"
+        },
+        "VIXCLS": {
+          "start": 17.6,
+          "end": 19.83,
+          "change": 2.229999999999997,
+          "changeBp": 222.9999999999997,
+          "observationStart": "2025-11-10",
+          "observationEnd": "2025-11-14"
+        },
+        "DFF": {
+          "start": 3.87,
+          "end": 3.88,
+          "change": 0.009999999999999787,
+          "changeBp": 0.9999999999999787,
+          "observationStart": "2025-11-08",
+          "observationEnd": "2025-11-14"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-11-21",
+      "weekStart": "2025-11-15",
+      "weekEnd": "2025-11-21",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-11-17",
+          "tradingEnd": "2025-11-21",
+          "open": 606.3,
+          "high": 614.03,
+          "low": 580.74,
+          "close": 590.07,
+          "volume": 441376420.0,
+          "pct": -2.676892627412157
+        },
+        "SPY": {
+          "tradingStart": "2025-11-17",
+          "tradingEnd": "2025-11-21",
+          "open": 669.7,
+          "high": 675.56,
+          "low": 650.85,
+          "close": 659.03,
+          "volume": 588876215.0,
+          "pct": -1.5932507092728194
+        }
+      },
+      "relativePct": -1.0836419181393375,
+      "leader": "SPY",
+      "macro": {
+        "DGS10": {
+          "start": 4.13,
+          "end": 4.06,
+          "change": -0.07000000000000028,
+          "changeBp": -7.000000000000028,
+          "observationStart": "2025-11-17",
+          "observationEnd": "2025-11-21"
+        },
+        "VIXCLS": {
+          "start": 22.38,
+          "end": 23.43,
+          "change": 1.0500000000000007,
+          "changeBp": 105.00000000000007,
+          "observationStart": "2025-11-17",
+          "observationEnd": "2025-11-21"
+        },
+        "DFF": {
+          "start": 3.88,
+          "end": 3.88,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2025-11-15",
+          "observationEnd": "2025-11-21"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-11-28",
+      "weekStart": "2025-11-22",
+      "weekEnd": "2025-11-28",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-11-24",
+          "tradingEnd": "2025-11-28",
+          "open": 595.28,
+          "high": 619.32,
+          "low": 595.16,
+          "close": 619.25,
+          "volume": 181379530.0,
+          "pct": 4.026676521972858
+        },
+        "SPY": {
+          "tradingStart": "2025-11-24",
+          "tradingEnd": "2025-11-28",
+          "open": 662.69,
+          "high": 683.665,
+          "low": 661.59,
+          "close": 683.39,
+          "volume": 275124899.0,
+          "pct": 3.1236324676696388
+        }
+      },
+      "relativePct": 0.9030440543032192,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.04,
+          "end": 4.02,
+          "change": -0.020000000000000462,
+          "changeBp": -2.000000000000046,
+          "observationStart": "2025-11-24",
+          "observationEnd": "2025-11-28"
+        },
+        "VIXCLS": {
+          "start": 20.52,
+          "end": 16.35,
+          "change": -4.169999999999998,
+          "changeBp": -416.99999999999983,
+          "observationStart": "2025-11-24",
+          "observationEnd": "2025-11-28"
+        },
+        "DFF": {
+          "start": 3.88,
+          "end": 3.89,
+          "change": 0.010000000000000231,
+          "changeBp": 1.000000000000023,
+          "observationStart": "2025-11-22",
+          "observationEnd": "2025-11-28"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-12-05",
+      "weekStart": "2025-11-29",
+      "weekEnd": "2025-12-05",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-12-01",
+          "tradingEnd": "2025-12-05",
+          "open": 613.63,
+          "high": 628.92,
+          "low": 612.52,
+          "close": 625.48,
+          "volume": 244022837.0,
+          "pct": 1.9311311376562459
+        },
+        "SPY": {
+          "tradingStart": "2025-12-01",
+          "tradingEnd": "2025-12-05",
+          "open": 678.81,
+          "high": 688.39,
+          "low": 678.74,
+          "close": 685.69,
+          "volume": 322604885.0,
+          "pct": 1.0135383980790074
+        }
+      },
+      "relativePct": 0.9175927395772385,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.09,
+          "end": 4.14,
+          "change": 0.04999999999999982,
+          "changeBp": 4.999999999999982,
+          "observationStart": "2025-12-01",
+          "observationEnd": "2025-12-05"
+        },
+        "VIXCLS": {
+          "start": 17.24,
+          "end": 15.41,
+          "change": -1.8299999999999983,
+          "changeBp": -182.99999999999983,
+          "observationStart": "2025-12-01",
+          "observationEnd": "2025-12-05"
+        },
+        "DFF": {
+          "start": 3.89,
+          "end": 3.89,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2025-11-29",
+          "observationEnd": "2025-12-05"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-12-12",
+      "weekStart": "2025-12-06",
+      "weekEnd": "2025-12-12",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-12-08",
+          "tradingEnd": "2025-12-12",
+          "open": 627.21,
+          "high": 629.21,
+          "low": 611.36,
+          "close": 613.62,
+          "volume": 269081304.0,
+          "pct": -2.166738412971737
+        },
+        "SPY": {
+          "tradingStart": "2025-12-08",
+          "tradingEnd": "2025-12-12",
+          "open": 686.59,
+          "high": 689.25,
+          "low": 679.1744,
+          "close": 681.76,
+          "volume": 398546834.0,
+          "pct": -0.7034766017565127
+        }
+      },
+      "relativePct": -1.463261811215224,
+      "leader": "SPY",
+      "macro": {
+        "DGS10": {
+          "start": 4.17,
+          "end": 4.19,
+          "change": 0.020000000000000462,
+          "changeBp": 2.000000000000046,
+          "observationStart": "2025-12-08",
+          "observationEnd": "2025-12-12"
+        },
+        "VIXCLS": {
+          "start": 16.66,
+          "end": 15.74,
+          "change": -0.9199999999999999,
+          "changeBp": -92.0,
+          "observationStart": "2025-12-08",
+          "observationEnd": "2025-12-12"
+        },
+        "DFF": {
+          "start": 3.89,
+          "end": 3.64,
+          "change": -0.25,
+          "changeBp": -25.0,
+          "observationStart": "2025-12-06",
+          "observationEnd": "2025-12-12"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-12-19",
+      "weekStart": "2025-12-13",
+      "weekEnd": "2025-12-19",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-12-15",
+          "tradingEnd": "2025-12-19",
+          "open": 618.37,
+          "high": 618.42,
+          "low": 600.28,
+          "close": 617.05,
+          "volume": 314590852.0,
+          "pct": -0.21346443068066853
+        },
+        "SPY": {
+          "tradingStart": "2025-12-15",
+          "tradingEnd": "2025-12-19",
+          "open": 685.74,
+          "high": 685.76,
+          "low": 671.195,
+          "close": 680.59,
+          "volume": 535716398.0,
+          "pct": -0.7510135036602761
+        }
+      },
+      "relativePct": 0.5375490729796075,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.18,
+          "end": 4.16,
+          "change": -0.019999999999999574,
+          "changeBp": -1.9999999999999574,
+          "observationStart": "2025-12-15",
+          "observationEnd": "2025-12-19"
+        },
+        "VIXCLS": {
+          "start": 16.5,
+          "end": 14.91,
+          "change": -1.5899999999999999,
+          "changeBp": -159.0,
+          "observationStart": "2025-12-15",
+          "observationEnd": "2025-12-19"
+        },
+        "DFF": {
+          "start": 3.64,
+          "end": 3.64,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2025-12-13",
+          "observationEnd": "2025-12-19"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2025-12-26",
+      "weekStart": "2025-12-20",
+      "weekEnd": "2025-12-26",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-12-22",
+          "tradingEnd": "2025-12-26",
+          "open": 621.35,
+          "high": 625.515,
+          "low": 617.77,
+          "close": 623.89,
+          "volume": 131307138.0,
+          "pct": 0.4087873179367448
+        },
+        "SPY": {
+          "tradingStart": "2025-12-22",
+          "tradingEnd": "2025-12-26",
+          "open": 683.94,
+          "high": 691.66,
+          "low": 680.5868,
+          "close": 690.31,
+          "volume": 212531124.0,
+          "pct": 0.9313682486767685
+        }
+      },
+      "relativePct": -0.5225809307400238,
+      "leader": "SPY",
+      "macro": {
+        "DGS10": {
+          "start": 4.17,
+          "end": 4.14,
+          "change": -0.03000000000000025,
+          "changeBp": -3.000000000000025,
+          "observationStart": "2025-12-22",
+          "observationEnd": "2025-12-26"
+        },
+        "VIXCLS": {
+          "start": 14.08,
+          "end": 13.6,
+          "change": -0.4800000000000004,
+          "changeBp": -48.00000000000004,
+          "observationStart": "2025-12-22",
+          "observationEnd": "2025-12-26"
+        },
+        "DFF": {
+          "start": 3.64,
+          "end": 3.64,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2025-12-20",
+          "observationEnd": "2025-12-26"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2026-01-02",
+      "weekStart": "2025-12-27",
+      "weekEnd": "2026-01-02",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2025-12-29",
+          "tradingEnd": "2026-01-02",
+          "open": 620.1,
+          "high": 622.85,
+          "low": 610.15,
+          "close": 613.12,
+          "volume": 166290712.0,
+          "pct": -1.1256248992098077
+        },
+        "SPY": {
+          "tradingStart": "2025-12-29",
+          "tradingEnd": "2026-01-02",
+          "open": 687.54,
+          "high": 689.2,
+          "low": 679.82,
+          "close": 683.17,
+          "volume": 273242142.0,
+          "pct": -0.6355993833086082
+        }
+      },
+      "relativePct": -0.49002551590119947,
+      "leader": "SPY",
+      "macro": {
+        "DGS10": {
+          "start": 4.12,
+          "end": 4.19,
+          "change": 0.07000000000000028,
+          "changeBp": 7.000000000000028,
+          "observationStart": "2025-12-29",
+          "observationEnd": "2026-01-02"
+        },
+        "VIXCLS": {
+          "start": 14.2,
+          "end": 14.51,
+          "change": 0.3100000000000005,
+          "changeBp": 31.00000000000005,
+          "observationStart": "2025-12-29",
+          "observationEnd": "2026-01-02"
+        },
+        "DFF": {
+          "start": 3.64,
+          "end": 3.64,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2025-12-27",
+          "observationEnd": "2026-01-02"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2026-01-09",
+      "weekStart": "2026-01-03",
+      "weekEnd": "2026-01-09",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2026-01-05",
+          "tradingEnd": "2026-01-09",
+          "open": 619.32,
+          "high": 627.94,
+          "low": 616.72,
+          "close": 626.65,
+          "volume": 234970676.0,
+          "pct": 1.1835561583672296
+        },
+        "SPY": {
+          "tradingStart": "2026-01-05",
+          "tradingEnd": "2026-01-09",
+          "open": 686.54,
+          "high": 695.31,
+          "low": 686.375,
+          "close": 694.07,
+          "volume": 360933923.0,
+          "pct": 1.096804264864405
+        }
+      },
+      "relativePct": 0.08675189350282464,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.17,
+          "end": 4.18,
+          "change": 0.009999999999999787,
+          "changeBp": 0.9999999999999787,
+          "observationStart": "2026-01-05",
+          "observationEnd": "2026-01-09"
+        },
+        "VIXCLS": {
+          "start": 14.9,
+          "end": 14.49,
+          "change": -0.41000000000000014,
+          "changeBp": -41.000000000000014,
+          "observationStart": "2026-01-05",
+          "observationEnd": "2026-01-09"
+        },
+        "DFF": {
+          "start": 3.64,
+          "end": 3.64,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2026-01-03",
+          "observationEnd": "2026-01-09"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2026-01-16",
+      "weekStart": "2026-01-10",
+      "weekEnd": "2026-01-16",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2026-01-12",
+          "tradingEnd": "2026-01-16",
+          "open": 622.31,
+          "high": 630.0,
+          "low": 614.56,
+          "close": 621.26,
+          "volume": 269461639.0,
+          "pct": -0.1687261975542663
+        },
+        "SPY": {
+          "tradingStart": "2026-01-12",
+          "tradingEnd": "2026-01-16",
+          "open": 690.68,
+          "high": 696.09,
+          "low": 686.04,
+          "close": 691.66,
+          "volume": 394113560.0,
+          "pct": 0.14188915271906213
+        }
+      },
+      "relativePct": -0.3106153502733284,
+      "leader": "SPY",
+      "macro": {
+        "DGS10": {
+          "start": 4.19,
+          "end": 4.24,
+          "change": 0.04999999999999982,
+          "changeBp": 4.999999999999982,
+          "observationStart": "2026-01-12",
+          "observationEnd": "2026-01-16"
+        },
+        "VIXCLS": {
+          "start": 15.12,
+          "end": 15.86,
+          "change": 0.7400000000000002,
+          "changeBp": 74.00000000000003,
+          "observationStart": "2026-01-12",
+          "observationEnd": "2026-01-16"
+        },
+        "DFF": {
+          "start": 3.64,
+          "end": 3.64,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2026-01-10",
+          "observationEnd": "2026-01-16"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2026-01-23",
+      "weekStart": "2026-01-17",
+      "weekEnd": "2026-01-23",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2026-01-20",
+          "tradingEnd": "2026-01-23",
+          "open": 610.53,
+          "high": 625.3999,
+          "low": 607.05,
+          "close": 622.72,
+          "volume": 247727307.0,
+          "pct": 1.996625882430029
+        },
+        "SPY": {
+          "tradingStart": "2026-01-20",
+          "tradingEnd": "2026-01-23",
+          "open": 681.49,
+          "high": 691.125,
+          "low": 676.57,
+          "close": 689.23,
+          "volume": 379639522.0,
+          "pct": 1.1357466727318097
+        }
+      },
+      "relativePct": 0.8608792096982192,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.3,
+          "end": 4.24,
+          "change": -0.05999999999999961,
+          "changeBp": -5.999999999999961,
+          "observationStart": "2026-01-20",
+          "observationEnd": "2026-01-23"
+        },
+        "VIXCLS": {
+          "start": 18.84,
+          "end": 16.09,
+          "change": -2.75,
+          "changeBp": -275.0,
+          "observationStart": "2026-01-19",
+          "observationEnd": "2026-01-23"
+        },
+        "DFF": {
+          "start": 3.64,
+          "end": 3.64,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2026-01-17",
+          "observationEnd": "2026-01-23"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2026-01-30",
+      "weekStart": "2026-01-24",
+      "weekEnd": "2026-01-30",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2026-01-26",
+          "tradingEnd": "2026-01-30",
+          "open": 623.21,
+          "high": 636.6,
+          "low": 618.27,
+          "close": 621.87,
+          "volume": 271266507.0,
+          "pct": -0.21501580526628772
+        },
+        "SPY": {
+          "tradingStart": "2026-01-26",
+          "tradingEnd": "2026-01-30",
+          "open": 690.49,
+          "high": 697.84,
+          "low": 684.83,
+          "close": 691.97,
+          "volume": 376473400.0,
+          "pct": 0.21434054077539402
+        }
+      },
+      "relativePct": -0.4293563460416817,
+      "leader": "SPY",
+      "macro": {
+        "DGS10": {
+          "start": 4.22,
+          "end": 4.26,
+          "change": 0.040000000000000036,
+          "changeBp": 4.0000000000000036,
+          "observationStart": "2026-01-26",
+          "observationEnd": "2026-01-30"
+        },
+        "VIXCLS": {
+          "start": 16.15,
+          "end": 17.44,
+          "change": 1.2900000000000027,
+          "changeBp": 129.00000000000028,
+          "observationStart": "2026-01-26",
+          "observationEnd": "2026-01-30"
+        },
+        "DFF": {
+          "start": 3.64,
+          "end": 3.64,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2026-01-24",
+          "observationEnd": "2026-01-30"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2026-02-06",
+      "weekStart": "2026-01-31",
+      "weekEnd": "2026-02-06",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2026-02-02",
+          "tradingEnd": "2026-02-06",
+          "open": 618.7,
+          "high": 629.98,
+          "low": 594.76,
+          "close": 609.65,
+          "volume": 379478586.0,
+          "pct": -1.4627444641991383
+        },
+        "SPY": {
+          "tradingStart": "2026-02-02",
+          "tradingEnd": "2026-02-06",
+          "open": 689.58,
+          "high": 696.96,
+          "low": 675.79,
+          "close": 690.62,
+          "volume": 495134074.0,
+          "pct": 0.15081643899184483
+        }
+      },
+      "relativePct": -1.613560903190983,
+      "leader": "SPY",
+      "macro": {
+        "DGS10": {
+          "start": 4.29,
+          "end": 4.22,
+          "change": -0.07000000000000028,
+          "changeBp": -7.000000000000028,
+          "observationStart": "2026-02-02",
+          "observationEnd": "2026-02-06"
+        },
+        "VIXCLS": {
+          "start": 16.34,
+          "end": 17.76,
+          "change": 1.4200000000000017,
+          "changeBp": 142.00000000000017,
+          "observationStart": "2026-02-02",
+          "observationEnd": "2026-02-06"
+        },
+        "DFF": {
+          "start": 3.64,
+          "end": 3.64,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2026-01-31",
+          "observationEnd": "2026-02-06"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2026-02-13",
+      "weekStart": "2026-02-07",
+      "weekEnd": "2026-02-13",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2026-02-09",
+          "tradingEnd": "2026-02-13",
+          "open": 607.54,
+          "high": 617.52,
+          "low": 596.42,
+          "close": 601.92,
+          "volume": 319927770.0,
+          "pct": -0.9250419725450184
+        },
+        "SPY": {
+          "tradingStart": "2026-02-09",
+          "tradingEnd": "2026-02-13",
+          "open": 689.42,
+          "high": 697.14,
+          "low": 677.52,
+          "close": 681.75,
+          "volume": 430521169.0,
+          "pct": -1.1125293725160221
+        }
+      },
+      "relativePct": 0.18748739997100372,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.22,
+          "end": 4.04,
+          "change": -0.17999999999999972,
+          "changeBp": -17.99999999999997,
+          "observationStart": "2026-02-09",
+          "observationEnd": "2026-02-13"
+        },
+        "VIXCLS": {
+          "start": 17.36,
+          "end": 20.6,
+          "change": 3.240000000000002,
+          "changeBp": 324.0000000000002,
+          "observationStart": "2026-02-09",
+          "observationEnd": "2026-02-13"
+        },
+        "DFF": {
+          "start": 3.64,
+          "end": 3.64,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2026-02-07",
+          "observationEnd": "2026-02-13"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2026-02-20",
+      "weekStart": "2026-02-14",
+      "weekEnd": "2026-02-20",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2026-02-17",
+          "tradingEnd": "2026-02-20",
+          "open": 598.375,
+          "high": 610.35,
+          "low": 593.34,
+          "close": 608.81,
+          "volume": 268352447.0,
+          "pct": 1.7438897012742753
+        },
+        "SPY": {
+          "tradingStart": "2026-02-17",
+          "tradingEnd": "2026-02-20",
+          "open": 680.14,
+          "high": 690.06,
+          "low": 675.78,
+          "close": 689.43,
+          "volume": 313608347.0,
+          "pct": 1.3658952568588767
+        }
+      },
+      "relativePct": 0.37799444441539864,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.05,
+          "end": 4.08,
+          "change": 0.03000000000000025,
+          "changeBp": 3.000000000000025,
+          "observationStart": "2026-02-17",
+          "observationEnd": "2026-02-20"
+        },
+        "VIXCLS": {
+          "start": 21.2,
+          "end": 19.09,
+          "change": -2.1099999999999994,
+          "changeBp": -210.99999999999994,
+          "observationStart": "2026-02-16",
+          "observationEnd": "2026-02-20"
+        },
+        "DFF": {
+          "start": 3.64,
+          "end": 3.64,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2026-02-14",
+          "observationEnd": "2026-02-20"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2026-02-27",
+      "weekStart": "2026-02-21",
+      "weekEnd": "2026-02-27",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2026-02-23",
+          "tradingEnd": "2026-02-27",
+          "open": 606.605,
+          "high": 616.83,
+          "low": 599.05,
+          "close": 607.29,
+          "volume": 338897501.0,
+          "pct": 0.11292356640646639
+        },
+        "SPY": {
+          "tradingStart": "2026-02-23",
+          "tradingEnd": "2026-02-27",
+          "open": 687.83,
+          "high": 693.68,
+          "low": 680.0,
+          "close": 685.99,
+          "volume": 375706092.0,
+          "pct": -0.2675079598156567
+        }
+      },
+      "relativePct": 0.3804315262221231,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.03,
+          "end": 3.97,
+          "change": -0.06000000000000005,
+          "changeBp": -6.000000000000005,
+          "observationStart": "2026-02-23",
+          "observationEnd": "2026-02-27"
+        },
+        "VIXCLS": {
+          "start": 21.01,
+          "end": 19.86,
+          "change": -1.1500000000000021,
+          "changeBp": -115.00000000000021,
+          "observationStart": "2026-02-23",
+          "observationEnd": "2026-02-27"
+        },
+        "DFF": {
+          "start": 3.64,
+          "end": 3.64,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2026-02-21",
+          "observationEnd": "2026-02-27"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2026-03-06",
+      "weekStart": "2026-02-28",
+      "weekEnd": "2026-03-06",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2026-03-02",
+          "tradingEnd": "2026-03-06",
+          "open": 598.86,
+          "high": 612.88,
+          "low": 591.87,
+          "close": 599.75,
+          "volume": 419128712.0,
+          "pct": 0.14861570316935283
+        },
+        "SPY": {
+          "tradingStart": "2026-03-02",
+          "tradingEnd": "2026-03-06",
+          "open": 678.7,
+          "high": 688.62,
+          "low": 669.66,
+          "close": 672.38,
+          "volume": 478955833.0,
+          "pct": -0.9311919846765949
+        }
+      },
+      "relativePct": 1.0798076878459477,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.05,
+          "end": 4.15,
+          "change": 0.10000000000000053,
+          "changeBp": 10.000000000000053,
+          "observationStart": "2026-03-02",
+          "observationEnd": "2026-03-06"
+        },
+        "VIXCLS": {
+          "start": 21.44,
+          "end": 29.49,
+          "change": 8.049999999999997,
+          "changeBp": 804.9999999999998,
+          "observationStart": "2026-03-02",
+          "observationEnd": "2026-03-06"
+        },
+        "DFF": {
+          "start": 3.64,
+          "end": 3.64,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2026-02-28",
+          "observationEnd": "2026-03-06"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2026-03-13",
+      "weekStart": "2026-03-07",
+      "weekEnd": "2026-03-13",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2026-03-09",
+          "tradingEnd": "2026-03-13",
+          "open": 594.225,
+          "high": 613.29,
+          "low": 591.33,
+          "close": 593.72,
+          "volume": 352243920.0,
+          "pct": -0.08498464386385551
+        },
+        "SPY": {
+          "tradingStart": "2026-03-09",
+          "tradingEnd": "2026-03-13",
+          "open": 666.39,
+          "high": 683.36,
+          "low": 661.36,
+          "close": 662.29,
+          "volume": 458697158.0,
+          "pct": -0.6152553309623529
+        }
+      },
+      "relativePct": 0.5302706870984973,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.12,
+          "end": 4.28,
+          "change": 0.16000000000000014,
+          "changeBp": 16.000000000000014,
+          "observationStart": "2026-03-09",
+          "observationEnd": "2026-03-13"
+        },
+        "VIXCLS": {
+          "start": 25.5,
+          "end": 27.19,
+          "change": 1.6900000000000013,
+          "changeBp": 169.0000000000001,
+          "observationStart": "2026-03-09",
+          "observationEnd": "2026-03-13"
+        },
+        "DFF": {
+          "start": 3.64,
+          "end": 3.64,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2026-03-07",
+          "observationEnd": "2026-03-13"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2026-03-20",
+      "weekStart": "2026-03-14",
+      "weekEnd": "2026-03-20",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2026-03-16",
+          "tradingEnd": "2026-03-20",
+          "open": 600.04,
+          "high": 605.9,
+          "low": 578.54,
+          "close": 582.06,
+          "volume": 319873925.0,
+          "pct": -2.9964669022065227
+        },
+        "SPY": {
+          "tradingStart": "2026-03-16",
+          "tradingEnd": "2026-03-20",
+          "open": 668.38,
+          "high": 674.44,
+          "low": 644.72,
+          "close": 648.57,
+          "volume": 526103769.0,
+          "pct": -2.963882821149637
+        }
+      },
+      "relativePct": -0.032584081056885594,
+      "leader": "SPY",
+      "macro": {
+        "DGS10": {
+          "start": 4.23,
+          "end": 4.39,
+          "change": 0.15999999999999925,
+          "changeBp": 15.999999999999925,
+          "observationStart": "2026-03-16",
+          "observationEnd": "2026-03-20"
+        },
+        "VIXCLS": {
+          "start": 23.51,
+          "end": 26.78,
+          "change": 3.2699999999999996,
+          "changeBp": 326.99999999999994,
+          "observationStart": "2026-03-16",
+          "observationEnd": "2026-03-20"
+        },
+        "DFF": {
+          "start": 3.64,
+          "end": 3.64,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2026-03-14",
+          "observationEnd": "2026-03-20"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2026-03-27",
+      "weekStart": "2026-03-21",
+      "weekEnd": "2026-03-27",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2026-03-23",
+          "tradingEnd": "2026-03-27",
+          "open": 590.52,
+          "high": 595.08,
+          "low": 561.57,
+          "close": 562.58,
+          "volume": 372356796.0,
+          "pct": -4.731423152475775
+        },
+        "SPY": {
+          "tradingStart": "2026-03-23",
+          "tradingEnd": "2026-03-27",
+          "open": 658.07,
+          "high": 662.615,
+          "low": 633.105,
+          "close": 634.09,
+          "volume": 522057594.0,
+          "pct": -3.6439892412661288
+        }
+      },
+      "relativePct": -1.0874339112096458,
+      "leader": "SPY",
+      "macro": {
+        "DGS10": {
+          "start": 4.34,
+          "end": 4.44,
+          "change": 0.10000000000000053,
+          "changeBp": 10.000000000000053,
+          "observationStart": "2026-03-23",
+          "observationEnd": "2026-03-27"
+        },
+        "VIXCLS": {
+          "start": 26.15,
+          "end": 31.05,
+          "change": 4.900000000000002,
+          "changeBp": 490.0000000000002,
+          "observationStart": "2026-03-23",
+          "observationEnd": "2026-03-27"
+        },
+        "DFF": {
+          "start": 3.64,
+          "end": 3.64,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2026-03-21",
+          "observationEnd": "2026-03-27"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2026-04-03",
+      "weekStart": "2026-03-28",
+      "weekEnd": "2026-04-03",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2026-03-30",
+          "tradingEnd": "2026-04-02",
+          "open": 567.38,
+          "high": 587.739,
+          "low": 555.6,
+          "close": 584.98,
+          "volume": 296857440.0,
+          "pct": 3.1019775106630516
+        },
+        "SPY": {
+          "tradingStart": "2026-03-30",
+          "tradingEnd": "2026-04-02",
+          "open": 640.11,
+          "high": 658.52,
+          "low": 629.28,
+          "close": 655.83,
+          "volume": 418010106.0,
+          "pct": 2.455827904578905
+        }
+      },
+      "relativePct": 0.6461496060841467,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.35,
+          "end": 4.35,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2026-03-30",
+          "observationEnd": "2026-04-03"
+        },
+        "VIXCLS": {
+          "start": 30.61,
+          "end": 23.87,
+          "change": -6.739999999999998,
+          "changeBp": -673.9999999999999,
+          "observationStart": "2026-03-30",
+          "observationEnd": "2026-04-02"
+        },
+        "DFF": {
+          "start": 3.64,
+          "end": 3.64,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2026-03-28",
+          "observationEnd": "2026-04-03"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2026-04-10",
+      "weekStart": "2026-04-04",
+      "weekEnd": "2026-04-10",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2026-04-06",
+          "tradingEnd": "2026-04-10",
+          "open": 586.23,
+          "high": 613.67,
+          "low": 578.4001,
+          "close": 611.07,
+          "volume": 220018717.0,
+          "pct": 4.237244767412114
+        },
+        "SPY": {
+          "tradingStart": "2026-04-06",
+          "tradingEnd": "2026-04-10",
+          "open": 655.86,
+          "high": 682.03,
+          "low": 651.06,
+          "close": 679.46,
+          "volume": 302080053.0,
+          "pct": 3.598328911657979
+        }
+      },
+      "relativePct": 0.638915855754135,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.34,
+          "end": 4.31,
+          "change": -0.03000000000000025,
+          "changeBp": -3.000000000000025,
+          "observationStart": "2026-04-06",
+          "observationEnd": "2026-04-10"
+        },
+        "VIXCLS": {
+          "start": 24.17,
+          "end": 19.23,
+          "change": -4.940000000000001,
+          "changeBp": -494.0000000000001,
+          "observationStart": "2026-04-06",
+          "observationEnd": "2026-04-10"
+        },
+        "DFF": {
+          "start": 3.64,
+          "end": 3.64,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2026-04-04",
+          "observationEnd": "2026-04-10"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2026-04-17",
+      "weekStart": "2026-04-11",
+      "weekEnd": "2026-04-17",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2026-04-13",
+          "tradingEnd": "2026-04-17",
+          "open": 609.48,
+          "high": 650.0,
+          "low": 608.11,
+          "close": 648.85,
+          "volume": 228804916.0,
+          "pct": 6.4596049091028425
+        },
+        "SPY": {
+          "tradingStart": "2026-04-13",
+          "tradingEnd": "2026-04-17",
+          "open": 677.41,
+          "high": 712.39,
+          "low": 676.58,
+          "close": 710.14,
+          "volume": 296541001.0,
+          "pct": 4.83163815119352
+        }
+      },
+      "relativePct": 1.6279667579093227,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.3,
+          "end": 4.26,
+          "change": -0.040000000000000036,
+          "changeBp": -4.0000000000000036,
+          "observationStart": "2026-04-13",
+          "observationEnd": "2026-04-17"
+        },
+        "VIXCLS": {
+          "start": 19.12,
+          "end": 17.48,
+          "change": -1.6400000000000006,
+          "changeBp": -164.00000000000006,
+          "observationStart": "2026-04-13",
+          "observationEnd": "2026-04-17"
+        },
+        "DFF": {
+          "start": 3.64,
+          "end": 3.64,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2026-04-11",
+          "observationEnd": "2026-04-17"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2026-04-24",
+      "weekStart": "2026-04-18",
+      "weekEnd": "2026-04-24",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2026-04-20",
+          "tradingEnd": "2026-04-24",
+          "open": 648.04,
+          "high": 664.51,
+          "low": 642.21,
+          "close": 663.88,
+          "volume": 199750261.0,
+          "pct": 2.4442935621257997
+        },
+        "SPY": {
+          "tradingStart": "2026-04-20",
+          "tradingEnd": "2026-04-24",
+          "open": 708.78,
+          "high": 714.47,
+          "low": 702.2803,
+          "close": 713.94,
+          "volume": 246362635.0,
+          "pct": 0.728011512740213
+        }
+      },
+      "relativePct": 1.7162820493855868,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.26,
+          "end": 4.31,
+          "change": 0.04999999999999982,
+          "changeBp": 4.999999999999982,
+          "observationStart": "2026-04-20",
+          "observationEnd": "2026-04-24"
+        },
+        "VIXCLS": {
+          "start": 18.87,
+          "end": 18.71,
+          "change": -0.16000000000000014,
+          "changeBp": -16.000000000000014,
+          "observationStart": "2026-04-20",
+          "observationEnd": "2026-04-24"
+        },
+        "DFF": {
+          "start": 3.64,
+          "end": 3.64,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2026-04-18",
+          "observationEnd": "2026-04-24"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2026-05-01",
+      "weekStart": "2026-04-25",
+      "weekEnd": "2026-05-01",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2026-04-27",
+          "tradingEnd": "2026-05-01",
+          "open": 663.4,
+          "high": 675.97,
+          "low": 653.81,
+          "close": 674.15,
+          "volume": 178384456.0,
+          "pct": 1.620440156768164
+        },
+        "SPY": {
+          "tradingStart": "2026-04-27",
+          "tradingEnd": "2026-05-01",
+          "open": 713.17,
+          "high": 724.87,
+          "low": 708.37,
+          "close": 720.65,
+          "volume": 228403260.0,
+          "pct": 1.0488382854018001
+        }
+      },
+      "relativePct": 0.571601871366364,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.35,
+          "end": 4.39,
+          "change": 0.040000000000000036,
+          "changeBp": 4.0000000000000036,
+          "observationStart": "2026-04-27",
+          "observationEnd": "2026-05-01"
+        },
+        "VIXCLS": {
+          "start": 18.02,
+          "end": 16.99,
+          "change": -1.0300000000000011,
+          "changeBp": -103.00000000000011,
+          "observationStart": "2026-04-27",
+          "observationEnd": "2026-05-01"
+        },
+        "DFF": {
+          "start": 3.64,
+          "end": 3.64,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2026-04-25",
+          "observationEnd": "2026-05-01"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2026-05-08",
+      "weekStart": "2026-05-02",
+      "weekEnd": "2026-05-08",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2026-05-04",
+          "tradingEnd": "2026-05-08",
+          "open": 674.66,
+          "high": 711.23,
+          "low": 668.9,
+          "close": 711.23,
+          "volume": 198520994.0,
+          "pct": 5.420508107787634
+        },
+        "SPY": {
+          "tradingStart": "2026-05-04",
+          "tradingEnd": "2026-05-08",
+          "open": 720.07,
+          "high": 738.08,
+          "low": 714.99,
+          "close": 737.62,
+          "volume": 241124281.0,
+          "pct": 2.437263043870728
+        }
+      },
+      "relativePct": 2.9832450639169057,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.45,
+          "end": 4.38,
+          "change": -0.07000000000000028,
+          "changeBp": -7.000000000000028,
+          "observationStart": "2026-05-04",
+          "observationEnd": "2026-05-08"
+        },
+        "VIXCLS": {
+          "start": 18.29,
+          "end": 17.19,
+          "change": -1.0999999999999979,
+          "changeBp": -109.99999999999979,
+          "observationStart": "2026-05-04",
+          "observationEnd": "2026-05-08"
+        },
+        "DFF": {
+          "start": 3.64,
+          "end": 3.63,
+          "change": -0.010000000000000231,
+          "changeBp": -1.000000000000023,
+          "observationStart": "2026-05-02",
+          "observationEnd": "2026-05-08"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2026-05-15",
+      "weekStart": "2026-05-09",
+      "weekEnd": "2026-05-15",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2026-05-11",
+          "tradingEnd": "2026-05-15",
+          "open": 710.36,
+          "high": 722.03,
+          "low": 696.64,
+          "close": 708.93,
+          "volume": 207024757.0,
+          "pct": -0.20130637986374003
+        },
+        "SPY": {
+          "tradingStart": "2026-05-11",
+          "tradingEnd": "2026-05-15",
+          "open": 736.45,
+          "high": 749.53,
+          "low": 731.83,
+          "close": 739.17,
+          "volume": 248127771.0,
+          "pct": 0.3693393984656003
+        }
+      },
+      "relativePct": -0.5706457783293404,
+      "leader": "SPY",
+      "macro": {
+        "DGS10": {
+          "start": 4.42,
+          "end": 4.59,
+          "change": 0.16999999999999993,
+          "changeBp": 16.999999999999993,
+          "observationStart": "2026-05-11",
+          "observationEnd": "2026-05-15"
+        },
+        "VIXCLS": {
+          "start": 18.38,
+          "end": 18.43,
+          "change": 0.05000000000000071,
+          "changeBp": 5.000000000000071,
+          "observationStart": "2026-05-11",
+          "observationEnd": "2026-05-15"
+        },
+        "DFF": {
+          "start": 3.63,
+          "end": 3.63,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2026-05-09",
+          "observationEnd": "2026-05-15"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2026-05-22",
+      "weekStart": "2026-05-16",
+      "weekEnd": "2026-05-22",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2026-05-18",
+          "tradingEnd": "2026-05-22",
+          "open": 711.54,
+          "high": 722.12,
+          "low": 695.25,
+          "close": 717.54,
+          "volume": 202975212.0,
+          "pct": 0.8432414200185513
+        },
+        "SPY": {
+          "tradingStart": "2026-05-18",
+          "tradingEnd": "2026-05-22",
+          "open": 739.83,
+          "high": 748.94,
+          "low": 731.53,
+          "close": 745.64,
+          "volume": 232962008.0,
+          "pct": 0.7853155454631395
+        }
+      },
+      "relativePct": 0.05792587455541176,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.61,
+          "end": 4.56,
+          "change": -0.05000000000000071,
+          "changeBp": -5.000000000000071,
+          "observationStart": "2026-05-18",
+          "observationEnd": "2026-05-22"
+        },
+        "VIXCLS": {
+          "start": 17.82,
+          "end": 16.7,
+          "change": -1.120000000000001,
+          "changeBp": -112.0000000000001,
+          "observationStart": "2026-05-18",
+          "observationEnd": "2026-05-22"
+        },
+        "DFF": {
+          "start": 3.63,
+          "end": 3.62,
+          "change": -0.009999999999999787,
+          "changeBp": -0.9999999999999787,
+          "observationStart": "2026-05-16",
+          "observationEnd": "2026-05-22"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2026-05-29",
+      "weekStart": "2026-05-23",
+      "weekEnd": "2026-05-29",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2026-05-26",
+          "tradingEnd": "2026-05-29",
+          "open": 725.96,
+          "high": 741.63,
+          "low": 724.16,
+          "close": 738.31,
+          "volume": 139784928.0,
+          "pct": 1.7011956581629715
+        },
+        "SPY": {
+          "tradingStart": "2026-05-26",
+          "tradingEnd": "2026-05-29",
+          "open": 750.01,
+          "high": 758.08,
+          "low": 748.22,
+          "close": 756.48,
+          "volume": 179868118.0,
+          "pct": 0.862655164597809
+        }
+      },
+      "relativePct": 0.8385404935651625,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.5,
+          "end": 4.45,
+          "change": -0.04999999999999982,
+          "changeBp": -4.999999999999982,
+          "observationStart": "2026-05-26",
+          "observationEnd": "2026-05-29"
+        },
+        "VIXCLS": {
+          "start": 16.59,
+          "end": 15.32,
+          "change": -1.2699999999999996,
+          "changeBp": -126.99999999999996,
+          "observationStart": "2026-05-25",
+          "observationEnd": "2026-05-29"
+        },
+        "DFF": {
+          "start": 3.62,
+          "end": 3.62,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2026-05-23",
+          "observationEnd": "2026-05-29"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2026-06-05",
+      "weekStart": "2026-05-30",
+      "weekEnd": "2026-06-05",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2026-06-01",
+          "tradingEnd": "2026-06-05",
+          "open": 737.04,
+          "high": 748.65,
+          "low": 704.32,
+          "close": 705.06,
+          "volume": 244634993.0,
+          "pct": -4.338977531748619
+        },
+        "SPY": {
+          "tradingStart": "2026-06-01",
+          "tradingEnd": "2026-06-05",
+          "open": 755.36,
+          "high": 760.4,
+          "low": 735.525,
+          "close": 737.55,
+          "volume": 270531720.0,
+          "pct": -2.3578161406481755
+        }
+      },
+      "relativePct": -1.9811613911004438,
+      "leader": "SPY",
+      "macro": {
+        "DGS10": {
+          "start": 4.47,
+          "end": 4.55,
+          "change": 0.08000000000000007,
+          "changeBp": 8.000000000000007,
+          "observationStart": "2026-06-01",
+          "observationEnd": "2026-06-05"
+        },
+        "VIXCLS": {
+          "start": 16.05,
+          "end": 21.51,
+          "change": 5.460000000000001,
+          "changeBp": 546.0000000000001,
+          "observationStart": "2026-06-01",
+          "observationEnd": "2026-06-05"
+        },
+        "DFF": {
+          "start": 3.62,
+          "end": 3.62,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2026-05-30",
+          "observationEnd": "2026-06-05"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2026-06-12",
+      "weekStart": "2026-06-06",
+      "weekEnd": "2026-06-12",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2026-06-08",
+          "tradingEnd": "2026-06-12",
+          "open": 717.81,
+          "high": 725.66,
+          "low": 686.37,
+          "close": 721.34,
+          "volume": 327702674.0,
+          "pct": 0.49177358911133684
+        },
+        "SPY": {
+          "tradingStart": "2026-06-08",
+          "tradingEnd": "2026-06-12",
+          "open": 743.36,
+          "high": 746.9,
+          "low": 722.59,
+          "close": 741.75,
+          "volume": 340753958.0,
+          "pct": -0.21658415841584341
+        }
+      },
+      "relativePct": 0.7083577475271803,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.56,
+          "end": 4.48,
+          "change": -0.07999999999999918,
+          "changeBp": -7.999999999999918,
+          "observationStart": "2026-06-08",
+          "observationEnd": "2026-06-12"
+        },
+        "VIXCLS": {
+          "start": 18.92,
+          "end": 17.68,
+          "change": -1.240000000000002,
+          "changeBp": -124.0000000000002,
+          "observationStart": "2026-06-08",
+          "observationEnd": "2026-06-12"
+        },
+        "DFF": {
+          "start": 3.62,
+          "end": 3.62,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2026-06-06",
+          "observationEnd": "2026-06-12"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2026-06-19",
+      "weekStart": "2026-06-13",
+      "weekEnd": "2026-06-19",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2026-06-15",
+          "tradingEnd": "2026-06-18",
+          "open": 738.1,
+          "high": 744.7599,
+          "low": 720.85,
+          "close": 740.62,
+          "volume": 193882649.0,
+          "pct": 0.34141715214740304
+        },
+        "SPY": {
+          "tradingStart": "2026-06-15",
+          "tradingEnd": "2026-06-18",
+          "open": 751.85,
+          "high": 756.68,
+          "low": 739.22,
+          "close": 746.74,
+          "volume": 294090437.0,
+          "pct": -0.6796568464454364
+        }
+      },
+      "relativePct": 1.0210739985928394,
+      "leader": "QQQ",
+      "macro": {
+        "DGS10": {
+          "start": 4.47,
+          "end": 4.46,
+          "change": -0.009999999999999787,
+          "changeBp": -0.9999999999999787,
+          "observationStart": "2026-06-15",
+          "observationEnd": "2026-06-18"
+        },
+        "VIXCLS": {
+          "start": 16.2,
+          "end": 16.78,
+          "change": 0.5800000000000018,
+          "changeBp": 58.000000000000185,
+          "observationStart": "2026-06-15",
+          "observationEnd": "2026-06-19"
+        },
+        "DFF": {
+          "start": 3.62,
+          "end": 3.63,
+          "change": 0.009999999999999787,
+          "changeBp": 0.9999999999999787,
+          "observationStart": "2026-06-13",
+          "observationEnd": "2026-06-19"
+        }
+      },
+      "events": []
+    },
+    {
+      "weekKey": "2026-06-26",
+      "weekStart": "2026-06-20",
+      "weekEnd": "2026-06-26",
+      "assets": {
+        "QQQ": {
+          "tradingStart": "2026-06-22",
+          "tradingEnd": "2026-06-24",
+          "open": 742.02,
+          "high": 745.45,
+          "low": 704.45,
+          "close": 710.62,
+          "volume": 149353163.0,
+          "pct": -4.231691868143713
+        },
+        "SPY": {
+          "tradingStart": "2026-06-22",
+          "tradingEnd": "2026-06-24",
+          "open": 747.7,
+          "high": 750.18,
+          "low": 730.84,
+          "close": 733.24,
+          "volume": 170914352.0,
+          "pct": -1.933930720877362
+        }
+      },
+      "relativePct": -2.297761147266351,
+      "leader": "SPY",
+      "macro": {
+        "DGS10": {
+          "start": 4.51,
+          "end": 4.5,
+          "change": -0.009999999999999787,
+          "changeBp": -0.9999999999999787,
+          "observationStart": "2026-06-22",
+          "observationEnd": "2026-06-23"
+        },
+        "VIXCLS": {
+          "start": 17.28,
+          "end": 19.49,
+          "change": 2.2099999999999973,
+          "changeBp": 220.99999999999972,
+          "observationStart": "2026-06-22",
+          "observationEnd": "2026-06-23"
+        },
+        "DFF": {
+          "start": 3.63,
+          "end": 3.63,
+          "change": 0.0,
+          "changeBp": 0.0,
+          "observationStart": "2026-06-20",
+          "observationEnd": "2026-06-23"
+        }
+      },
+      "events": []
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/equity-macro", "destination": "/index.html" },
+    { "source": "/equity-macro/(.*)", "destination": "/index.html" }
+  ]
+}
