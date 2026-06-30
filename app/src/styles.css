@@ -1088,6 +1088,11 @@ html[lang="zh-CN"] .title-block h1 {
   background: #f3f3eb;
 }
 
+.macro-sell-pressure-exhausted {
+  background: #ffe4a8;
+  color: #3f2600;
+}
+
 .macro-calendar-empty {
   color: #b0b0a6;
   font-size: 10px;

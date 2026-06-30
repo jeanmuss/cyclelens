@@ -7,8 +7,45 @@ import { promisify } from "node:util";
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const appRoot = resolve(scriptDir, "..");
 const workspaceRoot = resolve(appRoot, "..");
-const outputPath = resolve(appRoot, "public/data/chip-chain-hotspots.json");
 const execFileAsync = promisify(execFile);
+
+const CHAIN_CONFIGS = {
+  chip: {
+    label: "chip-chain",
+    outputPath: resolve(appRoot, "public/data/chip-chain-hotspots.json"),
+    refreshCadence: "U.S. equities refresh from backend/CI Alpaca cache when credentials are configured. Korea adapter is pending KIS/KRX review; retained rows are visibly marked by sourceKind/dataQuality.",
+    methodology: "Category returns are equal-weighted from visible assets for the selected window. U.S. price paths come from backend/CI Alpaca stock bars when configured; the frontend reads only this static JSON and never receives provider credentials.",
+    extraSources: [
+      {
+        market: "KR",
+        label: "Korea Investment Open API / KRX quote adapter pending; existing sample/static rows retained until reviewed credentials and redistribution terms are configured.",
+        plannedRefresh: "30 min during KRX regular sessions; close cache after market close.",
+      },
+    ],
+  },
+  robot: {
+    label: "robot-chain",
+    outputPath: resolve(appRoot, "public/data/robot-chain-watchlist.json"),
+    refreshCadence: "U.S. robotics watchlist equities and ETFs refresh from backend/CI Alpaca cache when credentials are configured.",
+    methodology: "Robot-chain table returns and sparklines come from backend/CI Alpaca stock bars when configured; the frontend reads only this static JSON and never receives provider credentials.",
+    sourceNoteZh: "\u5f53\u524d\u9875\u9762\u8bfb\u53d6\u540e\u7aef/CI \u751f\u6210\u7684\u9759\u6001\u884c\u60c5\u7f13\u5b58\uff1b\u4ef7\u683c\u3001\u6da8\u8dcc\u5e45\u4e0e\u7b80\u8981 K \u7ebf\u6765\u81ea\u7ecf\u5ba1\u67e5\u7684\u884c\u60c5\u6e90\uff0c\u524d\u7aef\u4e0d\u76f4\u8fde\u884c\u60c5\u6e90\u3002",
+    sourceNoteEn: "This page reads a backend/CI generated static quote cache; prices, returns, and sparklines come from reviewed market-data feeds and the frontend never calls providers directly.",
+    extraSources: [],
+  },
+};
+
+function selectedChainKey() {
+  const raw = process.argv.find((arg) => arg.startsWith("--chain="))?.split("=")[1] || process.argv[2] || "chip";
+  const normalized = String(raw).trim().toLowerCase();
+  return normalized === "robot-chain" ? "robot" : normalized;
+}
+
+const chainKey = selectedChainKey();
+const chainConfig = CHAIN_CONFIGS[chainKey];
+if (!chainConfig) {
+  throw new Error(`Unknown chain data target: ${chainKey}`);
+}
+const outputPath = chainConfig.outputPath;
 
 const ALPACA_DATA_BASE = process.env.ALPACA_DATA_BASE_URL || "https://data.alpaca.markets";
 const US_FEED = (process.env.CHIP_CHAIN_US_FEED || "iex").trim().toLowerCase();
@@ -63,6 +100,12 @@ function alpacaSecretKey() {
 
 function hasAlpacaCredentials() {
   return Boolean(alpacaKeyId() && alpacaSecretKey());
+}
+
+function isUsAsset(asset) {
+  const market = String(asset?.market || "").trim().toLowerCase();
+  if (market) return market === "us";
+  return String(asset?.quote || "").trim().toUpperCase() === "USD";
 }
 
 function redactSecret(text) {
@@ -267,19 +310,22 @@ function updateAssetFromPaths(asset, paths, benchmarks, asOfNow) {
 }
 
 function markNonUsPending(asset) {
+  const dataQuality = isUsAsset(asset)
+    ? "U.S. provider refresh pending; retaining existing sample/static row."
+    : asset.market === "kr"
+      ? "Korea price adapter pending; retaining existing sample/static row."
+      : "Non-U.S. adapter pending.";
   return {
     ...asset,
     sourceKind: asset.sourceKind === "live_cache" ? "provider_pending" : asset.sourceKind,
-    dataQuality: asset.market === "kr"
-      ? "Korea price adapter pending; retaining existing sample/static row."
-      : asset.dataQuality || "Non-U.S. adapter pending.",
+    dataQuality: asset.dataQuality || dataQuality,
   };
 }
 
 async function buildOutput(existing) {
   const failures = [];
   const usSymbols = Object.values(existing.assets || {})
-    .filter((asset) => asset.market === "us")
+    .filter(isUsAsset)
     .map((asset) => asset.symbol);
   const fetchSymbols = [...new Set([...usSymbols, ...BENCHMARK_SYMBOLS])];
   const pathsBySymbol = {};
@@ -292,23 +338,25 @@ async function buildOutput(existing) {
   const asOfNow = isoNow();
   const assets = {};
   for (const [symbol, asset] of Object.entries(existing.assets || {})) {
-    if (asset.market === "us" && pathsBySymbol[symbol] && Object.keys(pathsBySymbol[symbol]).length) {
+    if (isUsAsset(asset) && pathsBySymbol[symbol] && Object.keys(pathsBySymbol[symbol]).length) {
       assets[symbol] = updateAssetFromPaths(asset, pathsBySymbol[symbol], benchmarks, asOfNow);
     } else {
       assets[symbol] = markNonUsPending(asset);
-      if (asset.market !== "us") failures.push(`${symbol}: non-U.S. provider adapter pending; existing row retained.`);
+      if (!isUsAsset(asset)) failures.push(`${symbol}: non-U.S. provider adapter pending; existing row retained.`);
     }
   }
 
   const liveCount = Object.values(assets).filter((asset) => asset.sourceKind === "live_cache").length;
-  if (!liveCount) throw new Error("No live chip-chain assets were refreshed");
+  if (!liveCount) throw new Error(`No live ${chainConfig.label} assets were refreshed`);
 
   return {
     ...existing,
     generatedAt: asOfNow,
     kind: liveCount === Object.keys(existing.assets || {}).length ? "market_cache" : "market_cache_partial",
-    refreshCadence: "U.S. equities refresh from backend/CI Alpaca cache when credentials are configured. Korea adapter is pending KIS/KRX review; retained rows are visibly marked by sourceKind/dataQuality.",
-    methodology: "Category returns are equal-weighted from visible assets for the selected window. U.S. price paths come from backend/CI Alpaca stock bars when configured; the frontend reads only this static JSON and never receives provider credentials.",
+    refreshCadence: chainConfig.refreshCadence,
+    methodology: chainConfig.methodology,
+    ...(chainConfig.sourceNoteZh ? { sourceNoteZh: chainConfig.sourceNoteZh } : {}),
+    ...(chainConfig.sourceNoteEn ? { sourceNoteEn: chainConfig.sourceNoteEn } : {}),
     failures,
     sources: [
       {
@@ -316,11 +364,7 @@ async function buildOutput(existing) {
         label: `Alpaca ${US_FEED || "iex"} stock bars via backend/CI cache.`,
         plannedRefresh: "15-30 min during U.S. regular sessions; close cache after market close.",
       },
-      {
-        market: "KR",
-        label: "Korea Investment Open API / KRX quote adapter pending; existing sample/static rows retained until reviewed credentials and redistribution terms are configured.",
-        plannedRefresh: "30 min during KRX regular sessions; close cache after market close.",
-      },
+      ...chainConfig.extraSources,
     ],
     assets,
   };
@@ -334,6 +378,7 @@ async function main() {
   if (!hasAlpacaCredentials()) {
     console.log(JSON.stringify({
       status: "kept-last-known-good",
+      chain: chainConfig.label,
       outputPath,
       reason: "APCA_API_KEY_ID/APCA_API_SECRET_KEY or ALPACA_API_KEY_ID/ALPACA_API_SECRET_KEY are not configured.",
       kind: existing.kind,
@@ -348,6 +393,7 @@ async function main() {
   } catch (error) {
     console.log(JSON.stringify({
       status: "kept-last-known-good",
+      chain: chainConfig.label,
       outputPath,
       reason: redactSecret(error instanceof Error ? error.message : String(error)),
       kind: existing.kind,
@@ -359,6 +405,7 @@ async function main() {
   await writeFile(outputPath, `${JSON.stringify(output, null, 2)}\n`, "utf8");
   console.log(JSON.stringify({
     status: "updated",
+    chain: chainConfig.label,
     outputPath,
     kind: output.kind,
     liveAssets: Object.values(output.assets).filter((asset) => asset.sourceKind === "live_cache").length,
@@ -371,6 +418,7 @@ try {
 } catch (error) {
   console.error(JSON.stringify({
     status: "failed",
+    chain: chainConfig?.label || chainKey,
     outputPath,
     error: redactSecret(error instanceof Error ? error.message : String(error)),
   }));

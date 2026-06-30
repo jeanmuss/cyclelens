@@ -761,6 +761,7 @@ const TRANSLATIONS = {
       liquidity: "\u6d41\u52a8\u6027",
       quarterWindow: "\u5b63\u672b\u7a97\u53e3",
       monthWindow: "\u6708\u672b\u7a97\u53e3",
+      sellPressureExhausted: "\u5356\u538b\u6e10\u7aed",
       noData: "\u65e0\u6570\u636e",
       noIndicators: "\u5f53\u65e5\u65e0\u6307\u6807",
       clickDateHint: "\u70b9\u51fb\u65e5\u671f\u67e5\u770b\u8be6\u60c5",
@@ -1053,6 +1054,7 @@ const TRANSLATIONS = {
       liquidity: "Liquidity",
       quarterWindow: "Quarter-end window",
       monthWindow: "Month-end window",
+      sellPressureExhausted: "Selling pressure exhausted",
       noData: "No data",
       noIndicators: "No indicators",
       clickDateHint: "Click a date for details",
@@ -1661,6 +1663,7 @@ function macroMoveClass(value) {
 function macroCategoryLabel(category, t) {
   if (category === "all") return t.macroCalendar.all;
   if (category === "liquidity") return t.macroCalendar.liquidity;
+  if (category === "sell-pressure-exhausted") return t.macroCalendar.sellPressureExhausted;
   return t.macroCalendar.categories[category] || category;
 }
 
@@ -1925,15 +1928,31 @@ function flowItemsForDate(dateKey, t) {
   const date = utcDateFromKey(dateKey);
   const endOfMonth = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + 1, 0));
   const daysToMonthEnd = Math.round((endOfMonth - date) / 86400000);
-  if (daysToMonthEnd < 0 || daysToMonthEnd > 5) return [];
+  const lastWorkingDay = new Date(endOfMonth.getTime());
+  while (lastWorkingDay.getUTCDay() === 0 || lastWorkingDay.getUTCDay() === 6) {
+    lastWorkingDay.setUTCDate(lastWorkingDay.getUTCDate() - 1);
+  }
   const isQuarterEnd = [2, 5, 8, 11].includes(date.getUTCMonth());
-  return [{
-    type: "flow",
-    date: dateKey,
-    category: "liquidity",
-    label: isQuarterEnd ? t.macroCalendar.quarterWindow : t.macroCalendar.monthWindow,
-    text: isQuarterEnd ? t.macroCalendar.quarterWindow : t.macroCalendar.monthWindow,
-  }];
+  const items = [];
+  if (daysToMonthEnd >= 0 && daysToMonthEnd <= 5) {
+    items.push({
+      type: "flow",
+      date: dateKey,
+      category: "liquidity",
+      label: isQuarterEnd ? t.macroCalendar.quarterWindow : t.macroCalendar.monthWindow,
+      text: isQuarterEnd ? t.macroCalendar.quarterWindow : t.macroCalendar.monthWindow,
+    });
+  }
+  if (dateKey === dateKeyFromUtc(lastWorkingDay)) {
+    items.push({
+      type: "flow",
+      date: dateKey,
+      category: "sell-pressure-exhausted",
+      label: t.macroCalendar.sellPressureExhausted,
+      text: t.macroCalendar.sellPressureExhausted,
+    });
+  }
+  return items;
 }
 
 function eventsByDate(events) {

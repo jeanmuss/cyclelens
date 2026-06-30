@@ -7,6 +7,7 @@ Interactive return tables for risk assets:
 - Event and liquidity calendar: six-month macro, rates, dollar, volatility, and credit context.
 - Global market clock: crypto, U.S., Korea, and China market-session rotation with prices, market caps where available, and source-quality labels.
 - AI chip-chain hotspots: supply-chain category rotation with ticker-level price paths and a pinned detail panel.
+- Robotics chain watchlist: robotics value-chain table with segment, business role, price, return, and mini price path columns.
 
 The interface follows the visual and technical idea of the original Bitcoin four-year cycle map: semantic HTML tables, CSS heat classes, and JavaScript-driven calculations.
 
@@ -18,6 +19,7 @@ npm run build
 npm run update-data
 npm run update-market-session
 npm run update-chip-chain
+npm run update-robot-chain
 npm run update-equity-data
 npm run update-macro-calendar
 ```
@@ -63,14 +65,14 @@ Only derived weekly data is cached. API keys, cookies, sessions, raw tick data, 
 
 The browser reads only the generated JSON. `CMC_PRO_API_KEY` must never be exposed through `VITE_*` variables or frontend code.
 
-`scripts/update-chip-chain-data.mjs` retrieves the fifth-page chip-chain market cache and writes `public/data/chip-chain-hotspots.json`.
+`scripts/update-chip-chain-data.mjs` retrieves the chip-chain and robotics-chain market caches and writes `public/data/chip-chain-hotspots.json` or `public/data/robot-chain-watchlist.json`.
 
 - U.S. equities, ETFs, and ADRs: Alpaca official stock bars via backend/CI, using `APCA_API_KEY_ID` and `APCA_API_SECRET_KEY` from local ignored env files or GitHub Actions secrets.
 - Feed selection: set `CHIP_CHAIN_US_FEED` to `iex` by default, or to `delayed_sip` / `sip` only when the account subscription and redistribution terms support it.
 - Price paths: `1D`, `5D`, `1M`, and `3M` are written as static `pricePaths` and the frontend draws those paths when present.
 - Korea rows: Samsung Electronics `005930.KS` and SK hynix `000660.KS` remain in the page, but the KIS/KRX adapter is pending reviewed credentials, licensing, and redistribution terms. Until then those rows keep their visible sample/static source quality.
 
-If Alpaca credentials are not configured, the updater keeps the last-known-good JSON and does not rewrite `generatedAt`. A commit or deploy does not automatically convert sample chip-chain data into live market data; provider credentials and reviewed adapters must be configured first.
+If Alpaca credentials are not configured, the updater keeps the last-known-good JSON and does not rewrite `generatedAt`. A commit or deploy does not automatically convert sample chip-chain or robotics-chain data into live market data; provider credentials and reviewed adapters must be configured first.
 
 `scripts/update-macro-calendar.py` retrieves the first macro-calendar source set and writes `public/data/macro-calendar.json`.
 
@@ -100,9 +102,9 @@ GitHub Pages is the preferred static-share path for this repo. `.github/workflow
 
 - every push to `main`
 - manual workflow dispatch
-- an hourly schedule for current spot, market-session, and configured chip-chain refreshes
+- an hourly schedule for current spot, market-session, and configured chip-chain / robotics-chain refreshes
 
-Hourly Pages refreshes do not create hourly commits. The separate `update-market-data.yml` workflow can still be used for auditable checked-in cache updates on a lower-frequency schedule, including macro-calendar and chip-chain cache files.
+Hourly Pages refreshes do not create hourly commits. The separate `update-market-data.yml` workflow can still be used for auditable checked-in cache updates on a lower-frequency schedule, including macro-calendar, chip-chain, and robotics-chain cache files.
 
 The repository root includes `vercel.json` for Vercel preview deployments from this workspace:
 

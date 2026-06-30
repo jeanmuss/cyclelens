@@ -175,7 +175,6 @@ export function freshnessLabel(iso, language = "zh") {
   if (Number.isNaN(timestamp.getTime())) {
     if (language === "en") return "Update time unknown";
     return "\u66f4\u65b0\u65f6\u95f4\u672a\u77e5";
-    return language === "en" ? "Update time unknown" : "更新时间未知";
   }
   const locale = language === "en" ? "en-US" : "zh-CN";
   const timeZone = language === "en" ? "America/New_York" : "Asia/Shanghai";
@@ -191,5 +190,4 @@ export function freshnessLabel(iso, language = "zh") {
   }).format(timestamp);
   if (language === "en") return `Data through ${formatted} ${zoneLabel}`;
   return `\u6570\u636e\u622a\u81f3 ${formatted} ${zoneLabel}`;
-  return language === "en" ? `Data through ${formatted} UTC` : `数据截至 ${formatted} UTC`;
 }
