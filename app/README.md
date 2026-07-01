@@ -3,8 +3,8 @@
 Interactive return tables for risk assets:
 
 - Crypto cycle map: monthly BTC, ETH, SOL, and HYPE returns.
-- Equity macro map: weekly QQQ/SPY relative strength with FRED macro context from January 20, 2025 onward.
-- Event and liquidity calendar: six-month macro, rates, dollar, volatility, and credit context.
+- Macro and liquidity calendar: six-month macro, rates, dollar, volatility, and credit context.
+- US market map: weekly QQQ/SPY relative strength with FRED macro context from January 20, 2025 onward.
 - Global market clock: crypto, U.S., Korea, and China market-session rotation with prices, market caps where available, and source-quality labels.
 - AI chip-chain hotspots: supply-chain category rotation with ticker-level price paths and a pinned detail panel.
 - Robotics chain watchlist: robotics value-chain table with segment, business role, price, return, and mini price path columns.
@@ -47,7 +47,7 @@ This keeps the frontend free of provider credentials and avoids browser-side scr
 
 Hyperliquid's public API exposes the HYPE launch month as a monthly candle but does not retain intramonth candles for that month. Its high and low remain visible, while the directional extreme move is explicitly cached as unavailable instead of being inferred.
 
-`scripts/update-equity-data.py` retrieves weekly equity-macro data and writes `public/data/equity-weekly.json`.
+`scripts/update-equity-data.py` retrieves US market data and writes `public/data/equity-weekly.json`.
 
 - QQQ and SPY: AKShare/Sina U.S. daily data by default, grouped into Friday-ending weeks. `EQUITY_PRICE_SOURCE=yfinance` can be used when Yahoo access is healthy.
 - FRED: `DGS10`, `VIXCLS`, and `DFF`, read with `FRED_API_KEY` from the local environment or deployment secrets.
@@ -102,7 +102,7 @@ GitHub Pages is the preferred static-share path for this repo. `.github/workflow
 
 - every push to `main`
 - manual workflow dispatch
-- an hourly schedule for current spot, market-session, and configured chip-chain / robotics-chain refreshes
+- an hourly schedule for current spot, US market, market-session, and configured chip-chain / robotics-chain refreshes
 
 Hourly Pages refreshes do not create hourly commits. The separate `update-market-data.yml` workflow can still be used for auditable checked-in cache updates on a lower-frequency schedule, including macro-calendar, chip-chain, and robotics-chain cache files.
 

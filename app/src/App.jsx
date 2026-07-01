@@ -51,7 +51,7 @@ const VALID_ROBOT_CHAIN_RANGES = new Set(["1d", "5d", "1m", "3m"]);
 const EQUITY_MARKET_TEXT = {
   zh: {
     eyebrow: "EQUITY MARKET MAP",
-    titleAccent: "\u7f8e\u80a1\u5e02\u573a",
+    titleAccent: "\u7f8e\u80a1\u5927\u76d8",
     titleRest: "\u65e5\u5386",
     subtitle: "\u7528\u65e5\u9891\u4ef7\u683c\u3001\u5229\u7387\u548c\u6ce2\u52a8\u7387\u89c2\u5bdf\u98ce\u9669\u8d44\u4ea7\u7684\u77ed\u671f\u73af\u5883",
     cache: "\u5e02\u573a\u7f13\u5b58",
@@ -59,7 +59,7 @@ const EQUITY_MARKET_TEXT = {
     success: "\u5e02\u573a\u6570\u636e\u5df2\u66f4\u65b0",
     failure: (count) => `\u6570\u636e\u6e90\u5f02\u5e38\uff1a${count}`,
     loading: "\u6b63\u5728\u8bfb\u53d6\u672c\u5730\u5e02\u573a\u7f13\u5b58\u2026",
-    unavailable: "\u7f8e\u80a1\u5e02\u573a\u6570\u636e\u672a\u80fd\u52a0\u8f7d",
+    unavailable: "\u7f8e\u80a1\u5927\u76d8\u6570\u636e\u672a\u80fd\u52a0\u8f7d",
     latest: "\u6700\u65b0\u89c2\u6d4b",
     dow: "DOW",
     tenYear: "10Y",
@@ -80,7 +80,7 @@ const EQUITY_MARKET_TEXT = {
   },
   en: {
     eyebrow: "EQUITY MARKET MAP",
-    titleAccent: "Equity Market",
+    titleAccent: "US Market",
     titleRest: "Calendar",
     subtitle: "Daily price, rates, and volatility context for short-term risk-asset conditions.",
     cache: "Market cache",
@@ -630,17 +630,17 @@ const TRANSLATIONS = {
     },
     nav: {
       crypto: "加密周期",
-      equity: "美股宏观",
-      macro: "\u4e8b\u4ef6\u4e0e\u6d41\u52a8\u6027",
+      equity: "美股大盘",
+      macro: "\u5b8f\u89c2\u4e0e\u6d41\u52a8\u6027",
       marketClock: "开市轮动",
       chipChain: "芯片链热点",
       robotChain: "机器人链",
     },
     equity: {
-      docTitle: "美股宏观轮动图",
+      docTitle: "美股大盘轮动图",
       docDescription: "QQQ、SPY 周度收益与 FRED 宏观指标轮动可视化",
       eyebrow: "EQUITY MACRO MAP · WEEKLY",
-      titleAccent: "美股宏观",
+      titleAccent: "美股大盘",
       titleRest: "轮动图",
       subtitle: "从特朗普第二任期开始，按周观察 QQQ、SPY、利率与波动率的联动",
       cache: "周度缓存",
@@ -684,10 +684,10 @@ const TRANSLATIONS = {
       eventPlaceholder: "事件标注接口已预留，本版暂不自动抓取或人工编辑事件。",
     },
     macroCalendar: {
-      docTitle: "\u4e8b\u4ef6\u4e0e\u6d41\u52a8\u6027\u65e5\u5386",
+      docTitle: "\u5b8f\u89c2\u4e0e\u6d41\u52a8\u6027\u65e5\u5386",
       docDescription: "\u98ce\u9669\u8d44\u4ea7\u7684\u5b8f\u89c2\u3001\u5229\u7387\u3001\u7f8e\u5143\u3001\u6ce2\u52a8\u7387\u4e0e\u4fe1\u7528\u5229\u5dee\u89c2\u6d4b\u65e5\u5386",
       eyebrow: "EVENT & LIQUIDITY MAP",
-      titleAccent: "\u4e8b\u4ef6\u4e0e\u6d41\u52a8\u6027",
+      titleAccent: "\u5b8f\u89c2\u4e0e\u6d41\u52a8\u6027",
       titleRest: "\u65e5\u5386",
       subtitle: "\u7528\u534a\u5e74\u671f FRED \u89c2\u6d4b\u6570\u636e\u8865\u8db3\u4ef7\u683c\u80cc\u540e\u7684\u901a\u80c0\u3001\u589e\u957f\u3001\u5229\u7387\u4e0e\u98ce\u9669\u504f\u597d\u7ebf\u7d22",
       cache: "\u5b8f\u89c2\u7f13\u5b58",
@@ -923,17 +923,17 @@ const TRANSLATIONS = {
     },
     nav: {
       crypto: "Crypto cycle",
-      equity: "Equity macro",
-      macro: "Events & liquidity",
+      equity: "US market",
+      macro: "Macro & liquidity",
       marketClock: "Market clock",
       chipChain: "Chip chain",
       robotChain: "Robot chain",
     },
     equity: {
-      docTitle: "Equity Macro Rotation Map",
+      docTitle: "US Market Rotation Map",
       docDescription: "Weekly QQQ, SPY, and FRED macro rotation visualization",
       eyebrow: "EQUITY MACRO MAP · WEEKLY",
-      titleAccent: "Equity Macro",
+      titleAccent: "US Market",
       titleRest: "Rotation Map",
       subtitle: "Track QQQ, SPY, rates, and volatility by week from Trump's second term",
       cache: "Weekly cache",
@@ -977,10 +977,10 @@ const TRANSLATIONS = {
       eventPlaceholder: "Event annotation fields are reserved; this MVP does not auto-fetch or edit events.",
     },
     macroCalendar: {
-      docTitle: "Events & Liquidity Calendar",
+      docTitle: "Macro & Liquidity Calendar",
       docDescription: "Macro, rates, dollar, volatility, and credit observations for risk assets",
       eyebrow: "EVENT & LIQUIDITY MAP",
-      titleAccent: "Events & Liquidity",
+      titleAccent: "Macro & Liquidity",
       titleRest: "Calendar",
       subtitle: "A six-month FRED-backed context layer for inflation, growth, rates, dollar strength, volatility, and credit stress.",
       cache: "Macro cache",
@@ -1176,8 +1176,8 @@ function PageNav({ page, t }) {
   return (
     <nav className="page-nav" aria-label="Page">
       <a className={page === "crypto" ? "is-active" : ""} aria-current={page === "crypto" ? "page" : undefined} href={appHashUrl()}>{t.nav.crypto}</a>
-      <a className={page === "equity" ? "is-active" : ""} aria-current={page === "equity" ? "page" : undefined} href={appHashUrl("equity-macro")}>{t.nav.equity}</a>
       <a className={page === "macro" ? "is-active" : ""} aria-current={page === "macro" ? "page" : undefined} href={appHashUrl("macro-calendar")}>{t.nav.macro}</a>
+      <a className={page === "equity" ? "is-active" : ""} aria-current={page === "equity" ? "page" : undefined} href={appHashUrl("equity-macro")}>{t.nav.equity}</a>
       <a className={page === "marketClock" ? "is-active" : ""} aria-current={page === "marketClock" ? "page" : undefined} href={appHashUrl("market-clock")}>{t.nav.marketClock}</a>
       <a className={page === "chipChain" ? "is-active" : ""} aria-current={page === "chipChain" ? "page" : undefined} href={appHashUrl("chip-chain")}>{t.nav.chipChain}</a>
       <a className={page === "robotChain" ? "is-active" : ""} aria-current={page === "robotChain" ? "page" : undefined} href={appHashUrl("robot-chain")}>{t.nav.robotChain}</a>

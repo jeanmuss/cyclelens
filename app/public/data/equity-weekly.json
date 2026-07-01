@@ -2,7 +2,7 @@
   "version": 2,
   "page": "equity-macro",
   "timezone": "America/New_York for trading dates; FRED observations use provider dates",
-  "generatedAt": "2026-07-01T05:55:09Z",
+  "generatedAt": "2026-07-01T06:28:17Z",
   "window": {
     "months": 6,
     "startDate": "2026-01-01",
