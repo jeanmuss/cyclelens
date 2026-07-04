@@ -2,15 +2,15 @@
   "version": 2,
   "page": "equity-macro",
   "timezone": "America/New_York for trading dates; FRED observations use provider dates",
-  "generatedAt": "2026-07-03T15:31:26Z",
+  "generatedAt": "2026-07-04T05:57:07Z",
   "window": {
     "months": 6,
-    "startDate": "2026-01-03",
-    "endDate": "2026-07-03"
+    "startDate": "2026-01-04",
+    "endDate": "2026-07-04"
   },
   "market": {
     "timezone": "America/New_York",
-    "date": "2026-07-03",
+    "date": "2026-07-04",
     "isMarketDay": false,
     "isOpen": false,
     "session": "closed",
@@ -28,8 +28,8 @@
       "quote": "USD",
       "sourceLabel": "AKShare / Sina US stock daily (unadjusted)",
       "cacheStatus": "fresh",
-      "rows": 130,
-      "firstDate": "2025-12-24",
+      "rows": 129,
+      "firstDate": "2025-12-26",
       "lastDate": "2026-07-02"
     },
     "SPY": {
@@ -40,8 +40,8 @@
       "quote": "USD",
       "sourceLabel": "AKShare / Sina US stock daily (unadjusted)",
       "cacheStatus": "fresh",
-      "rows": 130,
-      "firstDate": "2025-12-24",
+      "rows": 129,
+      "firstDate": "2025-12-26",
       "lastDate": "2026-07-02"
     },
     "DIA": {
@@ -52,8 +52,8 @@
       "quote": "USD",
       "sourceLabel": "AKShare / Sina US stock daily (unadjusted)",
       "cacheStatus": "fresh",
-      "rows": 130,
-      "firstDate": "2025-12-24",
+      "rows": 129,
+      "firstDate": "2025-12-26",
       "lastDate": "2026-07-02"
     }
   },
@@ -135,20 +135,6 @@
     }
   },
   "days": [
-    {
-      "date": "2026-01-03",
-      "dayOfWeek": 5,
-      "isMarketDay": false,
-      "assets": {
-        "QQQ": null,
-        "SPY": null,
-        "DIA": null
-      },
-      "macro": {
-        "DGS10": null,
-        "VIXCLS": null
-      }
-    },
     {
       "date": "2026-01-04",
       "dayOfWeek": 6,
@@ -8500,6 +8486,20 @@
     {
       "date": "2026-07-03",
       "dayOfWeek": 4,
+      "isMarketDay": false,
+      "assets": {
+        "QQQ": null,
+        "SPY": null,
+        "DIA": null
+      },
+      "macro": {
+        "DGS10": null,
+        "VIXCLS": null
+      }
+    },
+    {
+      "date": "2026-07-04",
+      "dayOfWeek": 5,
       "isMarketDay": false,
       "assets": {
         "QQQ": null,
