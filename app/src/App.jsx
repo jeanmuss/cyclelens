@@ -193,6 +193,7 @@ const MARKET_CLOCK_TEXT = {
     details: "标的细节",
     localTime: "本地时间",
     next: "下一阶段",
+    sessions: "交易时段",
     alwaysOpen: "24小时交易",
     sourceNote: "价格优先使用公开行情快照；美股和 CL 可使用 OKX 合约/指数代理，旁边会标注数据质量。",
     methodology: "\u9875\u9762\u8bfb\u53d6 market-session.json\uff1b\u5f00\u95ed\u5e02\u72b6\u6001\u7531\u672c\u5730\u65f6\u533a\u548c\u4ea4\u6613\u65f6\u6bb5\u89c4\u5219\u8ba1\u7b97\u3002\u4e2d\u56fd\u5e02\u573a\u533a\u5206\u96c6\u5408\u7ade\u4ef7\u3001\u76d8\u4e2d\u3001\u6536\u76d8\u96c6\u5408\u7ade\u4ef7\u548c\u76d8\u540e\u65f6\u6bb5\uff1b\u97e9\u56fd\u5e02\u573a\u533a\u5206\u76d8\u524d\u3001\u76d8\u4e2d\u548c\u76d8\u540e\u3002",
@@ -254,6 +255,7 @@ const MARKET_CLOCK_TEXT = {
     details: "Asset detail",
     localTime: "Local time",
     next: "Next phase",
+    sessions: "Sessions",
     alwaysOpen: "24/7 trading",
     sourceNote: "Prices use public market snapshots where available; U.S. equities and CL may use clearly labeled OKX proxy contracts or index prices.",
     methodology: "The page reads market-session.json; session status is computed from local time-zone and session rules. China distinguishes call auction, regular trading, closing auction, and after-hours blocks; Korea distinguishes pre-market, regular, and after-hours sessions.",
@@ -710,6 +712,7 @@ const TRANSLATIONS = {
       marketClock: "开市轮动",
       chipChain: "芯片链热点",
       robotChain: "机器人链",
+      admin: "后台",
     },
     equity: {
       docTitle: "美股大盘轮动图",
@@ -1098,6 +1101,7 @@ const TRANSLATIONS = {
       marketClock: "Market clock",
       chipChain: "Chip chain",
       robotChain: "Robot chain",
+      admin: "Admin",
     },
     equity: {
       docTitle: "US Market Rotation Map",
@@ -1434,6 +1438,7 @@ function PageNav({ page, t }) {
       <a className={page === "marketClock" ? "is-active" : ""} aria-current={page === "marketClock" ? "page" : undefined} href={appHashUrl("market-clock")}>{t.nav.marketClock}</a>
       <a className={page === "chipChain" ? "is-active" : ""} aria-current={page === "chipChain" ? "page" : undefined} href={appHashUrl("chip-chain")}>{t.nav.chipChain}</a>
       <a className={page === "robotChain" ? "is-active" : ""} aria-current={page === "robotChain" ? "page" : undefined} href={appHashUrl("robot-chain")}>{t.nav.robotChain}</a>
+      <a className={page === "macroAdmin" ? "is-active" : ""} aria-current={page === "macroAdmin" ? "page" : undefined} href={appHashUrl("admin/macro-events")}>{t.nav.admin || "Admin"}</a>
     </nav>
   );
 }
@@ -2130,6 +2135,8 @@ function findWeeklyStateForDate(dataset, dateKey) {
 
 function macroEventLabel(event, t) {
   if (!event) return "N/A";
+  const localizedLabel = t.htmlLang === "zh-CN" ? event.labelZh : event.labelEn;
+  if (localizedLabel) return localizedLabel;
   const labels = t.macroCalendar.eventLabels || {};
   const prefixes = t.macroCalendar.eventLabelPrefixes || {};
   const seriesId = String(event.seriesId || "");
@@ -3004,6 +3011,459 @@ function MacroCalendarPage({ language, setLanguage, t }) {
         methodology={language === "zh" ? t.macroCalendar.methodology : dataset.methodology || t.macroCalendar.methodology}
         limitations={t.macroCalendar.sourceNote}
       />
+    </main>
+  );
+}
+
+const ADMIN_MACRO_API_BASE = "http://127.0.0.1:5174";
+const ADMIN_MACRO_CATEGORIES = ["inflation", "growth", "rates", "volatility", "liquidity"];
+const ADMIN_MACRO_DATE_MEANINGS = [
+  "scheduled_beijing_date",
+  "daily_observation",
+  "observation_period",
+  "observation_week",
+  "observed_holiday_date",
+];
+
+function adminMacroCopy(t) {
+  const zh = t.htmlLang === "zh-CN";
+  return zh ? {
+    docTitle: "宏观事件后台",
+    docDescription: "本地维护宏观流动性手动事件",
+    eyebrow: "LOCAL ADMIN",
+    title: "宏观事件后台",
+    subtitle: "编辑 app/data/manual-macro-events.json，再由数据脚本合并进宏观流动性日历。",
+    api: "本地 API",
+    connected: "已连接",
+    disconnected: "未连接",
+    reload: "重新载入",
+    saveAll: "保存到本地 JSON",
+    saveDraft: "更新当前事件",
+    newEvent: "新建事件",
+    duplicate: "复制",
+    delete: "删除",
+    eventList: "手动事件",
+    editor: "事件编辑",
+    preview: "时区预览",
+    empty: "暂无手动事件",
+    localOnly: "只连接 127.0.0.1:5174，本地 API 不执行 shell、不读取密钥、不写入固定 JSON 以外的路径。",
+    startApi: "先运行 npm run admin:macro-events，再运行 npm run dev 打开本页。",
+    fields: {
+      status: "状态",
+      date: "日历日期",
+      seriesId: "事件 ID",
+      labelZh: "中文标题",
+      labelEn: "英文标题",
+      category: "类别",
+      role: "角色",
+      unit: "单位",
+      source: "来源",
+      sourceUrl: "来源链接",
+      dateMeaning: "日期语义",
+      releaseTimeUtc: "发布时间 UTC",
+      actual: "实际",
+      previous: "前值",
+      forecast: "预测",
+      note: "备注",
+    },
+    statusOptions: [
+      { value: "published", label: "发布" },
+      { value: "draft", label: "草稿" },
+    ],
+    validation: {
+      date: "日期需要 YYYY-MM-DD",
+      seriesId: "事件 ID 必填，只使用大写字母、数字、下划线、冒号或短横线",
+      label: "中文或英文标题至少填一个",
+      source: "来源必填",
+      releaseTimeUtc: "UTC 发布时间无法解析",
+    },
+    saved: "已保存",
+    loaded: "已载入",
+    draftSaved: "当前事件已更新到列表，记得保存到本地 JSON。",
+    beijingDate: "北京时间日期",
+    newYorkDate: "纽约日期",
+    displayDate: "保存日期",
+    noReleaseTime: "未填写 UTC 发布时间时，中英日历都按保存日期落点。",
+  } : {
+    docTitle: "Macro Event Admin",
+    docDescription: "Local editor for manual macro-liquidity events",
+    eyebrow: "LOCAL ADMIN",
+    title: "Macro Event Admin",
+    subtitle: "Edit app/data/manual-macro-events.json, then merge it into the macro-liquidity calendar with the data script.",
+    api: "Local API",
+    connected: "Connected",
+    disconnected: "Disconnected",
+    reload: "Reload",
+    saveAll: "Save local JSON",
+    saveDraft: "Update event",
+    newEvent: "New event",
+    duplicate: "Duplicate",
+    delete: "Delete",
+    eventList: "Manual events",
+    editor: "Event editor",
+    preview: "Time-zone preview",
+    empty: "No manual events yet",
+    localOnly: "Only talks to 127.0.0.1:5174. The local API does not run shell commands, read secrets, or write outside the fixed JSON file.",
+    startApi: "Run npm run admin:macro-events, then npm run dev to use this page.",
+    fields: {
+      status: "Status",
+      date: "Calendar date",
+      seriesId: "Event ID",
+      labelZh: "Chinese title",
+      labelEn: "English title",
+      category: "Category",
+      role: "Role",
+      unit: "Unit",
+      source: "Source",
+      sourceUrl: "Source URL",
+      dateMeaning: "Date meaning",
+      releaseTimeUtc: "Release time UTC",
+      actual: "Actual",
+      previous: "Previous",
+      forecast: "Forecast",
+      note: "Note",
+    },
+    statusOptions: [
+      { value: "published", label: "Published" },
+      { value: "draft", label: "Draft" },
+    ],
+    validation: {
+      date: "Date must be YYYY-MM-DD",
+      seriesId: "Event ID is required and should use uppercase letters, numbers, underscores, colons, or hyphens",
+      label: "Provide at least one Chinese or English title",
+      source: "Source is required",
+      releaseTimeUtc: "UTC release time cannot be parsed",
+    },
+    saved: "Saved",
+    loaded: "Loaded",
+    draftSaved: "Current event was updated in the list. Remember to save the local JSON.",
+    beijingDate: "Beijing date",
+    newYorkDate: "New York date",
+    displayDate: "Saved date",
+    noReleaseTime: "Without a UTC release time, both calendar languages use the saved date.",
+  };
+}
+
+function blankAdminMacroEvent(language) {
+  const date = localDateKeyForLanguage(language);
+  const suffix = date.replaceAll("-", "");
+  return {
+    status: "draft",
+    date,
+    seriesId: `MANUAL_LIQUIDITY_${suffix}`,
+    label: "",
+    labelZh: "",
+    labelEn: "",
+    category: "liquidity",
+    role: "manual_liquidity_event",
+    cadence: "event",
+    unit: "event",
+    source: "",
+    sourceUrl: "",
+    dateMeaning: "scheduled_beijing_date",
+    releaseTimeUtc: "",
+    actual: "",
+    previous: "",
+    forecast: "",
+    note: "",
+  };
+}
+
+function adminEventKey(event) {
+  return `${event?.seriesId || "event"}::${event?.date || "date"}`;
+}
+
+function adminEventLabel(event, language) {
+  return (language === "en" ? event?.labelEn : event?.labelZh) || event?.label || event?.seriesId || "N/A";
+}
+
+function adminFormatDateTime(value, timeZone, language) {
+  if (!value) return "N/A";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "N/A";
+  return new Intl.DateTimeFormat(language === "en" ? "en-US" : "zh-CN", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).format(date);
+}
+
+function adminValidationErrors(event, copy) {
+  const errors = [];
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(String(event.date || ""))) errors.push(copy.validation.date);
+  if (!/^[A-Z0-9_:-]{3,80}$/.test(String(event.seriesId || ""))) errors.push(copy.validation.seriesId);
+  if (!String(event.labelZh || event.labelEn || event.label || "").trim()) errors.push(copy.validation.label);
+  if (!String(event.source || "").trim()) errors.push(copy.validation.source);
+  if (event.releaseTimeUtc && Number.isNaN(new Date(event.releaseTimeUtc).getTime())) errors.push(copy.validation.releaseTimeUtc);
+  return errors;
+}
+
+function normalizeAdminEventForList(event) {
+  const label = String(event.label || [event.labelZh, event.labelEn].filter(Boolean).join(" / ")).trim();
+  const numberOrNull = (value) => value === "" || value == null ? null : Number(value);
+  return {
+    ...event,
+    label,
+    actual: numberOrNull(event.actual),
+    previous: numberOrNull(event.previous),
+    forecast: numberOrNull(event.forecast),
+  };
+}
+
+function AdminField({ label, children }) {
+  return (
+    <label className="admin-field">
+      <span>{label}</span>
+      {children}
+    </label>
+  );
+}
+
+function AdminMacroEventsPage({ language, setLanguage, t }) {
+  const copy = adminMacroCopy(t);
+  const [payload, setPayload] = useState({ version: 1, updatedAt: null, events: [] });
+  const [draft, setDraft] = useState(() => blankAdminMacroEvent(language));
+  const [selectedKey, setSelectedKey] = useState("");
+  const [apiState, setApiState] = useState("loading");
+  const [message, setMessage] = useState("");
+
+  const loadEvents = () => {
+    setApiState("loading");
+    fetch(`${ADMIN_MACRO_API_BASE}/manual-macro-events`, { cache: "no-store" })
+      .then((response) => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.json();
+      })
+      .then((data) => {
+        const nextPayload = { version: 1, updatedAt: data.updatedAt || null, events: Array.isArray(data.events) ? data.events : [] };
+        setPayload(nextPayload);
+        const first = nextPayload.events[0] || blankAdminMacroEvent(language);
+        setDraft({ ...first });
+        setSelectedKey(nextPayload.events[0] ? adminEventKey(first) : "");
+        setApiState("connected");
+        setMessage(copy.loaded);
+      })
+      .catch((error) => {
+        setApiState("disconnected");
+        setMessage(error.message);
+      });
+  };
+
+  useEffect(() => {
+    loadEvents();
+    replaceHashState("admin/macro-events", {});
+  }, []);
+
+  const validationErrors = useMemo(() => adminValidationErrors(draft, copy), [draft, copy]);
+  const hasErrors = validationErrors.length > 0;
+  const releaseTime = draft.releaseTimeUtc || "";
+  const beijingDate = releaseTime ? dateKeyInTimeZone(releaseTime, "Asia/Shanghai") : draft.date;
+  const newYorkDate = releaseTime ? dateKeyInTimeZone(releaseTime, "America/New_York") : draft.date;
+  const selectedIndex = payload.events.findIndex((event) => adminEventKey(event) === selectedKey);
+
+  const updateDraft = (key, value) => setDraft((current) => ({ ...current, [key]: value }));
+  const selectEvent = (event) => {
+    setSelectedKey(adminEventKey(event));
+    setDraft({ ...event });
+    setMessage("");
+  };
+  const newEvent = () => {
+    const event = blankAdminMacroEvent(language);
+    setSelectedKey("");
+    setDraft(event);
+    setMessage("");
+  };
+  const duplicateEvent = () => {
+    const dateSuffix = String(draft.date || "").replaceAll("-", "");
+    setSelectedKey("");
+    setDraft({ ...draft, status: "draft", seriesId: `${draft.seriesId || "MANUAL_EVENT"}_COPY_${dateSuffix}` });
+  };
+  const updateEventList = () => {
+    if (hasErrors) return;
+    const normalized = normalizeAdminEventForList(draft);
+    setPayload((current) => {
+      const events = [...current.events];
+      if (selectedIndex >= 0) events[selectedIndex] = normalized;
+      else events.unshift(normalized);
+      return { ...current, events };
+    });
+    setSelectedKey(adminEventKey(normalized));
+    setDraft(normalized);
+    setMessage(copy.draftSaved);
+  };
+  const deleteEvent = () => {
+    setPayload((current) => ({ ...current, events: current.events.filter((event) => adminEventKey(event) !== selectedKey) }));
+    newEvent();
+  };
+  const saveAll = () => {
+    fetch(`${ADMIN_MACRO_API_BASE}/manual-macro-events`, {
+      method: "PUT",
+      headers: {
+        "content-type": "application/json",
+        "x-cycle-map-admin": "1",
+      },
+      body: JSON.stringify({ version: 1, events: payload.events }),
+    })
+      .then((response) => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.json();
+      })
+      .then((data) => {
+        setPayload(data);
+        setApiState("connected");
+        setMessage(copy.saved);
+      })
+      .catch((error) => {
+        setApiState("disconnected");
+        setMessage(error.message);
+      });
+  };
+
+  return (
+    <main className="app-page admin-page">
+      <header className="app-header">
+        <div className="title-block">
+          <p className="eyebrow">{copy.eyebrow}</p>
+          <h1>{copy.title}</h1>
+          <p>{copy.subtitle}</p>
+          <PageNav page="macroAdmin" t={t} />
+        </div>
+        <div className="freshness-block">
+          <LanguageToggle language={language} onChange={setLanguage} t={t} />
+          <CacheStatus label={copy.api} tooltip={copy.localOnly} />
+          <strong className={apiState === "connected" ? "macro-up" : "macro-down"}>
+            {apiState === "connected" ? copy.connected : copy.disconnected}
+          </strong>
+          <small>{message || copy.startApi}</small>
+        </div>
+      </header>
+
+      <section className="admin-toolbar" aria-label={copy.editor}>
+        <button type="button" onClick={loadEvents}>{copy.reload}</button>
+        <button type="button" onClick={newEvent}>{copy.newEvent}</button>
+        <button type="button" onClick={duplicateEvent}>{copy.duplicate}</button>
+        <button type="button" onClick={deleteEvent} disabled={!selectedKey}>{copy.delete}</button>
+        <button type="button" className="admin-primary-action" onClick={saveAll} disabled={apiState !== "connected"}>{copy.saveAll}</button>
+      </section>
+
+      <div className="admin-macro-layout">
+        <aside className="admin-event-list" aria-label={copy.eventList}>
+          <div className="macro-section-heading">
+            <div>
+              <p>{copy.api}</p>
+              <h2>{copy.eventList}</h2>
+            </div>
+            <span>{payload.events.length}</span>
+          </div>
+          {payload.events.length ? payload.events.map((event) => (
+            <button
+              type="button"
+              className={adminEventKey(event) === selectedKey ? "is-selected" : ""}
+              onClick={() => selectEvent(event)}
+              key={adminEventKey(event)}
+            >
+              <strong>{adminEventLabel(event, language)}</strong>
+              <span>{event.date} / {event.category}</span>
+              <em>{event.status || "published"}</em>
+            </button>
+          )) : <p className="admin-empty">{copy.empty}</p>}
+        </aside>
+
+        <section className="admin-editor" aria-label={copy.editor}>
+          <div className="macro-section-heading">
+            <div>
+              <p>{copy.editor}</p>
+              <h2>{adminEventLabel(draft, language)}</h2>
+            </div>
+            <button type="button" onClick={updateEventList} disabled={hasErrors}>{copy.saveDraft}</button>
+          </div>
+
+          {hasErrors ? (
+            <div className="admin-validation">
+              {validationErrors.map((error) => <span key={error}>{error}</span>)}
+            </div>
+          ) : null}
+
+          <div className="admin-form-grid">
+            <AdminField label={copy.fields.status}>
+              <select value={draft.status || "published"} onChange={(event) => updateDraft("status", event.target.value)}>
+                {copy.statusOptions.map((option) => <option value={option.value} key={option.value}>{option.label}</option>)}
+              </select>
+            </AdminField>
+            <AdminField label={copy.fields.date}>
+              <input type="date" value={draft.date || ""} onChange={(event) => updateDraft("date", event.target.value)} />
+            </AdminField>
+            <AdminField label={copy.fields.seriesId}>
+              <input value={draft.seriesId || ""} onChange={(event) => updateDraft("seriesId", event.target.value.toUpperCase())} />
+            </AdminField>
+            <AdminField label={copy.fields.category}>
+              <select value={draft.category || "liquidity"} onChange={(event) => updateDraft("category", event.target.value)}>
+                {ADMIN_MACRO_CATEGORIES.map((category) => <option value={category} key={category}>{macroCategoryLabel(category, t)}</option>)}
+              </select>
+            </AdminField>
+            <AdminField label={copy.fields.labelZh}>
+              <input value={draft.labelZh || ""} onChange={(event) => updateDraft("labelZh", event.target.value)} />
+            </AdminField>
+            <AdminField label={copy.fields.labelEn}>
+              <input value={draft.labelEn || ""} onChange={(event) => updateDraft("labelEn", event.target.value)} />
+            </AdminField>
+            <AdminField label={copy.fields.role}>
+              <input value={draft.role || ""} onChange={(event) => updateDraft("role", event.target.value)} />
+            </AdminField>
+            <AdminField label={copy.fields.unit}>
+              <input value={draft.unit || ""} onChange={(event) => updateDraft("unit", event.target.value)} />
+            </AdminField>
+            <AdminField label={copy.fields.source}>
+              <input value={draft.source || ""} onChange={(event) => updateDraft("source", event.target.value)} />
+            </AdminField>
+            <AdminField label={copy.fields.sourceUrl}>
+              <input value={draft.sourceUrl || ""} onChange={(event) => updateDraft("sourceUrl", event.target.value)} />
+            </AdminField>
+            <AdminField label={copy.fields.dateMeaning}>
+              <select value={draft.dateMeaning || "scheduled_beijing_date"} onChange={(event) => updateDraft("dateMeaning", event.target.value)}>
+                {ADMIN_MACRO_DATE_MEANINGS.map((value) => <option value={value} key={value}>{macroDateMeaningLabel(value, t)}</option>)}
+              </select>
+            </AdminField>
+            <AdminField label={copy.fields.releaseTimeUtc}>
+              <input placeholder="2026-07-19T19:00:00Z" value={draft.releaseTimeUtc || ""} onChange={(event) => updateDraft("releaseTimeUtc", event.target.value)} />
+            </AdminField>
+            <AdminField label={copy.fields.actual}>
+              <input inputMode="decimal" value={draft.actual ?? ""} onChange={(event) => updateDraft("actual", event.target.value)} />
+            </AdminField>
+            <AdminField label={copy.fields.previous}>
+              <input inputMode="decimal" value={draft.previous ?? ""} onChange={(event) => updateDraft("previous", event.target.value)} />
+            </AdminField>
+            <AdminField label={copy.fields.forecast}>
+              <input inputMode="decimal" value={draft.forecast ?? ""} onChange={(event) => updateDraft("forecast", event.target.value)} />
+            </AdminField>
+            <AdminField label={copy.fields.note}>
+              <textarea value={draft.note || ""} onChange={(event) => updateDraft("note", event.target.value)} rows={5} />
+            </AdminField>
+          </div>
+        </section>
+
+        <aside className="admin-preview" aria-label={copy.preview}>
+          <div className="macro-section-heading">
+            <div>
+              <p>{copy.preview}</p>
+              <h2>{copy.displayDate}</h2>
+            </div>
+          </div>
+          <dl>
+            <div><dt>{copy.displayDate}</dt><dd>{draft.date || "N/A"}</dd></div>
+            <div><dt>{copy.beijingDate}</dt><dd>{beijingDate || "N/A"}</dd></div>
+            <div><dt>{copy.newYorkDate}</dt><dd>{newYorkDate || "N/A"}</dd></div>
+            <div><dt>UTC</dt><dd>{releaseTime || "N/A"}</dd></div>
+            <div><dt>UTC+8</dt><dd>{releaseTime ? adminFormatDateTime(releaseTime, "Asia/Shanghai", language) : "N/A"}</dd></div>
+            <div><dt>ET</dt><dd>{releaseTime ? adminFormatDateTime(releaseTime, "America/New_York", language) : "N/A"}</dd></div>
+          </dl>
+          <p>{releaseTime ? copy.localOnly : copy.noReleaseTime}</p>
+        </aside>
+      </div>
     </main>
   );
 }
@@ -4409,6 +4869,33 @@ function marketStatus(market, now, language, copy) {
   return { key: "closed", label: copy.status.closed, active: false, sortRank: 4, localTime, nextText: market.regularOpen };
 }
 
+function marketSessionWindows(market, copy) {
+  if (market.stateModel === "always_open") {
+    return [{ key: "trading", label: copy.status.trading, time: copy.alwaysOpen }];
+  }
+  if (market.stateModel === "premarket_regular_afterhours") {
+    return [
+      { key: "premarket", label: copy.status.premarket, time: `${market.premarketOpen}-${market.regularOpen}` },
+      { key: "open", label: copy.status.open, time: `${market.regularOpen}-${market.regularClose}` },
+      { key: "afterhours", label: copy.status.afterhours, time: `${market.regularClose}-${market.afterhoursClose}` },
+    ];
+  }
+  if (market.stateModel === "china_auction_regular_afterhours") {
+    return [
+      { key: "opening-auction", label: copy.status.openingAuction, time: `${market.auctionOpen}-${market.regularOpen}` },
+      { key: "open", label: copy.status.open, time: `${market.regularOpen}-${market.lunchStart} / ${market.lunchEnd}-${market.closingAuctionOpen}` },
+      { key: "closing-auction", label: copy.status.closingAuction, time: `${market.closingAuctionOpen}-${market.regularClose}` },
+      { key: "afterhours", label: copy.status.afterhours, time: `${market.regularClose}-${market.afterhoursClose}` },
+    ];
+  }
+  if (market.stateModel === "regular_with_lunch") {
+    return [
+      { key: "open", label: copy.status.open, time: `${market.regularOpen}-${market.lunchStart} / ${market.lunchEnd}-${market.regularClose}` },
+    ];
+  }
+  return [{ key: "open", label: copy.status.open, time: `${market.regularOpen || "N/A"}-${market.regularClose || "N/A"}` }];
+}
+
 function marketDisplayName(market, language) {
   return language === "en" ? market.displayName : market.displayNameZh || market.displayName;
 }
@@ -4505,6 +4992,14 @@ function MarketClockSummary({ dataset, statuses, language, copy }) {
             <strong>{status?.label || copy.status.closed}</strong>
             <span>{copy.localTime}: {status?.localTime || "N/A"}</span>
             <em>{copy.next}: {status?.nextText || "N/A"}</em>
+            <div className="market-session-strip" aria-label={`${marketDisplayName(market, language)} ${copy.sessions}`}>
+              {marketSessionWindows(market, copy).map((session) => (
+                <span className={`market-session-chip state-${session.key}`} key={`${market.id}-${session.key}`}>
+                  <b>{session.label}</b>
+                  <i>{session.time}</i>
+                </span>
+              ))}
+            </div>
           </div>
         );
       })}
@@ -5697,12 +6192,14 @@ function RobotChainPage({ language, setLanguage, t }) {
 function currentPage() {
   if (typeof window === "undefined") return "crypto";
   const hashPath = window.location.hash.replace(/^#/, "");
+  if (hashPath.startsWith("/admin/macro-events")) return "macroAdmin";
   if (hashPath.startsWith("/robot-chain")) return "robotChain";
   if (hashPath.startsWith("/chip-chain")) return "chipChain";
   if (hashPath.startsWith("/market-clock")) return "marketClock";
   if (hashPath.startsWith("/macro-calendar")) return "macro";
   if (hashPath.startsWith("/equity-macro")) return "equity";
   if (hashPath.startsWith("/") || hashPath === "") return "crypto";
+  if (routePathname(window.location.pathname).startsWith("/admin/macro-events")) return "macroAdmin";
   if (routePathname(window.location.pathname).startsWith("/robot-chain")) return "robotChain";
   if (routePathname(window.location.pathname).startsWith("/chip-chain")) return "chipChain";
   if (routePathname(window.location.pathname).startsWith("/market-clock")) return "marketClock";
@@ -5730,10 +6227,11 @@ export function App() {
     const marketClock = marketClockCopy(t);
     const chipChain = chipChainCopy(t);
     const robotChain = robotChainCopy(t);
-    document.title = page === "robotChain" ? robotChain.docTitle : page === "chipChain" ? chipChain.docTitle : page === "marketClock" ? marketClock.docTitle : page === "macro" ? t.macroCalendar.docTitle : page === "equity" ? t.equity.docTitle : t.docTitle;
+    const adminMacro = adminMacroCopy(t);
+    document.title = page === "macroAdmin" ? adminMacro.docTitle : page === "robotChain" ? robotChain.docTitle : page === "chipChain" ? chipChain.docTitle : page === "marketClock" ? marketClock.docTitle : page === "macro" ? t.macroCalendar.docTitle : page === "equity" ? t.equity.docTitle : t.docTitle;
     document
       .querySelector('meta[name="description"]')
-      ?.setAttribute("content", page === "robotChain" ? robotChain.docDescription : page === "chipChain" ? chipChain.docDescription : page === "marketClock" ? marketClock.docDescription : page === "macro" ? t.macroCalendar.docDescription : page === "equity" ? t.equity.docDescription : t.docDescription);
+      ?.setAttribute("content", page === "macroAdmin" ? adminMacro.docDescription : page === "robotChain" ? robotChain.docDescription : page === "chipChain" ? chipChain.docDescription : page === "marketClock" ? marketClock.docDescription : page === "macro" ? t.macroCalendar.docDescription : page === "equity" ? t.equity.docDescription : t.docDescription);
     try {
       window.localStorage.setItem("cycle-map-language", language);
     } catch {
@@ -5741,6 +6239,7 @@ export function App() {
     }
   }, [language, page, t]);
 
+  if (page === "macroAdmin") return <AdminMacroEventsPage language={language} setLanguage={setLanguage} t={t} />;
   if (page === "robotChain") return <RobotChainPage language={language} setLanguage={setLanguage} t={t} />;
   if (page === "chipChain") return <ChipChainPage language={language} setLanguage={setLanguage} t={t} />;
   if (page === "marketClock") return <MarketClockPage language={language} setLanguage={setLanguage} t={t} />;

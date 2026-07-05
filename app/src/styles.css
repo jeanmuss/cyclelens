@@ -1510,6 +1510,218 @@ html[lang="zh-CN"] .title-block h1 {
   line-height: 1.45;
 }
 
+.admin-page {
+  max-width: 1360px;
+}
+
+.admin-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 2px solid var(--ink);
+}
+
+.admin-toolbar button,
+.admin-editor .macro-section-heading button {
+  min-height: 34px;
+  padding: 7px 10px;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  box-shadow: 2px 2px 0 var(--ink);
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.admin-toolbar button:hover,
+.admin-editor .macro-section-heading button:hover {
+  background: #f3f3eb;
+}
+
+.admin-toolbar button:disabled,
+.admin-editor .macro-section-heading button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.admin-toolbar .admin-primary-action {
+  margin-left: auto;
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.admin-macro-layout {
+  display: grid;
+  grid-template-columns: minmax(240px, 300px) minmax(0, 1fr) minmax(240px, 300px);
+  gap: 16px;
+  margin-top: 18px;
+  align-items: start;
+}
+
+.admin-event-list,
+.admin-editor,
+.admin-preview {
+  min-width: 0;
+  border-top: 1px solid var(--ink);
+  background: var(--paper);
+}
+
+.admin-event-list button {
+  display: grid;
+  width: 100%;
+  gap: 4px;
+  padding: 10px;
+  border: 0;
+  border-right: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  border-left: 1px solid var(--ink);
+  background: transparent;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+}
+
+.admin-event-list button:hover,
+.admin-event-list button.is-selected {
+  background: #fff5bf;
+}
+
+.admin-event-list strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+}
+
+.admin-event-list span,
+.admin-event-list em {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 750;
+  font-style: normal;
+}
+
+.admin-empty {
+  margin: 0;
+  padding: 12px;
+  border: 1px solid var(--ink);
+  border-top: 0;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.admin-validation {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.admin-validation span {
+  padding: 7px 9px;
+  border: 1px solid #b52435;
+  background: #ffe8ec;
+  color: #8e1223;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.admin-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid var(--ink);
+  border-left: 1px solid var(--ink);
+}
+
+.admin-field {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  padding: 10px;
+  border-right: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+
+.admin-field span {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.admin-field input,
+.admin-field select,
+.admin-field textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--line);
+  background: #fffdf6;
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 720;
+}
+
+.admin-field input,
+.admin-field select {
+  height: 34px;
+  padding: 6px 8px;
+}
+
+.admin-field textarea {
+  min-height: 118px;
+  padding: 8px;
+  resize: vertical;
+  line-height: 1.45;
+}
+
+.admin-field:last-child {
+  grid-column: 1 / -1;
+}
+
+.admin-preview dl {
+  display: grid;
+  margin: 0;
+  border-top: 1px solid var(--ink);
+  border-left: 1px solid var(--ink);
+}
+
+.admin-preview dl div {
+  display: grid;
+  grid-template-columns: minmax(86px, 0.8fr) minmax(0, 1.2fr);
+  border-right: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+
+.admin-preview dt,
+.admin-preview dd {
+  margin: 0;
+  padding: 8px;
+  font-size: 12px;
+}
+
+.admin-preview dt {
+  background: #f3f3eb;
+  color: var(--muted);
+  font-weight: 850;
+}
+
+.admin-preview dd {
+  overflow-wrap: anywhere;
+  font-weight: 780;
+}
+
+.admin-preview p {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
 .macro-month-controls {
   display: inline-flex;
   align-items: center;
@@ -1947,10 +2159,10 @@ html[lang="zh-CN"] .title-block h1 {
   background: var(--paper);
 }
 
-.market-state-card small,
-.market-state-card strong,
-.market-state-card span,
-.market-state-card em {
+.market-state-card > small,
+.market-state-card > strong,
+.market-state-card > span,
+.market-state-card > em {
   display: block;
   min-width: 0;
   overflow: hidden;
@@ -1958,7 +2170,7 @@ html[lang="zh-CN"] .title-block h1 {
   white-space: nowrap;
 }
 
-.market-state-card small {
+.market-state-card > small {
   color: var(--muted);
   font-size: 10px;
   font-weight: 850;
@@ -1966,18 +2178,56 @@ html[lang="zh-CN"] .title-block h1 {
   text-transform: uppercase;
 }
 
-.market-state-card strong {
+.market-state-card > strong {
   margin-top: 4px;
   font-size: 18px;
 }
 
-.market-state-card span,
-.market-state-card em {
+.market-state-card > span,
+.market-state-card > em {
   margin-top: 4px;
   color: var(--muted);
   font-size: 11px;
   font-style: normal;
   font-weight: 700;
+}
+
+.market-session-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 9px;
+}
+
+.market-session-chip {
+  display: inline-grid;
+  gap: 1px;
+  min-width: 58px;
+  max-width: 100%;
+  padding: 4px 5px;
+  border: 1px solid rgba(19, 24, 31, 0.28);
+  background: rgba(255, 255, 255, 0.42);
+  line-height: 1.05;
+}
+
+.market-session-chip b,
+.market-session-chip i {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.market-session-chip b {
+  font-size: 9.5px;
+  font-weight: 900;
+}
+
+.market-session-chip i {
+  color: var(--muted);
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 760;
 }
 
 .market-state-card.state-trading,
@@ -3423,6 +3673,14 @@ html[lang="zh-CN"] .data-trust-grid small {
   .metric-chart-svg {
     min-height: 300px;
   }
+
+  .admin-macro-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-toolbar .admin-primary-action {
+    margin-left: 0;
+  }
 }
 
 @media (max-width: 560px) {
@@ -3444,7 +3702,7 @@ html[lang="zh-CN"] .data-trust-grid small {
   }
 
   .page-nav a:nth-last-child(-n + 2) {
-    border-bottom: 0;
+    border-bottom: 1px solid var(--ink);
   }
 
   .page-nav a:nth-child(2n) {
@@ -3454,6 +3712,18 @@ html[lang="zh-CN"] .data-trust-grid small {
   .page-nav a:last-child {
     border-bottom: 0;
     border-right: 0;
+  }
+
+  .admin-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-field:last-child {
+    grid-column: auto;
+  }
+
+  .admin-preview dl div {
+    grid-template-columns: 1fr;
   }
 
   .latest-strip,

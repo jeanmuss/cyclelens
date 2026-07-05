@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
+    "admin:macro-events": "node scripts/macro-events-admin-api.mjs",
     "build": "vite build",
     "build:pages": "vite build && node scripts/prepare-github-pages.mjs",
     "preview": "vite preview --host 127.0.0.1",

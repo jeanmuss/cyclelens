@@ -1,7 +1,7 @@
 {
   "version": 1,
   "page": "macro-calendar",
-  "generatedAt": "2026-07-04T05:57:21Z",
+  "generatedAt": "2026-07-05T14:22:57Z",
   "window": {
     "months": 6,
     "startDate": "2026-01-04",
@@ -1674,7 +1674,10 @@
       "pctChange": null,
       "yearAgo": null,
       "yoyPct": null,
-      "note": "Scheduled for 2026-07-19 15:00 America/New_York at New York New Jersey Stadium; Beijing time is 2026-07-20 03:00. Added as a discretionary liquidity/attention event, not an economic data release."
+      "note": "Scheduled for 2026-07-19 15:00 America/New_York at New York New Jersey Stadium; Beijing time is 2026-07-20 03:00. Added as a discretionary liquidity/attention event, not an economic data release.",
+      "labelZh": "世界杯决赛",
+      "labelEn": "FIFA World Cup Final",
+      "releaseTimeUtc": "2026-07-19T19:00:00Z"
     },
     {
       "date": "2026-07-14",
@@ -11858,7 +11861,12 @@
     "ADP National Employment Report": "https://adpemploymentreport.com/ner_production.json",
     "U.S. federal holidays": "https://www.opm.gov/policy-data-oversight/pay-leave/federal-holidays/",
     "China holiday annotations": "Manual festival-date annotations maintained in scripts/update-macro-calendar.py.",
-    "manualEvents": "Curated policy, legal, holiday, media, sports, and institutional-flow annotations maintained in scripts/update-macro-calendar.py."
+    "manualEvents": "Curated policy, legal, holiday, media, sports, and institutional-flow annotations maintained in app/data/manual-macro-events.json."
   },
-  "failures": []
+  "failures": [
+    "Official schedule adp-ner-production-json: HTTPSConnectionPool(host='adpemploymentreport.com', port=443): Max retries exceeded with url: /ner_production.json (Caused by ProxyError('Unable to connect to proxy', NewConnectionError(\"HTTPSConnection(host='127.0.0.1', port=9): Failed to establish a new connection: [WinError 10061] 由于目标计算机积极拒绝，无法连接。\")))",
+    "FRED release dates 50: HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Max retries exceeded with url: /fred/release/dates?release_id=50&api_key=[REDACTED]&file_type=json&include_release_dates_with_no_data=true&sort_order=desc&limit=120 (Caused by ProxyError('Unable to connect to proxy', NewConnectionError(\"HTTPSConnection(host='127.0.0.1', port=9): Failed to establish a new connection: [WinError 10061] 由于目标计算机积极拒绝，无法连接。\")))",
+    "FRED release dates 10: HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Max retries exceeded with url: /fred/release/dates?release_id=10&api_key=[REDACTED]&file_type=json&include_release_dates_with_no_data=true&sort_order=desc&limit=120 (Caused by ProxyError('Unable to connect to proxy', NewConnectionError(\"HTTPSConnection(host='127.0.0.1', port=9): Failed to establish a new connection: [WinError 10061] 由于目标计算机积极拒绝，无法连接。\")))",
+    "Official schedule fed-fomc-calendar: HTTPSConnectionPool(host='www.federalreserve.gov', port=443): Max retries exceeded with url: /monetarypolicy/fomccalendars.htm (Caused by ProxyError('Unable to connect to proxy', NewConnectionError(\"HTTPSConnection(host='127.0.0.1', port=9): Failed to establish a new connection: [WinError 10061] 由于目标计算机积极拒绝，无法连接。\")))"
+  ]
 }

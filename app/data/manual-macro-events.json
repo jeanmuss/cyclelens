@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "updatedAt": "2026-07-05T14:31:29Z",
+  "events": [
+    {
+      "status": "published",
+      "date": "2026-07-20",
+      "seriesId": "MANUAL_FIFA_WC_FINAL_2026",
+      "label": "世界杯决赛 / FIFA World Cup Final",
+      "labelZh": "世界杯决赛",
+      "labelEn": "FIFA World Cup Final",
+      "category": "liquidity",
+      "role": "manual_liquidity_event",
+      "cadence": "event",
+      "unit": "event",
+      "source": "FIFA match schedule / manual liquidity annotation",
+      "dateMeaning": "scheduled_beijing_date",
+      "actual": null,
+      "previous": null,
+      "forecast": null,
+      "change": null,
+      "changeBp": null,
+      "pctChange": null,
+      "yearAgo": null,
+      "yoyPct": null,
+      "note": "Scheduled for 2026-07-19 15:00 America/New_York at New York New Jersey Stadium; Beijing time is 2026-07-20 03:00. Added as a discretionary liquidity/attention event, not an economic data release.",
+      "releaseTimeUtc": "2026-07-19T19:00:00Z"
+    }
+  ]
+}

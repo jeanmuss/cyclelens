@@ -34,6 +34,7 @@ import requests
 APP_ROOT = Path(__file__).resolve().parents[1]
 WORKSPACE_ROOT = APP_ROOT.parent
 OUTPUT_PATH = APP_ROOT / "public" / "data" / "macro-calendar.json"
+MANUAL_EVENTS_PATH = APP_ROOT / "data" / "manual-macro-events.json"
 CACHE_DIR = WORKSPACE_ROOT / "tmp" / "macro-cache" / "fred"
 SCHEDULE_CACHE_DIR = WORKSPACE_ROOT / "tmp" / "macro-cache" / "official-schedules"
 FRED_OBSERVATIONS_URL = "https://api.stlouisfed.org/fred/series/observations"
@@ -166,7 +167,7 @@ STATUS_SERIES: list[Indicator] = [
 ALL_SERIES = {indicator.id: indicator for indicator in [*EVENT_SERIES, *STATUS_SERIES]}
 
 
-MANUAL_EVENTS: list[dict] = [
+FALLBACK_MANUAL_EVENTS: list[dict] = [
     {
         "date": "2026-07-20",
         "seriesId": "MANUAL_FIFA_WC_FINAL_2026",
@@ -1023,9 +1024,72 @@ def build_observation_events(series_frames: dict[str, pd.DataFrame]) -> list[dic
     return sorted(events, key=lambda item: (item["date"], item["category"], item["seriesId"]), reverse=True)
 
 
+def read_manual_event_file() -> list[dict]:
+    try:
+        payload = json.loads(MANUAL_EVENTS_PATH.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        return FALLBACK_MANUAL_EVENTS
+    except json.JSONDecodeError as exc:
+        raise RuntimeError(f"manual macro events JSON is invalid: {safe_error_message(exc)}") from exc
+    events = payload.get("events") if isinstance(payload, dict) else payload
+    if not isinstance(events, list):
+        raise RuntimeError("manual macro events JSON must contain an events array")
+    return events
+
+
+def normalize_manual_event(event: dict) -> dict:
+    if not isinstance(event, dict):
+        raise RuntimeError("manual macro event must be an object")
+    if str(event.get("status", "published")).strip().lower() == "draft":
+        return {}
+    category = str(event.get("category") or "liquidity").strip()
+    if category not in CATEGORIES:
+        raise RuntimeError(f"manual macro event category is invalid: {category}")
+    date = str(event.get("date") or "").strip()
+    if not re.match(r"^\d{4}-\d{2}-\d{2}$", date):
+        raise RuntimeError(f"manual macro event date is invalid: {date}")
+    series_id = str(event.get("seriesId") or "").strip()
+    if not series_id:
+        raise RuntimeError(f"manual macro event on {date} is missing seriesId")
+    label_zh = str(event.get("labelZh") or "").strip()
+    label_en = str(event.get("labelEn") or "").strip()
+    label = str(event.get("label") or " / ".join(part for part in [label_zh, label_en] if part)).strip()
+    if not label:
+        raise RuntimeError(f"manual macro event {series_id} is missing label")
+    normalized = {
+        "date": date,
+        "seriesId": series_id,
+        "label": label,
+        "category": category,
+        "categoryLabel": CATEGORIES[category],
+        "role": str(event.get("role") or "manual_liquidity_event").strip(),
+        "cadence": str(event.get("cadence") or "event").strip(),
+        "unit": str(event.get("unit") or "event").strip(),
+        "source": str(event.get("source") or "Manual macro event").strip(),
+        "dateMeaning": str(event.get("dateMeaning") or "scheduled_beijing_date").strip(),
+        "actual": finite_number(event.get("actual")),
+        "previous": finite_number(event.get("previous")),
+        "forecast": finite_number(event.get("forecast")),
+        "change": finite_number(event.get("change")),
+        "changeBp": finite_number(event.get("changeBp")),
+        "pctChange": finite_number(event.get("pctChange")),
+        "yearAgo": finite_number(event.get("yearAgo")),
+        "yoyPct": finite_number(event.get("yoyPct")),
+        "note": str(event.get("note") or "").strip(),
+    }
+    for key in ["labelZh", "labelEn", "releaseTimeUtc", "sourceUrl", "country", "holidayName", "holidayNameZh", "observedDate", "legalDate", "referencePeriod"]:
+        value = str(event.get(key) or "").strip()
+        if value:
+            normalized[key] = value
+    return normalized
+
+
 def manual_events_for_window() -> list[dict]:
     events = []
-    for event in MANUAL_EVENTS:
+    for raw_event in read_manual_event_file():
+        event = normalize_manual_event(raw_event)
+        if not event:
+            continue
         date = pd.Timestamp(event["date"])
         if WINDOW_START <= date <= MANUAL_EVENT_END:
             events.append(dict(event))
@@ -1273,7 +1337,7 @@ def build_output() -> dict:
             "ADP National Employment Report": ADP_NER_JSON_URL,
             "U.S. federal holidays": US_FEDERAL_HOLIDAYS_URL,
             "China holiday annotations": "Manual festival-date annotations maintained in scripts/update-macro-calendar.py.",
-            "manualEvents": "Curated policy, legal, holiday, media, sports, and institutional-flow annotations maintained in scripts/update-macro-calendar.py.",
+            "manualEvents": "Curated policy, legal, holiday, media, sports, and institutional-flow annotations maintained in app/data/manual-macro-events.json.",
         },
         "failures": failures,
     }
@@ -1294,7 +1358,7 @@ def merge_manual_events_into_existing(existing: dict, error: Exception | None = 
     output.setdefault("cache", {})["scheduleEventLookaheadDays"] = SCHEDULE_EVENT_LOOKAHEAD_DAYS
     output.setdefault("cache", {})["officialScheduleCachePath"] = "tmp/macro-cache/official-schedules"
     output.setdefault("sources", {})["manualEvents"] = (
-        "Curated policy, legal, holiday, media, sports, and institutional-flow annotations maintained in scripts/update-macro-calendar.py."
+        "Curated policy, legal, holiday, media, sports, and institutional-flow annotations maintained in app/data/manual-macro-events.json."
     )
     output.setdefault("sources", {})["FRED release dates"] = "https://fred.stlouisfed.org/docs/api/fred/release_dates.html"
     output.setdefault("sources", {})["Federal Reserve FOMC calendar"] = FED_FOMC_CALENDAR_URL
