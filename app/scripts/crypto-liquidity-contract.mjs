@@ -104,6 +104,13 @@ export function normalizeSosoEtfHistory(payload, asset) {
   };
 }
 
+export function requireSosoEtfHistory(result, asset = result?.asset) {
+  if (!result?.daily?.length) {
+    throw new Error(`SoSoValue ${asset || "ETF"} returned an empty history`);
+  }
+  return result;
+}
+
 export function normalizeBlockbeatsBtcHistory(payload) {
   const rows = Array.isArray(payload?.data) ? payload.data : [];
   const daily = rows

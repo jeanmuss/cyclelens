@@ -12,6 +12,7 @@ import {
   normalizeBlockbeatsBtcHistory,
   normalizeCmcLiquidity,
   normalizeSosoEtfHistory,
+  requireSosoEtfHistory,
 } from "../scripts/crypto-liquidity-contract.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -67,6 +68,12 @@ test("SoSoValue daily ETF rows are normalized without filling missing days", () 
   assert.deepEqual(result.daily.map((point) => point.date), ["2026-07-07", "2026-07-09"]);
   assert.equal(result.weekly[0].netFlowUsd, 80);
   assert.equal(result.weekly[0].tradingDays, 2);
+});
+
+test("empty SoSoValue histories are rejected instead of advancing freshness", () => {
+  const result = normalizeSosoEtfHistory({ data: { list: [] } }, "BTC");
+  assert.equal(result.status, "unavailable");
+  assert.throws(() => requireSosoEtfHistory(result, "BTC"), /empty history/);
 });
 
 test("BlockBeats values stay auxiliary and convert millions to USD", () => {

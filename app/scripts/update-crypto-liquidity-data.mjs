@@ -10,6 +10,7 @@ import {
   normalizeBlockbeatsBtcHistory,
   normalizeCmcLiquidity,
   normalizeSosoEtfHistory,
+  requireSosoEtfHistory,
 } from "./crypto-liquidity-contract.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -83,7 +84,7 @@ async function fetchSosoAsset(asset) {
     body: JSON.stringify({ type: `us-${asset.toLowerCase()}-spot` }),
   });
   if (Number(payload?.code) !== 0) throw new Error(`SoSoValue ${asset} request failed`);
-  return normalizeSosoEtfHistory(payload, asset);
+  return requireSosoEtfHistory(normalizeSosoEtfHistory(payload, asset), asset);
 }
 
 async function fetchBlockbeatsAuxiliary() {
