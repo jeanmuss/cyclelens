@@ -546,6 +546,35 @@ export function normalizeReviewedTreasuryDisclosure(payload) {
   };
 }
 
+export function applyReviewedStrategyDisclosure(dataset, reviewedDisclosures) {
+  const reviewed = normalizeReviewedTreasuryDisclosure(reviewedDisclosures?.treasuries?.MSTR || {});
+  if (reviewed.status !== "available" || reviewed.source !== "Strategy official Form 8-K") {
+    throw new Error("Reviewed Strategy disclosure must contain an available official holdings observation");
+  }
+  const strategy = attachTreasurySpotPrice(reviewed, dataset?.spotPrices?.BTC);
+  const { sosovalueTreasury: ignoredTreasurySource, ...sources } = dataset?.sources || {};
+  return {
+    ...dataset,
+    corporateTreasuries: {
+      ...(dataset?.corporateTreasuries || {}),
+      MSTR: strategy,
+    },
+    corporateTreasuryAutomation: {
+      ...(dataset?.corporateTreasuryAutomation || {}),
+      strategy: "reviewed_strategy_official_disclosure",
+    },
+    methodology: {
+      ...(dataset?.methodology || {}),
+      treasury: "Corporate treasury holdings and acquisition-cost observations keep separate source dates. Strategy holdings and average cost use reviewed official company disclosures; BitMine cost basis per ETH is derived only from same-date SEC units and cost basis. Press-release spot prices are never treated as acquisition cost.",
+    },
+    sources: {
+      ...sources,
+      strategy: strategy.sourceUrl,
+    },
+    failures: (dataset?.failures || []).filter((item) => !/^SoSoValue MSTR treasury:/i.test(String(item))),
+  };
+}
+
 export function attachTreasurySpotPrice(treasury, spotPrice) {
   const price = finiteNumber(spotPrice?.priceUsd);
   const cost = finiteNumber(treasury?.averageCostUsd);

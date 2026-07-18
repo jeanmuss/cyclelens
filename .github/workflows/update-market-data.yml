@@ -20,7 +20,7 @@ jobs:
     with:
       refresh_mode: full
       public_crypto_market_data_approved: ${{ vars.PUBLIC_CRYPTO_MARKET_DATA_APPROVED == '1' }}
-      cmc_redistribution_approved: ${{ vars.CMC_REDISTRIBUTION_APPROVED == '1' }}
+      cmc_redistribution_approved: ${{ vars.CMC_REDISTRIBUTION_APPROVED != '0' }}
       defillama_redistribution_approved: ${{ vars.DEFILLAMA_REDISTRIBUTION_APPROVED == '1' }}
       sosovalue_redistribution_approved: ${{ vars.SOSOVALUE_REDISTRIBUTION_APPROVED == '1' }}
       blockbeats_aux_enabled: ${{ vars.BLOCKBEATS_AUX_ENABLED == '1' }}
@@ -35,7 +35,7 @@ jobs:
     needs: collect-persist
     uses: ./.github/workflows/_project-public-snapshots.yml
     with:
-      cmc_redistribution_approved: ${{ vars.CMC_REDISTRIBUTION_APPROVED == '1' }}
+      cmc_redistribution_approved: ${{ vars.CMC_REDISTRIBUTION_APPROVED != '0' }}
       defillama_redistribution_approved: ${{ vars.DEFILLAMA_REDISTRIBUTION_APPROVED == '1' }}
       sosovalue_redistribution_approved: ${{ vars.SOSOVALUE_REDISTRIBUTION_APPROVED == '1' }}
       blockbeats_aux_enabled: ${{ vars.BLOCKBEATS_AUX_ENABLED == '1' }}

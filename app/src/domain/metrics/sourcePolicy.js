@@ -7,7 +7,7 @@ function policy(entry) {
 }
 
 export const SOURCE_POLICIES = Object.freeze([
-  policy({ id: "coinmarketcap", label: "CoinMarketCap Pro API", transport: "licensed_json_api", reviewStatus: "approval_required", productionEligible: false, approvalVariable: "CMC_REDISTRIBUTION_APPROVED", termsUrl: "https://coinmarketcap.com/terms/", cachePolicy: "Cache only derived values within the subscribed plan.", redistributionPolicy: "Requires operator confirmation for the active plan.", attribution: "CoinMarketCap" }),
+  policy({ id: "coinmarketcap", label: "CoinMarketCap Pro API", transport: "licensed_json_api", reviewStatus: "approval_required", productionEligible: false, approvalVariable: "CMC_REDISTRIBUTION_APPROVED", approvalDefault: "1", termsUrl: "https://coinmarketcap.com/terms/", cachePolicy: "Cache only derived values within the subscribed plan.", redistributionPolicy: "Operator approved derived public values on 2026-07-18; set the gate to 0 to suspend publication.", attribution: "CoinMarketCap" }),
   policy({ id: "defillama", label: "DefiLlama stablecoins API", transport: "public_json_api", reviewStatus: "approval_required", productionEligible: false, approvalVariable: "DEFILLAMA_REDISTRIBUTION_APPROVED", termsUrl: "https://api-docs.defillama.com/", cachePolicy: "Derived daily values only.", redistributionPolicy: "No explicit redistribution grant recorded; operator approval required.", attribution: "DefiLlama" }),
   policy({ id: "sosovalue", label: "SoSoValue Open API", transport: "licensed_json_api", reviewStatus: "approval_required", productionEligible: false, approvalVariable: "SOSOVALUE_REDISTRIBUTION_APPROVED", termsUrl: "https://sosovalue-1.gitbook.io/sosovalue-api-doc/", cachePolicy: "Derived daily ETF and treasury observations only.", redistributionPolicy: "Requires confirmation of the account plan and public display rights.", attribution: "SoSoValue" }),
   policy({ id: "blockbeats", label: "BlockBeats Pro API", transport: "licensed_json_api", reviewStatus: "approval_required", productionEligible: false, approvalVariable: "BLOCKBEATS_REDISTRIBUTION_APPROVED", termsUrl: "https://www.theblockbeats.info/apiDoc", cachePolicy: "Auxiliary cross-check only; never primary LKG.", redistributionPolicy: "A legal approval variable is required separately from the feature flag.", attribution: "BlockBeats" }),
@@ -58,7 +58,10 @@ export function sourcePolicyForObservation(observation) {
 export function sourceIsProductionEligible(policy, environment = process.env) {
   if (!policy || policy.reviewStatus === "blocked") return false;
   if (policy.productionEligible) return true;
-  return Boolean(policy.approvalVariable && environment?.[policy.approvalVariable] === "1");
+  if (!policy.approvalVariable) return false;
+  const configured = environment?.[policy.approvalVariable];
+  if (configured != null) return configured === "1";
+  return policy.approvalDefault === "1";
 }
 
 export function validateSourcePolicies(policies = SOURCE_POLICIES) {
@@ -70,6 +73,7 @@ export function validateSourcePolicies(policies = SOURCE_POLICIES) {
     if (!entry?.transport || !entry?.reviewStatus || !entry?.termsUrl) errors.push(`${entry?.id}: incomplete review contract`);
     if (!entry?.cachePolicy || !entry?.redistributionPolicy || !entry?.attribution) errors.push(`${entry?.id}: cache, redistribution, and attribution are required`);
     if (entry?.reviewStatus === "approval_required" && !entry?.approvalVariable) errors.push(`${entry?.id}: approval variable is required`);
+    if (entry?.approvalDefault != null && !["0", "1"].includes(entry.approvalDefault)) errors.push(`${entry?.id}: approval default must be 0 or 1`);
   }
   return errors;
 }

@@ -58,6 +58,7 @@ test("deployment builds only from the reviewed projection artifact", async () =>
   assert.match(source, /npm --prefix app run build:pages/);
   assert.match(source, /uses: actions\/deploy-pages@v4/);
   assert.doesNotMatch(source, /scripts\/update-market-data\.mjs/);
+  assert.match(source, /CMC_REDISTRIBUTION_APPROVED: \$\{\{ vars\.CMC_REDISTRIBUTION_APPROVED \|\| '1' \}\}/);
 });
 
 test("versioned snapshots remain isolated on data-cache", async () => {

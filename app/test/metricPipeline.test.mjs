@@ -83,8 +83,12 @@ test("adapter runner executes the five stages in order and stops before mutation
   assert.deepEqual(failedStages, ["fetch"], "an upstream failure must leave persisted and projected LKG untouched");
 });
 
-test("reviewed source policy gates observations before persistence or projection", () => {
-  const blocked = validateObservationRows([observation()], { environment: {} });
+test("reviewed source policy defaults CMC on after operator approval and permits an explicit suspension", () => {
+  const approvedByDefault = validateObservationRows([observation()], { environment: {} });
+  assert.equal(approvedByDefault.accepted.length, 1);
+  assert.equal(approvedByDefault.accepted[0].source_policy_id, "coinmarketcap");
+
+  const blocked = validateObservationRows([observation()], { environment: { CMC_REDISTRIBUTION_APPROVED: "0" } });
   assert.equal(blocked.accepted.length, 0);
   assert.equal(blocked.rejected[0].reason, "source_not_approved_for_production");
 
@@ -122,4 +126,11 @@ test("Phase 3 migration seeds the catalog and keeps database tables server-only"
   assert.match(migration, /revoke all on table public\.metric_catalog from public, anon, authenticated/);
   assert.match(migration, /revoke all on table public\.dashboard_snapshot_runs from public, anon, authenticated/);
   assert.doesNotMatch(migration, /grant .* to anon/);
+});
+
+test("Strategy holdings catalog migration removes the disabled provider source", async () => {
+  const migration = await readFile(resolve(workspaceRoot, "supabase/migrations/20260718221500_strategy_official_source.sql"), "utf8");
+  assert.match(migration, /where metric_id = 'treasury\.mstr\.btc_holdings'/);
+  assert.match(migration, /source_policy_ids = array\['strategy-disclosures'\]/);
+  assert.doesNotMatch(migration, /sosovalue/i);
 });

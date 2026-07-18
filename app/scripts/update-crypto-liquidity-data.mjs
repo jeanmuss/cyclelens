@@ -23,7 +23,6 @@ import {
   normalizeDefiLlamaStablecoinHistory,
   normalizeReviewedTreasuryDisclosure,
   normalizeSosoEtfHistory,
-  normalizeStrategyTreasuryHistory,
   planCmcHistoryFetch,
   requireCmcLiquiditySnapshot,
   requireSosoEtfHistory,
@@ -45,7 +44,6 @@ const CMC_ASSET_HISTORY_URL = "https://pro-api.coinmarketcap.com/v3/cryptocurren
 const DEFILLAMA_STABLECOIN_BASE_URL = "https://stablecoins.llama.fi";
 const SOSO_BASE_URL = "https://openapi.sosovalue.com/openapi/v1";
 const SOSO_ETF_URL = `${SOSO_BASE_URL}/etfs/summary-history`;
-const SOSO_STRATEGY_URL = `${SOSO_BASE_URL}/btc-treasuries/MSTR/purchase-history?limit=100`;
 const BLOCKBEATS_URL = "https://api-pro.theblockbeats.info/v1/data/btc_etf";
 const BITMINE_CIK = "0001829311";
 const SEC_SUBMISSIONS_URL = `https://data.sec.gov/submissions/CIK${BITMINE_CIK}.json`;
@@ -247,17 +245,6 @@ async function fetchSosoAsset(asset) {
     lastCheckedAt: fetchedAt,
     daily: result.daily.map((point) => ({ ...point, fetchedAt, lastCheckedAt: fetchedAt })),
   };
-}
-
-async function fetchStrategyTreasury() {
-  const key = process.env.SOSOVALUE_API_KEY;
-  if (!key) throw new Error("SOSOVALUE_API_KEY is not configured");
-  const payload = await fetchJson(SOSO_STRATEGY_URL, {
-    headers: { "x-soso-api-key": key },
-  });
-  const result = normalizeStrategyTreasuryHistory(unwrapSosoPayload(payload, "MSTR treasury"));
-  if (!result.history.length) throw new Error("SoSoValue MSTR treasury returned an empty history");
-  return result;
 }
 
 function plainText(html) {
@@ -574,15 +561,8 @@ const reviewedBitmine = normalizeReviewedTreasuryDisclosure({
   ...bitmineDisclosurePayload,
   holdings: [...(bitmineDisclosurePayload.holdings || []), ...bitmineSec.holdings],
 });
-let strategyPrimary = existing?.corporateTreasuries?.MSTR || null;
-try {
-  strategyPrimary = await fetchStrategyTreasury();
-  freshSourceCount += 1;
-} catch (error) {
-  failures.push(`SoSoValue MSTR treasury: ${safeFailure(error)}`);
-}
 const corporateTreasuries = {
-  MSTR: attachTreasurySpotPrice(mergeTreasurySnapshots(strategyPrimary, reviewedStrategy), spotPrices?.BTC),
+  MSTR: attachTreasurySpotPrice(reviewedStrategy, spotPrices?.BTC),
   BMNR: attachTreasurySpotPrice(mergeTreasurySnapshots(existing?.corporateTreasuries?.BMNR, reviewedBitmine), spotPrices?.ETH),
 };
 
@@ -641,7 +621,7 @@ const output = {
   spotPrices,
   corporateTreasuries,
   corporateTreasuryAutomation: {
-    strategy: "sosovalue_plus_official_8k_cost",
+    strategy: "reviewed_strategy_official_disclosure",
     bitmine: bitmineSec.status,
   },
   auxiliarySources: { blockbeats },
@@ -650,7 +630,7 @@ const output = {
     stablecoins: "USDT and USDC market caps proxy circulating supply in USD. Their sum is labelled as tracked major stablecoins, not the entire stablecoin market. When CoinMarketCap asset history is unavailable, DefiLlama's documented free Stablecoins API supplies same-source circulating-USD history. A fresh CoinMarketCap current level is retained; a missing or stale stablecoin current level may advance to the newest documented same-series history point.",
     usdtPeg: "USDT peg deviation is (price - 1 USD) × 10,000 basis points and is not a flow metric.",
     etf: "SoSoValue v1 daily aggregate net flow is used for U.S. BTC, ETH, and SOL spot ETF series. Its one-month response is merged with prior observations; missing trading days are never filled with zero.",
-    treasury: "Corporate treasury holdings and acquisition-cost observations keep separate source dates. Strategy average cost uses its official Form 8-K; BitMine cost basis per ETH is derived only from same-date SEC units and cost basis. Press-release spot prices are never treated as acquisition cost.",
+    treasury: "Corporate treasury holdings and acquisition-cost observations keep separate source dates. Strategy holdings and average cost use reviewed official company disclosures; BitMine cost basis per ETH is derived only from same-date SEC units and cost basis. Press-release spot prices are never treated as acquisition cost.",
     blockbeats: "BlockBeats is reserved as an auxiliary BTC cross-check only and never overwrites the primary ETF series.",
   },
   sources: {
@@ -659,7 +639,6 @@ const output = {
     cmcAssetHistory: "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
     defillamaStablecoins: "https://api-docs.defillama.com/",
     sosovalueEtf: "https://sosovalue-1.gitbook.io/sosovalue-api-doc/2.-etf/summary-history",
-    sosovalueTreasury: "https://sosovalue-1.gitbook.io/sosovalue-api-doc/5.-btc-treasuries/purchase-history",
     strategy: corporateTreasuries.MSTR.sourceUrl,
     bitmine: corporateTreasuries.BMNR.sourceUrl,
     secSubmissions: SEC_SUBMISSIONS_URL,

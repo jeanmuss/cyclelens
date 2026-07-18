@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import test from "node:test";
 
 import {
+  applyReviewedStrategyDisclosure,
   aggregateWeeklyFlows,
   attachHistoricalMetricFallbacks,
   attachMetricChanges,
@@ -290,6 +291,36 @@ test("corporate treasury holdings and cost observations keep independent dates",
   assert.equal(repeatedMerge.costHistory.length, 1, "repeated refreshes must not duplicate the same cost observation");
 });
 
+test("reviewed Strategy disclosures replace provider treasury history without changing unrelated data", () => {
+  const sourceUrl = "https://www.strategy.com/press/example";
+  const result = applyReviewedStrategyDisclosure({
+    spotPrices: { BTC: { priceUsd: 90000, observedAt: "2026-06-22" } },
+    corporateTreasuries: {
+      MSTR: { source: "sosovalue", history: [{ holdings: 1 }] },
+      BMNR: { ticker: "BMNR", holdings: 2 },
+    },
+    corporateTreasuryAutomation: { bitmine: "unchanged" },
+    methodology: { marketCaps: "unchanged" },
+    sources: { sosovalueTreasury: "https://example.test/provider", other: "https://example.test/other" },
+    failures: ["SoSoValue MSTR treasury: HTTP 403", "Other source: unavailable"],
+  }, {
+    treasuries: {
+      MSTR: {
+        company: "Strategy", ticker: "MSTR", asset: "BTC", source: "Strategy official Form 8-K",
+        holdings: [{ disclosedAt: "2026-06-22", holdingsObservedAt: "2026-06-21", holdings: 847363, sourceUrl, qualityStatus: "official_form_8k" }],
+        costs: [{ costObservedAt: "2026-06-21", averageCostUsd: 75651, sourceUrl, qualityStatus: "official_form_8k" }],
+      },
+    },
+  });
+  assert.equal(result.corporateTreasuries.MSTR.source, "Strategy official Form 8-K");
+  assert.equal(result.corporateTreasuries.MSTR.history.length, 1);
+  assert.equal(result.corporateTreasuries.MSTR.holdings, 847363);
+  assert.equal(result.corporateTreasuries.BMNR.holdings, 2);
+  assert.equal(result.corporateTreasuryAutomation.strategy, "reviewed_strategy_official_disclosure");
+  assert.equal(result.sources.sosovalueTreasury, undefined);
+  assert.equal(result.failures.length, 1);
+});
+
 test("updater preserves the last-known-good snapshot when every upstream is unavailable", async () => {
   const before = await readFile(outputPath, "utf8");
   const result = await runUpdaterWithoutCredentials();
@@ -300,11 +331,12 @@ test("updater preserves the last-known-good snapshot when every upstream is unav
   assert.equal(after, before);
 });
 
-test("crypto updater uses the current SoSoValue OpenAPI host and ignored local env files", async () => {
+test("crypto updater limits SoSoValue to ETF data and uses reviewed official Strategy disclosures", async () => {
   const source = await readFile(updaterPath, "utf8");
   assert.match(source, /https:\/\/openapi\.sosovalue\.com\/openapi\/v1/);
   assert.match(source, /etfs\/summary-history/);
-  assert.match(source, /btc-treasuries\/MSTR\/purchase-history/);
+  assert.doesNotMatch(source, /btc-treasuries\/MSTR\/purchase-history/);
+  assert.match(source, /MSTR: attachTreasurySpotPrice\(reviewedStrategy/);
   assert.match(source, /data\.sec\.gov\/submissions\/CIK/);
   assert.match(source, /process\.env\.SEC_USER_AGENT/);
   assert.match(source, /process\.env\.SEC_USER_AGENT\]\)/, "SEC contact identifier must be included in error redaction");

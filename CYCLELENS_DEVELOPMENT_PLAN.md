@@ -228,6 +228,8 @@ app/src/
 - 剩余风险：13 个默认 widget 指标依赖中，9 个因来源许可 approval 默认关闭而未进入当前公开 projection，界面会明确显示 N/A 与待批准说明，不会伪造或直连来源；布局按设计仅保存在当前设备，不支持跨设备同步；尚未运行远端 CI，也未连接或修改 Supabase/GitHub。
 - 下一步：进入 Phase 5，先确认 A 股 MVP 指标、审核数据源与许可边界，再复用现有指标目录、公开投影和市场日历契约；继续保持 Phase 8 前不推送、不添加新 remote、不克隆 `cyclelens`。
 
+后续数据源决策（2026-07-18）：13 项明细、原始候选行数、替代来源审查和当前可用性见 [`docs/data/DASHBOARD_DEFAULT_METRICS.md`](docs/data/DASHBOARD_DEFAULT_METRICS.md)。CMC 发布开关按产品决定默认置为 `1`，Strategy 持仓改为官方披露；重建后 13 个默认依赖中 7 个可用、6 个 N/A。Binance/OKX 的官方公开 API 不提供等价的全市场稳定币流通市值或美国现货 ETF 净流量，不能用价格/成交量改变指标语义来填空。
+
 ### Phase 5：A 股独立页面
 
 - [ ] 在 `features/a-share` 中建立独立模块，与“美股宏观”并列，不复制美股页面代码。
@@ -237,6 +239,15 @@ app/src/
 - [ ] 为未来行业、指数、流动性、北向资金等扩充预留指标分类，但不提前存储无用数据。
 
 验收：新增页面只需要 feature 模块、数据 adapter 和路由注册；不修改其他页面的业务实现。
+
+暂停记录（2026-07-18）：产品决定暂缓 A 股页面实现，先与其他开发者讨论信源、展示许可、缓存和署名边界。判断依据、建议 MVP、东方财富/雪球风险与架构预留统一记录在 [`docs/product/A_SHARE_PAGE_HOLD.md`](docs/product/A_SHARE_PAGE_HOLD.md)。本阶段 checklist 保持未完成；当前不注册空路由、不创建空 feature 或存储无用数据，仅保留 `a-share.*` 命名空间、未来 projection/adapter/路由边界。按第 9 节既有规则，Phase 5 与 Phase 6 可分别推进，因此该产品暂停不阻塞 Phase 6。
+
+执行记录（2026-07-18，Phase 5 暂停与数据源决策批次）：
+
+- 完成内容：落库 A 股页面暂停判断与架构预留文档、首页 13 指标可用性清单和 Binance/OKX 官方 API 替代审查；CMC 发布开关默认置为 `1` 且保留显式 `0` 的停用能力；Strategy 持仓从 SoSoValue 采集路径、指标目录和公开 LKG 中移除，改为审核后的 Strategy 官方披露，并新增确定性应用脚本与 Supabase catalog migration。
+- 验证结果：数据源/指标/工作流定向回归 41/41 通过；`npm run check` 通过（source lint、148/148 单元测试、官方美/韩/中市场日历边界验证、公开投影生成和生产构建）；dashboard 投影为 8 个指标/136 条观测，其中 13 个默认依赖为 7 个可用、6 个 N/A，额外 1 个为非默认的 CMC USDT 脱锚指标；Strategy 公共历史只保留 1 条官方观测；`git diff --check` 通过。
+- 剩余风险：CMC 的产品批准不能替代套餐条款持续复核；DefiLlama 稳定币市值与 SoSoValue ETF 流量仍未获发布批准且 Binance/OKX 没有等价字段；Strategy 官方历史暂时比第三方聚合历史短；新 migration 仅完成本地静态与合同验证，尚未连接或修改远端 Supabase。
+- 下一步：进入 Phase 6，先审计独立 admin build、Cloudflare Pages/Access、Pages Function/Worker 和 Supabase CRUD 的现有边界；外部账号与 secrets 若只在部署时需要则后补，不阻塞本地安全代码和测试。
 
 ### Phase 6：可联网访问的管理员后台 MVP
 

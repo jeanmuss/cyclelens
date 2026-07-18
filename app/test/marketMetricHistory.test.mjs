@@ -47,6 +47,35 @@ test("ETF and corporate treasury observations retain source and independent cost
   assert.equal(byMetric["treasury.bmnr.eth_holdings"].last_checked_at, "2026-07-13T00:00:00.000Z");
 });
 
+test("current official treasury holdings are emitted even when retained history came from a disabled provider", () => {
+  const rows = extractCryptoHistoryRows({
+    generatedAt: "2026-07-18T00:00:00Z",
+    corporateTreasuries: {
+      MSTR: {
+        company: "Strategy",
+        ticker: "MSTR",
+        asset: "BTC",
+        source: "Strategy official Form 8-K",
+        sourceUrl: "https://www.strategy.com/press/example",
+        holdings: 847363,
+        holdingsObservedAt: "2026-06-21",
+        holdingsDisclosedAt: "2026-06-22",
+        qualityStatus: "official_form_8k",
+        history: [{
+          holdings: 843775,
+          holdingsObservedAt: "2026-07-05",
+          disclosedAt: "2026-07-05",
+          source: "sosovalue",
+          sourceUrl: "https://sosovalue-1.gitbook.io/example",
+        }],
+      },
+    },
+  });
+  const official = rows.find((item) => item.source === "Strategy official Form 8-K");
+  assert.equal(official.value, 847363);
+  assert.equal(official.metadata.disclosedAt, "2026-06-22");
+});
+
 test("crypto level history persists point-level provider provenance and quality", () => {
   const [row] = extractCryptoHistoryRows({
     generatedAt: "2026-07-16T02:00:00Z",

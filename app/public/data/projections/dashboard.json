@@ -4,12 +4,278 @@
   "projectionId": "dashboard",
   "generatedAt": "2026-07-16T08:49:09.863Z",
   "freshness": {
-    "observedAt": "2026-07-14T00:00:00.000Z",
+    "observedAt": "2026-07-16T00:00:00.000Z",
     "firstFetchedAt": "2026-07-16T03:58:13.477Z",
     "lastCheckedAt": "2026-07-16T03:58:13.477Z",
     "transformedAt": "2026-07-16T08:49:09.863Z"
   },
   "metrics": [
+    {
+      "metricId": "crypto.totalMarketCap",
+      "title": {
+        "zh": "加密货币总市值",
+        "en": "Total crypto market cap"
+      },
+      "unit": "USD",
+      "cadence": "daily",
+      "quality": {
+        "missing": "preserve_last_known_good",
+        "stale": "show_with_quality_flag",
+        "revisions": "retain"
+      },
+      "defaultDisplay": {
+        "format": "compact_currency",
+        "precision": 2
+      },
+      "sources": [
+        {
+          "sourcePolicyId": "coinmarketcap",
+          "label": "CoinMarketCap Pro API",
+          "attribution": "CoinMarketCap",
+          "termsUrl": "https://coinmarketcap.com/terms/"
+        }
+      ],
+      "observations": [
+        {
+          "observedAt": "2026-07-10T00:00:00.000Z",
+          "value": 2198899358998.4966,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-16T03:58:13.477Z",
+          "lastCheckedAt": "2026-07-16T03:58:13.477Z",
+          "sourcePolicyId": "coinmarketcap",
+          "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/",
+          "dimensions": {}
+        },
+        {
+          "observedAt": "2026-07-13T00:00:00.000Z",
+          "value": 2141287275183.8284,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-16T03:58:13.477Z",
+          "lastCheckedAt": "2026-07-16T03:58:13.477Z",
+          "sourcePolicyId": "coinmarketcap",
+          "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/",
+          "dimensions": {}
+        },
+        {
+          "observedAt": "2026-07-14T00:00:00.000Z",
+          "value": 2225590657864.653,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-16T03:58:13.477Z",
+          "lastCheckedAt": "2026-07-16T03:58:13.477Z",
+          "sourcePolicyId": "coinmarketcap",
+          "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/",
+          "dimensions": {}
+        },
+        {
+          "observedAt": "2026-07-15T00:00:00.000Z",
+          "value": 2224231971711.8394,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-16T03:58:13.477Z",
+          "lastCheckedAt": "2026-07-16T03:58:13.477Z",
+          "sourcePolicyId": "coinmarketcap",
+          "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/",
+          "dimensions": {}
+        },
+        {
+          "observedAt": "2026-07-16T00:00:00.000Z",
+          "value": 2220092840388.847,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-16T03:58:13.477Z",
+          "lastCheckedAt": "2026-07-16T03:58:13.477Z",
+          "sourcePolicyId": "coinmarketcap",
+          "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/",
+          "dimensions": {}
+        }
+      ]
+    },
+    {
+      "metricId": "btc.marketCap",
+      "title": {
+        "zh": "比特币市值",
+        "en": "Bitcoin market cap"
+      },
+      "unit": "USD",
+      "cadence": "daily",
+      "quality": {
+        "missing": "preserve_last_known_good",
+        "stale": "show_with_quality_flag",
+        "revisions": "retain"
+      },
+      "defaultDisplay": {
+        "format": "compact_currency",
+        "precision": 2
+      },
+      "sources": [
+        {
+          "sourcePolicyId": "coinmarketcap",
+          "label": "CoinMarketCap Pro API",
+          "attribution": "CoinMarketCap",
+          "termsUrl": "https://coinmarketcap.com/terms/"
+        }
+      ],
+      "observations": [
+        {
+          "observedAt": "2026-07-10T00:00:00.000Z",
+          "value": 1286300026857.8228,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-16T00:01:28.790Z",
+          "lastCheckedAt": "2026-07-16T03:58:13.477Z",
+          "sourcePolicyId": "coinmarketcap",
+          "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/",
+          "dimensions": {}
+        },
+        {
+          "observedAt": "2026-07-13T00:00:00.000Z",
+          "value": 1245472945962.1917,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-16T00:01:28.790Z",
+          "lastCheckedAt": "2026-07-16T03:58:13.477Z",
+          "sourcePolicyId": "coinmarketcap",
+          "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/",
+          "dimensions": {}
+        },
+        {
+          "observedAt": "2026-07-14T00:00:00.000Z",
+          "value": 1301371196150.3145,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-16T00:01:28.790Z",
+          "lastCheckedAt": "2026-07-16T03:58:13.477Z",
+          "sourcePolicyId": "coinmarketcap",
+          "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/",
+          "dimensions": {}
+        },
+        {
+          "observedAt": "2026-07-15T00:00:00.000Z",
+          "value": 1300290672144.9668,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-16T00:01:28.790Z",
+          "lastCheckedAt": "2026-07-16T03:58:13.477Z",
+          "sourcePolicyId": "coinmarketcap",
+          "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/",
+          "dimensions": {}
+        },
+        {
+          "observedAt": "2026-07-16T00:00:00.000Z",
+          "value": 1294815840284.9905,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-16T00:01:28.790Z",
+          "lastCheckedAt": "2026-07-16T03:58:13.477Z",
+          "sourcePolicyId": "coinmarketcap",
+          "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/",
+          "dimensions": {}
+        }
+      ]
+    },
+    {
+      "metricId": "stablecoin.usdt.depegBps",
+      "title": {
+        "zh": "USDT 脱锚幅度",
+        "en": "USDT depeg distance"
+      },
+      "unit": "bps",
+      "cadence": "daily",
+      "quality": {
+        "missing": "preserve_last_known_good",
+        "stale": "show_with_quality_flag",
+        "revisions": "retain"
+      },
+      "defaultDisplay": {
+        "format": "basis_points",
+        "precision": 2
+      },
+      "sources": [
+        {
+          "sourcePolicyId": "coinmarketcap",
+          "label": "CoinMarketCap Pro API",
+          "attribution": "CoinMarketCap",
+          "termsUrl": "https://coinmarketcap.com/terms/"
+        }
+      ],
+      "observations": [
+        {
+          "observedAt": "2026-07-10T00:00:00.000Z",
+          "value": -7.000000000000339,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:47.853Z",
+          "lastCheckedAt": "2026-07-15T23:26:47.853Z",
+          "sourcePolicyId": "coinmarketcap",
+          "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/",
+          "dimensions": {}
+        },
+        {
+          "observedAt": "2026-07-13T00:00:00.000Z",
+          "value": -12.854740587435742,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:47.853Z",
+          "lastCheckedAt": "2026-07-15T23:26:47.853Z",
+          "sourcePolicyId": "coinmarketcap",
+          "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/",
+          "dimensions": {}
+        },
+        {
+          "observedAt": "2026-07-14T00:00:00.000Z",
+          "value": -7.437859670337277,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:47.853Z",
+          "lastCheckedAt": "2026-07-15T23:26:47.853Z",
+          "sourcePolicyId": "coinmarketcap",
+          "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/",
+          "dimensions": {}
+        },
+        {
+          "observedAt": "2026-07-15T00:00:00.000Z",
+          "value": -7.909369625760387,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:47.853Z",
+          "lastCheckedAt": "2026-07-15T23:26:47.853Z",
+          "sourcePolicyId": "coinmarketcap",
+          "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/",
+          "dimensions": {}
+        }
+      ]
+    },
+    {
+      "metricId": "treasury.mstr.btc_holdings",
+      "title": {
+        "zh": "Strategy 比特币持仓",
+        "en": "Strategy bitcoin holdings"
+      },
+      "unit": "BTC",
+      "cadence": "disclosure",
+      "quality": {
+        "missing": "preserve_last_known_good",
+        "stale": "show_with_quality_flag",
+        "revisions": "retain"
+      },
+      "defaultDisplay": {
+        "format": "compact_number",
+        "precision": 0
+      },
+      "sources": [
+        {
+          "sourcePolicyId": "strategy-disclosures",
+          "label": "Strategy investor disclosures",
+          "attribution": "Strategy investor disclosures",
+          "termsUrl": "https://www.strategy.com/investor-relations"
+        }
+      ],
+      "observations": [
+        {
+          "observedAt": "2026-06-21T00:00:00.000Z",
+          "value": 847363,
+          "qualityStatus": "official_form_8k",
+          "firstFetchedAt": "2026-07-16T03:58:13.477Z",
+          "lastCheckedAt": "2026-07-16T03:58:13.477Z",
+          "sourcePolicyId": "strategy-disclosures",
+          "sourceUrl": "https://www.strategy.com/press/strategy-increases-its-usd-reserve-to-1-4-billion-and-btc-reserve-to-847363_06-22-2026",
+          "dimensions": {
+            "company": "Strategy",
+            "ticker": "MSTR",
+            "asset": "BTC"
+          }
+        }
+      ]
+    },
     {
       "metricId": "treasury.mstr.btc_average_cost_usd",
       "title": {
@@ -109,7 +375,7 @@
         {
           "observedAt": "2026-06-28T22:30:00.000Z",
           "value": 5742237,
-          "qualityStatus": "official_sec_exhibit_corrected_release",
+          "qualityStatus": "mixed_disclosure_dates",
           "firstFetchedAt": "2026-07-16T03:58:13.477Z",
           "lastCheckedAt": "2026-07-16T03:58:13.477Z",
           "sourcePolicyId": "sec-edgar",

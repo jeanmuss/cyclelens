@@ -24,7 +24,7 @@ jobs:
       refresh_mode: ${{ github.event_name == 'schedule' && github.event.schedule == '15,30,45 * * * *' && 'fast' || 'full' }}
       require_durable_baseline: ${{ github.event_name == 'schedule' && github.event.schedule == '15,30,45 * * * *' }}
       public_crypto_market_data_approved: ${{ vars.PUBLIC_CRYPTO_MARKET_DATA_APPROVED == '1' }}
-      cmc_redistribution_approved: ${{ vars.CMC_REDISTRIBUTION_APPROVED == '1' }}
+      cmc_redistribution_approved: ${{ vars.CMC_REDISTRIBUTION_APPROVED != '0' }}
       defillama_redistribution_approved: ${{ vars.DEFILLAMA_REDISTRIBUTION_APPROVED == '1' }}
       sosovalue_redistribution_approved: ${{ vars.SOSOVALUE_REDISTRIBUTION_APPROVED == '1' }}
       blockbeats_aux_enabled: ${{ vars.BLOCKBEATS_AUX_ENABLED == '1' }}
@@ -39,7 +39,7 @@ jobs:
     needs: collect-persist
     uses: ./.github/workflows/_project-public-snapshots.yml
     with:
-      cmc_redistribution_approved: ${{ vars.CMC_REDISTRIBUTION_APPROVED == '1' }}
+      cmc_redistribution_approved: ${{ vars.CMC_REDISTRIBUTION_APPROVED != '0' }}
       defillama_redistribution_approved: ${{ vars.DEFILLAMA_REDISTRIBUTION_APPROVED == '1' }}
       sosovalue_redistribution_approved: ${{ vars.SOSOVALUE_REDISTRIBUTION_APPROVED == '1' }}
       blockbeats_aux_enabled: ${{ vars.BLOCKBEATS_AUX_ENABLED == '1' }}
@@ -50,7 +50,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GITHUB_PAGES: "true"
-      CMC_REDISTRIBUTION_APPROVED: ${{ vars.CMC_REDISTRIBUTION_APPROVED || '0' }}
+      CMC_REDISTRIBUTION_APPROVED: ${{ vars.CMC_REDISTRIBUTION_APPROVED || '1' }}
       DEFILLAMA_REDISTRIBUTION_APPROVED: ${{ vars.DEFILLAMA_REDISTRIBUTION_APPROVED || '0' }}
       SOSOVALUE_REDISTRIBUTION_APPROVED: ${{ vars.SOSOVALUE_REDISTRIBUTION_APPROVED || '0' }}
       BLOCKBEATS_AUX_ENABLED: ${{ vars.BLOCKBEATS_AUX_ENABLED || '0' }}

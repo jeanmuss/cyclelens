@@ -141,7 +141,19 @@ export function extractCryptoHistoryRows(dataset) {
     if (!treasury?.ticker || !treasury?.asset) continue;
     const ticker = treasury.ticker.toLowerCase();
     const asset = treasury.asset.toLowerCase();
-    for (const point of treasury.history || []) {
+    const currentHolding = finiteNumber(treasury.holdings) != null && treasury.holdingsObservedAt
+      ? {
+          disclosedAt: treasury.holdingsDisclosedAt || treasury.holdingsObservedAt,
+          holdingsObservedAt: treasury.holdingsObservedAt,
+          holdings: treasury.holdings,
+          acquired: treasury.latestAcquisition,
+          source: treasury.source,
+          sourceUrl: treasury.sourceUrl,
+          qualityStatus: treasury.qualityStatus,
+        }
+      : null;
+    const holdingsHistory = currentHolding ? [...(treasury.history || []), currentHolding] : (treasury.history || []);
+    for (const point of holdingsHistory) {
       rows.push(row({
         metricId: `treasury.${ticker}.${asset}_holdings`,
         observedAt: point.holdingsObservedAt || point.date,

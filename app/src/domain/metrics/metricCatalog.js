@@ -104,7 +104,7 @@ export const METRIC_CATALOG = Object.freeze([
     title: { zh: "Strategy 比特币持仓", en: "Strategy bitcoin holdings" },
     unit: "BTC",
     cadence: "disclosure",
-    sourcePolicyIds: ["strategy-disclosures", "sosovalue"],
+    sourcePolicyIds: ["strategy-disclosures"],
     projections: ["dashboard", "crypto-liquidity"],
     format: "compact_number",
     precision: 0,

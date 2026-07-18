@@ -14,6 +14,7 @@
     "preview": "vite preview --host 127.0.0.1",
     "update-data": "node scripts/update-market-data.mjs",
     "update-crypto-liquidity": "node scripts/update-crypto-liquidity-data.mjs",
+    "apply-reviewed-treasuries": "node scripts/apply-reviewed-treasury-disclosures.mjs",
     "update-market-session": "node scripts/update-market-session-data.mjs",
     "update-market-session-calendar": "node scripts/update-market-session-data.mjs --calendar-only",
     "update-chip-chain": "node scripts/update-chip-chain-data.mjs chip",
