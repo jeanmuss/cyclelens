@@ -3,6 +3,7 @@ import { PRODUCT_CONFIG, productStorageKey } from "../product.config.mjs";
 export const PREFERENCE_KEYS = Object.freeze({
   language: productStorageKey(PRODUCT_CONFIG.storageKeys.language),
   hideCrypto: productStorageKey(PRODUCT_CONFIG.storageKeys.marketClockHideCrypto),
+  dashboardLayout: productStorageKey(PRODUCT_CONFIG.storageKeys.dashboardLayout),
 });
 
 export const LEGACY_PREFERENCE_KEYS = Object.freeze({

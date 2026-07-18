@@ -59,6 +59,28 @@ test("legacy datasets infer observations without relabeling generatedAt", () => 
   assert.equal(entry.timestampFallback, "legacy-generatedAt");
 });
 
+test("public projections preserve their explicit lifecycle without a legacy warning", () => {
+  const payload = {
+    generatedAt: "2026-07-18T04:00:00.000Z",
+    freshness: {
+      observedAt: "2026-07-18T01:00:00.000Z",
+      firstFetchedAt: "2026-07-18T02:00:00.000Z",
+      lastCheckedAt: "2026-07-18T02:30:00.000Z",
+      transformedAt: "2026-07-18T03:00:00.000Z",
+    },
+    metrics: [],
+  };
+  const [, entry] = describeDatasetSource(
+    { id: "dashboardProjection", file: "projections/dashboard.json", pollIntervalMs: 300_000 },
+    Buffer.from(JSON.stringify(payload)),
+  );
+
+  assert.equal(entry.observedAt, payload.freshness.observedAt);
+  assert.equal(entry.fetchedAt, payload.freshness.firstFetchedAt);
+  assert.equal(entry.transformedAt, payload.freshness.transformedAt);
+  assert.equal(entry.timestampFallback, null);
+});
+
 test("manifest deployment time is applied without collapsing source freshness", () => {
   const deployedAt = "2026-07-18T08:00:00.000Z";
   const entry = {

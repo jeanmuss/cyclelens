@@ -18,6 +18,7 @@ const appRoot = resolve(testDirectory, "..");
 test("live-data groups own unique immutable dataset contracts", () => {
   assert.equal(FIVE_MINUTES_MS, 300_000);
   assert.deepEqual(Object.keys(LIVE_DATA_GROUPS), [
+    "dashboard",
     "macro",
     "equitySummary",
     "equityChart",
@@ -35,7 +36,7 @@ test("live-data groups own unique immutable dataset contracts", () => {
     assert.ok(Object.isFrozen(group));
     for (const definition of group) {
       assert.ok(Object.isFrozen(definition));
-      assert.match(definition.path, /^data\/[a-z0-9-]+\.json$/);
+      assert.match(definition.path, /^data\/(?:[a-z0-9-]+\/)?[a-z0-9-]+\.json$/);
       assert.ok(definition.pollIntervalMs >= 30_000 && definition.pollIntervalMs <= 3_600_000);
     }
   }

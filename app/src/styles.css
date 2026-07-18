@@ -1,6 +1,7 @@
 @import "./shared/styles/tokens.css";
 @import "./shared/styles/base.css";
 @import "./shared/styles/components.css";
+@import "./features/dashboard/dashboard.css";
 @import "./features/crypto-cycle/crypto-summary.css";
 @import "./features/us-equity/equity-summary.css";
 @import "./shared/styles/controls.css";

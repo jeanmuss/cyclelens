@@ -51,7 +51,7 @@ export function CryptoCyclePage({ language, setLanguage, t }) {
   }, []);
 
   useEffect(() => {
-    replaceHashState("", cryptoState);
+    replaceHashState("crypto-cycle", cryptoState);
   }, [cryptoState]);
 
   const assetMaps = useMemo(() => dataset ? makeAssetMaps(dataset) : null, [dataset]);

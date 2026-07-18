@@ -21,7 +21,8 @@ const testDirectory = dirname(fileURLToPath(import.meta.url));
 const appRoot = resolve(testDirectory, "..");
 
 const EXPECTED_PUBLIC_ROUTES = [
-  ["crypto", "", "/"],
+  ["dashboard", "", "/"],
+  ["crypto", "crypto-cycle", "/crypto-cycle"],
   ["cryptoLiquidity", "crypto-liquidity", "/crypto-liquidity"],
   ["macro", "macro-calendar", "/macro-calendar"],
   ["equity", "equity-macro", "/equity-macro"],
@@ -31,7 +32,7 @@ const EXPECTED_PUBLIC_ROUTES = [
 ];
 
 test("the public registry owns unique route, navigation, and data contracts", () => {
-  assert.equal(DEFAULT_ROUTE_ID, "crypto");
+  assert.equal(DEFAULT_ROUTE_ID, "dashboard");
   assert.deepEqual(
     PUBLIC_ROUTE_REGISTRY.map(({ id, hashPath, matchPath }) => [id, hashPath, matchPath]),
     EXPECTED_PUBLIC_ROUTES,
@@ -87,9 +88,10 @@ test("route navigation labels and metadata have one bilingual identity source", 
       assert.deepEqual(metadataForRoute(pageId, language), pageMetadata(pageId, language));
     }
   }
+  assert.equal(pageIdentity("dashboard", "zh-CN").navLabel, "首页看板");
   assert.equal(pageIdentity("crypto", "zh-CN").navLabel, "加密周期");
   assert.equal(pageIdentity("crypto", "en-US").navLabel, "Crypto cycle");
-  assert.equal(pageIdentity("unknown", "en").title, PAGE_IDENTITIES.en.crypto.title);
+  assert.equal(pageIdentity("unknown", "en").title, PAGE_IDENTITIES.en.dashboard.title);
 });
 
 test("route wrappers pass registry ids while App keeps the admin loader statically gated", async () => {
@@ -98,6 +100,7 @@ test("route wrappers pass registry ids while App keeps the admin loader statical
   assert.match(appSource, /ADMIN_PAGE_ENABLED\s*\?\s*lazy\(\(\) => import\("\.\/routes\/MacroAdminRoute\.js"\)\)\s*:\s*null/);
 
   const routeFiles = {
+    dashboard: "DashboardRoute.js",
     crypto: "CryptoRoute.js",
     cryptoLiquidity: "CryptoLiquidityRoute.js",
     macro: "MacroRoute.js",

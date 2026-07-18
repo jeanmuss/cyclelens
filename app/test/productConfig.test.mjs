@@ -25,6 +25,7 @@ test("CycleLens product identity and storage namespace have one canonical defini
     productStorageKey(PRODUCT_CONFIG.storageKeys.marketClockHideCrypto),
     "cyclelens:market-clock:hide-crypto",
   );
+  assert.equal(productStorageKey(PRODUCT_CONFIG.storageKeys.dashboardLayout), "cyclelens:dashboard:layout");
 });
 
 test("page titles, User-Agent values, and environment aliases follow CycleLens identity", () => {

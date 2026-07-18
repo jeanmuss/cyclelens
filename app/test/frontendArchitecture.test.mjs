@@ -80,6 +80,7 @@ test("feature modules do not import pages or sibling feature internals", async (
 
 test("page calculations live in React-free model modules", async () => {
   const contracts = [
+    ["pages/DashboardPage.jsx", "features/dashboard/dashboardModel.js"],
     ["pages/MacroPage.jsx", "features/macro/macroCalendarModel.js"],
     ["pages/EquityPage.jsx", "features/us-equity/equityModel.js"],
     ["pages/MarketClockPage.jsx", "features/market-clock/marketClockModel.js"],
@@ -102,6 +103,7 @@ test("all public loading/error/empty/partial/stale states share one contract", a
   const stateSource = await readFile(path.join(srcRoot, "shared/components/DataState.jsx"), "utf8");
   for (const variant of ["loading", "error", "empty", "stale", "partial"]) assert.match(stateSource, new RegExp(`"${variant}"`));
   for (const pageName of [
+    "DashboardPage.jsx",
     "CryptoPage.jsx",
     "CryptoLiquidityPage.jsx",
     "MacroPage.jsx",
@@ -123,6 +125,7 @@ test("styles entrypoint preserves the reviewed token/base/component/feature orde
     "./shared/styles/tokens.css",
     "./shared/styles/base.css",
     "./shared/styles/components.css",
+    "./features/dashboard/dashboard.css",
     "./features/crypto-cycle/crypto-summary.css",
     "./features/us-equity/equity-summary.css",
     "./shared/styles/controls.css",
@@ -157,7 +160,7 @@ test("route registry keeps every public route behind a distinct lazy route modul
     readFile(path.join(srcRoot, "shared/routing/routeLoaders.js"), "utf8"),
   ]);
   assert.doesNotMatch(appSource, /from\s+["'].+\/pages\//);
-  for (const routeName of ["Crypto", "CryptoLiquidity", "Macro", "Equity", "MarketClock", "ChipChain", "RobotChain"]) {
+  for (const routeName of ["Dashboard", "Crypto", "CryptoLiquidity", "Macro", "Equity", "MarketClock", "ChipChain", "RobotChain"]) {
     assert.match(loaderSource, new RegExp(`import\\(\\"\\.\\.\\/\\.\\.\\/routes\\/${routeName}Route\\.js\\"\\)`));
     const routeSource = await readFile(path.join(srcRoot, "routes", `${routeName}Route.js`), "utf8");
     assert.match(routeSource, new RegExp(`pages/${routeName}Page\\.jsx`));

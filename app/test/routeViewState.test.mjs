@@ -103,3 +103,9 @@ test("feature components no longer own route-state definitions", async () => {
   await assert.rejects(readFile(resolve(appRoot, "src", "pages", "AppShared.jsx"), "utf8"), { code: "ENOENT" });
   assert.doesNotMatch(cryptoComponents, /DEFAULT_.*_STATE|VALID_.*|hashParams|read.*StateFromHash|replaceHashState/);
 });
+
+test("crypto page preserves its explicit route when syncing view state", async () => {
+  const cryptoPage = await readFile(resolve(appRoot, "src", "pages", "CryptoPage.jsx"), "utf8");
+  assert.match(cryptoPage, /replaceHashState\("crypto-cycle", cryptoState\)/);
+  assert.doesNotMatch(cryptoPage, /replaceHashState\("", cryptoState\)/);
+});

@@ -106,7 +106,7 @@ test("public projections are page-scoped, provenance-rich, and private-field fre
 });
 
 test("checked-in page projections satisfy the public contract", async () => {
-  for (const projectionId of ["crypto-liquidity", "us-equity"]) {
+  for (const projectionId of ["dashboard", "crypto-liquidity", "us-equity"]) {
     const payload = JSON.parse(await readFile(resolve(appRoot, `public/data/projections/${projectionId}.json`), "utf8"));
     assert.deepEqual(validatePublicProjection(payload), []);
     assert.equal(payload.projectionId, projectionId);

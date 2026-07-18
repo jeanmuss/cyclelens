@@ -6,7 +6,7 @@ import {
 import { SOURCE_POLICY_BY_ID } from "../src/domain/metrics/sourcePolicy.js";
 
 export const PUBLIC_PROJECTION_SCHEMA_VERSION = 1;
-export const PUBLIC_PROJECTION_IDS = Object.freeze(["crypto-liquidity", "us-equity"]);
+export const PUBLIC_PROJECTION_IDS = Object.freeze(["dashboard", "crypto-liquidity", "us-equity"]);
 
 const publicDimensionKeys = new Set([
   "asset",

@@ -1,6 +1,7 @@
 const storageKeys = Object.freeze({
   language: "language",
   marketClockHideCrypto: "market-clock:hide-crypto",
+  dashboardLayout: "dashboard:layout",
 });
 
 const legacyStorageKeys = Object.freeze({

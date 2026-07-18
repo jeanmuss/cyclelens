@@ -1,4 +1,5 @@
 export const PUBLIC_ROUTE_LOADERS = Object.freeze({
+  dashboard: () => import("../../routes/DashboardRoute.js"),
   crypto: () => import("../../routes/CryptoRoute.js"),
   cryptoLiquidity: () => import("../../routes/CryptoLiquidityRoute.js"),
   macro: () => import("../../routes/MacroRoute.js"),

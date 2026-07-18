@@ -1,5 +1,10 @@
 const identities = {
   zh: {
+    dashboard: {
+      navLabel: "首页看板",
+      title: "风险资产数据看板",
+      description: "集中浏览并按设备定制跨市场指标卡片",
+    },
     crypto: {
       navLabel: "加密周期",
       title: "风险资产周期与轮动图",
@@ -42,6 +47,11 @@ const identities = {
     },
   },
   en: {
+    dashboard: {
+      navLabel: "Dashboard",
+      title: "Risk Asset Dashboard",
+      description: "Browse and customize cross-market metric cards on this device",
+    },
     crypto: {
       navLabel: "Crypto cycle",
       title: "Risk Asset Cycle & Rotation Map",
@@ -103,7 +113,7 @@ export function normalizedLanguage(value) {
 
 export function pageIdentity(pageId, language = "zh") {
   const localized = PAGE_IDENTITIES[normalizedLanguage(language)];
-  return localized[pageId] || localized.crypto;
+  return localized[pageId] || localized.dashboard;
 }
 
 export function pageMetadata(pageId, language = "zh") {

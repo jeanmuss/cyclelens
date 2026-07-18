@@ -1,6 +1,6 @@
 import { pageIdentity, pageMetadata } from "../i18n/pageIdentity.js";
 
-export const DEFAULT_ROUTE_ID = "crypto";
+export const DEFAULT_ROUTE_ID = "dashboard";
 
 function routeDefinition(definition) {
   return Object.freeze({
@@ -13,9 +13,15 @@ function routeDefinition(definition) {
 
 export const PUBLIC_ROUTE_REGISTRY = Object.freeze([
   routeDefinition({
-    id: "crypto",
+    id: "dashboard",
     hashPath: "",
     matchPath: "/",
+    dataDependencies: Object.freeze(["dashboardProjection"]),
+  }),
+  routeDefinition({
+    id: "crypto",
+    hashPath: "crypto-cycle",
+    matchPath: "/crypto-cycle",
     dataDependencies: Object.freeze(["marketMonthly"]),
   }),
   routeDefinition({

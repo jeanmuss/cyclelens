@@ -9,14 +9,15 @@ import { pageForLocation, routePathname } from "../src/routeResolver.js";
 const testDirectory = dirname(fileURLToPath(import.meta.url));
 
 const PUBLIC_HASH_ROUTES = [
+  ["#/crypto-cycle", "crypto"],
   ["#/crypto-liquidity", "cryptoLiquidity"],
   ["#/robot-chain", "robotChain"],
   ["#/chip-chain", "chipChain"],
   ["#/market-clock", "marketClock"],
   ["#/macro-calendar", "macro"],
   ["#/equity-macro", "equity"],
-  ["#/", "crypto"],
-  ["#/unknown", "crypto"],
+  ["#/", "dashboard"],
+  ["#/unknown", "dashboard"],
 ];
 
 test("public hash routes resolve to the existing page identifiers", () => {
@@ -26,7 +27,7 @@ test("public hash routes resolve to the existing page identifiers", () => {
 });
 
 test("admin routes remain gated by the build target", () => {
-  assert.equal(pageForLocation({ hash: "#/admin/macro-events", adminEnabled: false }), "crypto");
+  assert.equal(pageForLocation({ hash: "#/admin/macro-events", adminEnabled: false }), "dashboard");
   assert.equal(pageForLocation({ hash: "#/admin/macro-events", adminEnabled: true }), "macroAdmin");
 });
 
@@ -41,8 +42,8 @@ test("repository base paths are removed before pathname fallback routing", () =>
   }), "equity");
 });
 
-test("route selection without browser location data falls back to the crypto page", () => {
-  assert.equal(pageForLocation(), "crypto");
+test("route selection without browser location data falls back to the dashboard", () => {
+  assert.equal(pageForLocation(), "dashboard");
 });
 
 test("the admin route gate remains statically removable from production builds", async () => {

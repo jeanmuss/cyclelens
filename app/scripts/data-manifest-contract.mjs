@@ -12,6 +12,7 @@ export const DATA_MANIFEST_DATASETS = Object.freeze([
   { id: "marketSession", file: "market-session.json", pollIntervalMs: 300_000 },
   { id: "chipChain", file: "chip-chain-hotspots.json", pollIntervalMs: 300_000 },
   { id: "robotChain", file: "robot-chain-watchlist.json", pollIntervalMs: 300_000 },
+  { id: "dashboardProjection", file: "projections/dashboard.json", pollIntervalMs: 300_000 },
   { id: "cryptoLiquidityProjection", file: "projections/crypto-liquidity.json", pollIntervalMs: 300_000 },
   { id: "usEquityProjection", file: "projections/us-equity.json", pollIntervalMs: 300_000 },
 ]);
@@ -65,9 +66,13 @@ export function inferObservedAt(datasetId, payload) {
 
 export function describeDatasetSource(definition, source) {
   const payload = JSON.parse(source.toString("utf8"));
-  const observedAt = validTimestamp(payload.timestamps?.observedAt) || inferObservedAt(definition.id, payload);
-  const fetchedAt = validTimestamp(payload.timestamps?.fetchedAt) || validTimestamp(payload.fetchedAt) || validTimestamp(payload.generatedAt);
-  const transformedAt = validTimestamp(payload.timestamps?.transformedAt) || validTimestamp(payload.generatedAt);
+  const lifecycle = payload.timestamps || payload.freshness || {};
+  const observedAt = validTimestamp(lifecycle.observedAt) || inferObservedAt(definition.id, payload);
+  const fetchedAt = validTimestamp(lifecycle.fetchedAt)
+    || validTimestamp(lifecycle.firstFetchedAt)
+    || validTimestamp(payload.fetchedAt)
+    || validTimestamp(payload.generatedAt);
+  const transformedAt = validTimestamp(lifecycle.transformedAt) || validTimestamp(payload.generatedAt);
 
   return [
     definition.id,
@@ -77,7 +82,7 @@ export function describeDatasetSource(definition, source) {
       observedAt,
       fetchedAt,
       transformedAt,
-      timestampFallback: payload.timestamps ? null : "legacy-generatedAt",
+      timestampFallback: payload.timestamps || payload.freshness ? null : "legacy-generatedAt",
       pollIntervalMs: definition.pollIntervalMs,
       sizeBytes: source.byteLength,
     },

@@ -29,6 +29,10 @@ export const CRYPTO_LIVE_DATA = datasetGroup([
   { id: "marketMonthly", path: "data/market-monthly.json", pollIntervalMs: FIVE_MINUTES_MS },
 ]);
 
+export const DASHBOARD_LIVE_DATA = datasetGroup([
+  { id: "dashboardProjection", path: "data/projections/dashboard.json", pollIntervalMs: FIVE_MINUTES_MS },
+]);
+
 export const CRYPTO_LIQUIDITY_LIVE_DATA = datasetGroup([
   { id: "cryptoLiquidity", path: "data/crypto-liquidity.json", pollIntervalMs: FIVE_MINUTES_MS },
 ]);
@@ -42,6 +46,7 @@ export const ROBOT_CHAIN_LIVE_DATA = datasetGroup([
 ]);
 
 export const LIVE_DATA_GROUPS = Object.freeze({
+  dashboard: DASHBOARD_LIVE_DATA,
   macro: MACRO_LIVE_DATA,
   equitySummary: EQUITY_SUMMARY_LIVE_DATA,
   equityChart: EQUITY_CHART_LIVE_DATA,
