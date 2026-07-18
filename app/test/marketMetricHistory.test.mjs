@@ -15,6 +15,7 @@ import {
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const workspaceRoot = resolve(__dirname, "..", "..");
 const persistScriptPath = resolve(workspaceRoot, "app/scripts/persist-market-metric-history.mjs");
+const adapterScriptPath = resolve(workspaceRoot, "app/scripts/market-history-adapter.mjs");
 
 test("ETF and corporate treasury observations retain source and independent cost dates", () => {
   const rows = extractCryptoHistoryRows({
@@ -264,13 +265,17 @@ test("market metric migration denies browser roles and grants only service-side 
 
 test("market history persistence supports opaque keys and an explicit required mode", async () => {
   const source = await readFile(persistScriptPath, "utf8");
+  const adapterSource = await readFile(adapterScriptPath, "utf8");
+  const pipelineSource = `${source}\n${adapterSource}`;
   assert.match(source, /key && !key\.startsWith\("sb_"\)/, "opaque secret keys must not be sent as bearer JWTs");
   assert.match(source, /"CYCLELENS_REQUIRE_MARKET_HISTORY"/);
   assert.match(source, /"CYCLE_MAP_REQUIRE_MARKET_HISTORY"/, "the old variable remains a migration fallback");
   assert.match(source, /if \(historyRequired\) throw new Error\(detail\)/);
-  assert.match(source, /initialBackfillDays: 400/);
+  assert.match(pipelineSource, /initialBackfillDays: 400/);
   assert.match(source, /slice\(0, 500\)/, "provider errors written to CI logs must be bounded");
   assert.match(source, /cryptoHistoryPageSize = 1000/);
   assert.match(source, /offset: String\(page \* cryptoHistoryPageSize\)/, "database hydration must page beyond PostgREST's common 1000-row cap");
-  assert.match(source, /hydrateCryptoDatasetFromRows/);
+  assert.match(pipelineSource, /hydrateCryptoDatasetFromRows/);
+  assert.match(source, /runMetricAdapter/);
+  assert.match(adapterSource, /MARKET_HISTORY_CONFLICT_FIELDS/);
 });

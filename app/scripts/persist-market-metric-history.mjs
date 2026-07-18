@@ -3,13 +3,8 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { preferredEnvironmentValue } from "../product.config.mjs";
 
-import {
-  dedupeMarketMetricRows,
-  extractCryptoHistoryRows,
-  extractJapanRateRows,
-  hydrateCryptoDatasetFromRows,
-  selectIncrementalObservationRows,
-} from "./market-metric-history-contract.mjs";
+import { runMetricAdapter } from "./metric-adapter-contract.mjs";
+import { createMarketHistoryAdapter } from "./market-history-adapter.mjs";
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const appRoot = resolve(scriptDir, "..");
@@ -136,7 +131,7 @@ async function readCryptoHistoryRows() {
   const rows = [];
   for (let page = 0; page < cryptoHistoryMaxPages; page += 1) {
     const query = new URLSearchParams({
-      select: "metric_id,observed_at,value,source,source_url,source_key,quality_status,fetched_at,last_checked_at,metadata",
+      select: "metric_id,observed_at,value,unit,cadence,source,source_url,source_key,quality_status,fetched_at,last_checked_at,transformed_at,dimensions,metadata",
       metric_id: `in.(${cryptoHistoryMetricIds.join(",")})`,
       observed_at: `gte.${start}`,
       order: "metric_id.asc,observed_at.asc,source_key.asc",
@@ -181,32 +176,33 @@ if (!url || !key) {
 }
 
 try {
-  const [crypto, equity, jgbCache] = await Promise.all([
-    readJson(resolve(appRoot, "public/data/crypto-liquidity.json"), {}),
-    readJson(resolve(appRoot, "public/data/equity-weekly.json"), {}),
-    readJson(resolve(workspaceRoot, "tmp/equity-cache/mof-JGB10Y.json"), null),
-  ]);
-  const latestJgb = await latestJapanObservation();
-  const cryptoRows = extractCryptoHistoryRows(crypto);
-  const japanRows = selectIncrementalObservationRows(
-    extractJapanRateRows(jgbCache, equity),
-    latestJgb,
-    { initialBackfillDays: 400, overlapDays: 14 },
-  );
-  const rows = dedupeMarketMetricRows([...cryptoRows, ...japanRows]);
-  if (!rows.length) throw new Error("No market metric observations were available to persist");
-  await upsertRows(rows);
-  const databaseCryptoRows = await readCryptoHistoryRows();
-  if (!databaseCryptoRows.length) throw new Error("Supabase returned no crypto history rows after persistence");
-  const hydratedCrypto = hydrateCryptoDatasetFromRows(crypto, databaseCryptoRows, new Date().toISOString());
-  await writeJsonAtomic(resolve(appRoot, "public/data/crypto-liquidity.json"), hydratedCrypto);
+  const adapter = createMarketHistoryAdapter({
+    async readInputs() {
+      const [crypto, equity, jgbCache] = await Promise.all([
+        readJson(resolve(appRoot, "public/data/crypto-liquidity.json"), {}),
+        readJson(resolve(appRoot, "public/data/equity-weekly.json"), {}),
+        readJson(resolve(workspaceRoot, "tmp/equity-cache/mof-JGB10Y.json"), null),
+      ]);
+      return { crypto, equity, jgbCache };
+    },
+    latestJapanObservation,
+    readCryptoHistoryRows,
+    upsertRows,
+    writeCryptoDataset(payload) {
+      return writeJsonAtomic(resolve(appRoot, "public/data/crypto-liquidity.json"), payload);
+    },
+  });
+  const result = await runMetricAdapter(adapter, { environment: process.env });
+  const summary = result.projected;
   console.log(JSON.stringify({
     status: "persisted",
-    rows: rows.length,
-    cryptoRows: cryptoRows.length,
-    japanRows: japanRows.length,
-    databaseCryptoRows: databaseCryptoRows.length,
-    hydratedHistoryMetrics: Object.keys(hydratedCrypto.history || {}).length,
+    rows: summary.persistedRows,
+    cryptoRows: summary.cryptoRows,
+    japanRows: summary.japanRows,
+    databaseCryptoRows: summary.databaseRows,
+    rejectedRows: summary.rejectedRows,
+    metricIds: summary.metricIds,
+    hydratedHistoryMetrics: Object.keys(summary.hydratedCrypto.history || {}).length,
   }));
 } catch (error) {
   const detail = redact(error?.message || error);

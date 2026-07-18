@@ -1,0 +1,1666 @@
+{
+  "schemaVersion": 1,
+  "catalogVersion": 1,
+  "projectionId": "us-equity",
+  "generatedAt": "2026-07-16T08:49:09.863Z",
+  "freshness": {
+    "observedAt": "2026-07-14T00:00:00.000Z",
+    "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+    "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+    "transformedAt": "2026-07-16T08:49:09.863Z"
+  },
+  "metrics": [
+    {
+      "metricId": "macro.JGB10Y.value",
+      "title": {
+        "zh": "日本十年期国债收益率",
+        "en": "Japan 10-year government bond yield"
+      },
+      "unit": "percent",
+      "cadence": "daily",
+      "quality": {
+        "missing": "preserve_last_known_good",
+        "stale": "show_with_quality_flag",
+        "revisions": "retain"
+      },
+      "defaultDisplay": {
+        "format": "percent",
+        "precision": 3
+      },
+      "sources": [
+        {
+          "sourcePolicyId": "japan-mof",
+          "label": "Japan Ministry of Finance",
+          "attribution": "Japan Ministry of Finance",
+          "termsUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/qa.htm"
+        }
+      ],
+      "observations": [
+        {
+          "observedAt": "2026-01-15T00:00:00.000Z",
+          "value": 2.164,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-01-16T00:00:00.000Z",
+          "value": 2.182,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-01-20T00:00:00.000Z",
+          "value": 2.33,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-01-21T00:00:00.000Z",
+          "value": 2.28,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-01-22T00:00:00.000Z",
+          "value": 2.239,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-01-23T00:00:00.000Z",
+          "value": 2.253,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-01-26T00:00:00.000Z",
+          "value": 2.236,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-01-27T00:00:00.000Z",
+          "value": 2.281,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-01-28T00:00:00.000Z",
+          "value": 2.237,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-01-29T00:00:00.000Z",
+          "value": 2.252,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-01-30T00:00:00.000Z",
+          "value": 2.247,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-02-02T00:00:00.000Z",
+          "value": 2.235,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-02-03T00:00:00.000Z",
+          "value": 2.258,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-02-04T00:00:00.000Z",
+          "value": 2.249,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-02-05T00:00:00.000Z",
+          "value": 2.231,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-02-06T00:00:00.000Z",
+          "value": 2.236,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-02-09T00:00:00.000Z",
+          "value": 2.289,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-02-10T00:00:00.000Z",
+          "value": 2.241,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-02-12T00:00:00.000Z",
+          "value": 2.238,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-02-13T00:00:00.000Z",
+          "value": 2.218,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-02-17T00:00:00.000Z",
+          "value": 2.143,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-02-18T00:00:00.000Z",
+          "value": 2.152,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-02-19T00:00:00.000Z",
+          "value": 2.157,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-02-20T00:00:00.000Z",
+          "value": 2.125,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-02-24T00:00:00.000Z",
+          "value": 2.119,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-02-25T00:00:00.000Z",
+          "value": 2.154,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-02-26T00:00:00.000Z",
+          "value": 2.168,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-02-27T00:00:00.000Z",
+          "value": 2.132,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-03-02T00:00:00.000Z",
+          "value": 2.087,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-03-03T00:00:00.000Z",
+          "value": 2.148,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-03-04T00:00:00.000Z",
+          "value": 2.134,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-03-05T00:00:00.000Z",
+          "value": 2.175,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-03-06T00:00:00.000Z",
+          "value": 2.18,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-03-09T00:00:00.000Z",
+          "value": 2.205,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-03-10T00:00:00.000Z",
+          "value": 2.199,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-03-11T00:00:00.000Z",
+          "value": 2.178,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-03-12T00:00:00.000Z",
+          "value": 2.201,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-03-13T00:00:00.000Z",
+          "value": 2.255,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-03-16T00:00:00.000Z",
+          "value": 2.288,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-03-17T00:00:00.000Z",
+          "value": 2.279,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-03-18T00:00:00.000Z",
+          "value": 2.231,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-03-19T00:00:00.000Z",
+          "value": 2.273,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-03-23T00:00:00.000Z",
+          "value": 2.322,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-03-24T00:00:00.000Z",
+          "value": 2.282,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-03-25T00:00:00.000Z",
+          "value": 2.267,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-03-26T00:00:00.000Z",
+          "value": 2.286,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-03-27T00:00:00.000Z",
+          "value": 2.38,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-03-30T00:00:00.000Z",
+          "value": 2.368,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-03-31T00:00:00.000Z",
+          "value": 2.366,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-04-01T00:00:00.000Z",
+          "value": 2.315,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-04-02T00:00:00.000Z",
+          "value": 2.395,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-04-06T00:00:00.000Z",
+          "value": 2.429,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-04-07T00:00:00.000Z",
+          "value": 2.411,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-04-08T00:00:00.000Z",
+          "value": 2.374,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-04-09T00:00:00.000Z",
+          "value": 2.397,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-04-10T00:00:00.000Z",
+          "value": 2.439,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-04-13T00:00:00.000Z",
+          "value": 2.467,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-04-14T00:00:00.000Z",
+          "value": 2.423,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-04-15T00:00:00.000Z",
+          "value": 2.414,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-04-16T00:00:00.000Z",
+          "value": 2.409,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-04-17T00:00:00.000Z",
+          "value": 2.428,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-04-20T00:00:00.000Z",
+          "value": 2.405,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-04-21T00:00:00.000Z",
+          "value": 2.392,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-04-22T00:00:00.000Z",
+          "value": 2.406,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-04-23T00:00:00.000Z",
+          "value": 2.429,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-04-24T00:00:00.000Z",
+          "value": 2.443,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-04-27T00:00:00.000Z",
+          "value": 2.477,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-04-28T00:00:00.000Z",
+          "value": 2.468,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-04-30T00:00:00.000Z",
+          "value": 2.52,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-05-01T00:00:00.000Z",
+          "value": 2.507,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-05-07T00:00:00.000Z",
+          "value": 2.485,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-05-08T00:00:00.000Z",
+          "value": 2.485,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-05-11T00:00:00.000Z",
+          "value": 2.527,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-05-12T00:00:00.000Z",
+          "value": 2.546,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-05-13T00:00:00.000Z",
+          "value": 2.587,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-05-14T00:00:00.000Z",
+          "value": 2.628,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-05-15T00:00:00.000Z",
+          "value": 2.691,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-05-18T00:00:00.000Z",
+          "value": 2.729,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-05-19T00:00:00.000Z",
+          "value": 2.783,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-05-20T00:00:00.000Z",
+          "value": 2.77,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-05-21T00:00:00.000Z",
+          "value": 2.748,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-05-22T00:00:00.000Z",
+          "value": 2.749,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-05-26T00:00:00.000Z",
+          "value": 2.713,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-05-27T00:00:00.000Z",
+          "value": 2.687,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-05-28T00:00:00.000Z",
+          "value": 2.692,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-05-29T00:00:00.000Z",
+          "value": 2.657,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-06-01T00:00:00.000Z",
+          "value": 2.682,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-06-02T00:00:00.000Z",
+          "value": 2.577,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-06-03T00:00:00.000Z",
+          "value": 2.645,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-06-04T00:00:00.000Z",
+          "value": 2.671,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-06-05T00:00:00.000Z",
+          "value": 2.669,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-06-08T00:00:00.000Z",
+          "value": 2.715,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-06-09T00:00:00.000Z",
+          "value": 2.669,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-06-10T00:00:00.000Z",
+          "value": 2.681,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-06-11T00:00:00.000Z",
+          "value": 2.682,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-06-12T00:00:00.000Z",
+          "value": 2.643,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-06-15T00:00:00.000Z",
+          "value": 2.589,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-06-16T00:00:00.000Z",
+          "value": 2.655,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-06-17T00:00:00.000Z",
+          "value": 2.613,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-06-18T00:00:00.000Z",
+          "value": 2.628,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-06-22T00:00:00.000Z",
+          "value": 2.677,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-06-23T00:00:00.000Z",
+          "value": 2.683,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-06-24T00:00:00.000Z",
+          "value": 2.674,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-06-25T00:00:00.000Z",
+          "value": 2.637,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-06-26T00:00:00.000Z",
+          "value": 2.611,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-06-29T00:00:00.000Z",
+          "value": 2.644,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-06-30T00:00:00.000Z",
+          "value": 2.69,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-07-01T00:00:00.000Z",
+          "value": 2.711,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-07-02T00:00:00.000Z",
+          "value": 2.778,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-07-06T00:00:00.000Z",
+          "value": 2.823,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-07-07T00:00:00.000Z",
+          "value": 2.834,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-07-08T00:00:00.000Z",
+          "value": 2.856,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-07-09T00:00:00.000Z",
+          "value": 2.866,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-07-10T00:00:00.000Z",
+          "value": 2.761,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-07-13T00:00:00.000Z",
+          "value": 2.786,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        },
+        {
+          "observedAt": "2026-07-14T00:00:00.000Z",
+          "value": 2.713,
+          "qualityStatus": "official",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "japan-mof",
+          "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv",
+          "dimensions": {
+            "country": "JP",
+            "tenor": "10Y",
+            "sourceColumn": "10Y"
+          }
+        }
+      ]
+    }
+  ]
+}

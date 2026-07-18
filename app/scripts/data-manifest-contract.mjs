@@ -12,6 +12,8 @@ export const DATA_MANIFEST_DATASETS = Object.freeze([
   { id: "marketSession", file: "market-session.json", pollIntervalMs: 300_000 },
   { id: "chipChain", file: "chip-chain-hotspots.json", pollIntervalMs: 300_000 },
   { id: "robotChain", file: "robot-chain-watchlist.json", pollIntervalMs: 300_000 },
+  { id: "cryptoLiquidityProjection", file: "projections/crypto-liquidity.json", pollIntervalMs: 300_000 },
+  { id: "usEquityProjection", file: "projections/us-equity.json", pollIntervalMs: 300_000 },
 ]);
 
 export function validTimestamp(value) {
@@ -26,6 +28,7 @@ export function latestTimestamp(values) {
 }
 
 export function inferObservedAt(datasetId, payload) {
+  if (datasetId.endsWith("Projection")) return validTimestamp(payload.freshness?.observedAt);
   if (datasetId === "marketMonthly") {
     return latestTimestamp(Object.values(payload.assets || {}).flatMap((asset) => [
       asset.updatedAt,

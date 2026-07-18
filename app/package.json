@@ -4,10 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "npm run generate-data-manifest && vite --host 127.0.0.1",
+    "dev": "npm run project-public-data && npm run generate-data-manifest && vite --host 127.0.0.1",
     "admin:macro-events": "node scripts/macro-events-admin-api.mjs",
-    "build": "npm run generate-data-manifest && vite build",
-    "build:pages": "npm run generate-data-manifest && vite build && node scripts/prepare-github-pages.mjs",
+    "build": "npm run project-public-data && npm run generate-data-manifest && vite build",
+    "build:pages": "npm run build && node scripts/prepare-github-pages.mjs",
     "lint": "node scripts/lint-source.mjs",
     "test": "node --test",
     "check": "npm run lint && npm test && npm run verify-market-calendar && npm run build",
@@ -24,6 +24,7 @@
     "update-macro-calendar": "python scripts/update-macro-calendar.py",
     "update-chart-series": "node scripts/update-chart-series-data.mjs",
     "persist-market-history": "node scripts/persist-market-metric-history.mjs",
+    "project-public-data": "node scripts/project-public-metrics.mjs",
     "generate-data-manifest": "node scripts/generate-data-manifest.mjs",
     "verify-market-calendar": "node scripts/verify-market-session-calendar.mjs"
   },

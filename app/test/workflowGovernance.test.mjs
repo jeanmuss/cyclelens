@@ -4,46 +4,68 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const workflowPath = resolve(__dirname, "..", "..", ".github", "workflows", "update-market-data.yml");
-const deployWorkflowPath = resolve(__dirname, "..", "..", ".github", "workflows", "deploy-pages.yml");
+const directory = dirname(fileURLToPath(import.meta.url));
+const workflowRoot = resolve(directory, "..", "..", ".github", "workflows");
 
-test("versioned market snapshots are isolated from the development branch", async () => {
-  const workflow = await readFile(workflowPath, "utf8");
+async function workflow(name) {
+  return readFile(resolve(workflowRoot, name), "utf8");
+}
 
-  assert.match(workflow, /fetch-depth:\s*0/);
-  assert.match(workflow, /refs\/remotes\/origin\/data-cache/);
-  assert.match(workflow, /git commit-tree/);
-  assert.match(workflow, /refs\/heads\/data-cache/);
-  assert.doesNotMatch(workflow, /^\s+git commit -m /m);
-  assert.doesNotMatch(workflow, /^\s+git push\s*$/m);
+test("deployment and data-cache workflows reuse collection and projection stages", async () => {
+  for (const name of ["deploy-pages.yml", "update-market-data.yml"]) {
+    const source = await workflow(name);
+    const collect = source.indexOf("uses: ./.github/workflows/_collect-persist.yml");
+    const project = source.indexOf("uses: ./.github/workflows/_project-public-snapshots.yml");
+    assert.ok(collect >= 0 && project > collect);
+    assert.match(source, /project-public-snapshots:\s*\n\s+needs: collect-persist/);
+    assert.match(source, /secrets: inherit/);
+  }
 });
 
-test("scheduled deployments fall back to the durable data branch", async () => {
-  const workflow = await readFile(deployWorkflowPath, "utf8");
-
-  assert.match(workflow, /id:\s*restore-data-baseline/);
-  assert.match(workflow, /steps\.restore-data-baseline\.outputs\.cache-hit == ''/);
-  assert.match(workflow, /data-cache:refs\/remotes\/origin\/data-cache/);
-  assert.match(workflow, /git restore --source=refs\/remotes\/origin\/data-cache -- app\/public\/data/);
-  assert.match(workflow, /A fast refresh requires either an Actions cache or origin\/data-cache/);
-  assert.doesNotMatch(workflow, /fail-on-cache-miss:/);
+test("collection restores LKG, gates reviewed sources, persists, then uploads private input", async () => {
+  const source = await workflow("_collect-persist.yml");
+  assert.match(source, /on:\s*\n\s+workflow_call:/);
+  assert.match(source, /data-cache:refs\/remotes\/origin\/data-cache/);
+  assert.match(source, /preserving the checked-in baseline/);
+  assert.match(source, /inputs\.public_crypto_market_data_approved/);
+  assert.match(source, /inputs\.alpaca_redistribution_approved/);
+  assert.match(source, /inputs\.fred_third_party_series_approved/);
+  assert.doesNotMatch(source, /update-equity-data\.py/, "blocked unofficial equity adapters must not run in production");
+  const chart = source.indexOf("Refresh interactive chart series");
+  const persist = source.indexOf("Persist canonical market metric history");
+  const upload = source.indexOf("Upload collected private build input");
+  assert.ok(chart < persist && persist < upload);
+  assert.match(source.slice(persist, upload), /CYCLELENS_REQUIRE_MARKET_HISTORY/);
+  assert.match(source, /retention-days: 1/);
 });
 
-test("full refreshes persist metric history after generation and before publication", async () => {
-  const updateWorkflow = await readFile(workflowPath, "utf8");
-  const deployWorkflow = await readFile(deployWorkflowPath, "utf8");
+test("projection is contract-tested before the reviewed artifact is published", async () => {
+  const source = await workflow("_project-public-snapshots.yml");
+  const download = source.indexOf("Download collected build input");
+  const project = source.indexOf("Generate page-scoped public projections");
+  const verify = source.indexOf("Verify projection contracts and build the public manifest");
+  const upload = source.indexOf("Upload reviewed public snapshot");
+  assert.ok(download < project && project < verify && verify < upload);
+  assert.match(source, /node --test test\/metricPipeline\.test\.mjs test\/dataManifest\.test\.mjs/);
+  assert.match(source, /CMC_REDISTRIBUTION_APPROVED/);
+  assert.match(source, /DEFILLAMA_REDISTRIBUTION_APPROVED/);
+});
 
-  const updateChart = updateWorkflow.indexOf("Refresh interactive chart series");
-  const updatePersist = updateWorkflow.indexOf("Persist derived market metric history");
-  const updatePublish = updateWorkflow.indexOf("Publish the versioned data snapshot");
-  assert.ok(updateChart < updatePersist && updatePersist < updatePublish);
+test("deployment builds only from the reviewed projection artifact", async () => {
+  const source = await workflow("deploy-pages.yml");
+  assert.match(source, /build:\s*\n\s+needs: project-public-snapshots/);
+  assert.match(source, /name: public-market-snapshot/);
+  assert.match(source, /npm --prefix app run build:pages/);
+  assert.match(source, /uses: actions\/deploy-pages@v4/);
+  assert.doesNotMatch(source, /scripts\/update-market-data\.mjs/);
+});
 
-  const deployChart = deployWorkflow.indexOf("Refresh interactive chart series");
-  const deployPersist = deployWorkflow.indexOf("Persist derived market metric history");
-  const deployBuild = deployWorkflow.indexOf("Build static site for GitHub Pages");
-  assert.ok(deployChart < deployPersist && deployPersist < deployBuild);
-  assert.match(deployWorkflow.slice(deployPersist, deployBuild), /github\.event\.schedule == '0 \* \* \* \*'/);
-  assert.match(updateWorkflow.slice(updatePersist, updatePublish), /vars\.MARKET_HISTORY_REQUIRED \|\| '0'/);
-  assert.match(deployWorkflow.slice(deployPersist, deployBuild), /vars\.MARKET_HISTORY_REQUIRED \|\| '0'/);
+test("versioned snapshots remain isolated on data-cache", async () => {
+  const source = await workflow("update-market-data.yml");
+  assert.match(source, /fetch-depth:\s*0/);
+  assert.match(source, /refs\/remotes\/origin\/data-cache/);
+  assert.match(source, /git commit-tree/);
+  assert.match(source, /refs\/heads\/data-cache/);
+  assert.doesNotMatch(source, /^\s+git commit -m /m);
+  assert.doesNotMatch(source, /^\s+git push\s*$/m);
 });

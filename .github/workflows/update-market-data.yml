@@ -15,126 +15,52 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  update:
+  collect-persist:
+    uses: ./.github/workflows/_collect-persist.yml
+    with:
+      refresh_mode: full
+      public_crypto_market_data_approved: ${{ vars.PUBLIC_CRYPTO_MARKET_DATA_APPROVED == '1' }}
+      cmc_redistribution_approved: ${{ vars.CMC_REDISTRIBUTION_APPROVED == '1' }}
+      defillama_redistribution_approved: ${{ vars.DEFILLAMA_REDISTRIBUTION_APPROVED == '1' }}
+      sosovalue_redistribution_approved: ${{ vars.SOSOVALUE_REDISTRIBUTION_APPROVED == '1' }}
+      blockbeats_aux_enabled: ${{ vars.BLOCKBEATS_AUX_ENABLED == '1' }}
+      blockbeats_redistribution_approved: ${{ vars.BLOCKBEATS_REDISTRIBUTION_APPROVED == '1' }}
+      alpaca_redistribution_approved: ${{ vars.ALPACA_REDISTRIBUTION_APPROVED == '1' }}
+      fred_third_party_series_approved: ${{ vars.FRED_THIRD_PARTY_SERIES_APPROVED == '1' }}
+      adp_data_display_approved: ${{ vars.ADP_DATA_DISPLAY_APPROVED == '1' }}
+      cyclelens_require_market_history: ${{ vars.MARKET_HISTORY_REQUIRED == '1' }}
+    secrets: inherit
+
+  project-public-snapshots:
+    needs: collect-persist
+    uses: ./.github/workflows/_project-public-snapshots.yml
+    with:
+      cmc_redistribution_approved: ${{ vars.CMC_REDISTRIBUTION_APPROVED == '1' }}
+      defillama_redistribution_approved: ${{ vars.DEFILLAMA_REDISTRIBUTION_APPROVED == '1' }}
+      sosovalue_redistribution_approved: ${{ vars.SOSOVALUE_REDISTRIBUTION_APPROVED == '1' }}
+      blockbeats_aux_enabled: ${{ vars.BLOCKBEATS_AUX_ENABLED == '1' }}
+      blockbeats_redistribution_approved: ${{ vars.BLOCKBEATS_REDISTRIBUTION_APPROVED == '1' }}
+
+  publish-versioned-snapshot:
+    needs: project-public-snapshots
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Restore the latest versioned data snapshot
-        shell: bash
-        run: |
-          if git fetch --no-tags origin data-cache:refs/remotes/origin/data-cache; then
-            git restore --source=refs/remotes/origin/data-cache -- \
-              app/data/manual-macro-events.json \
-              app/public/data/market-monthly.json \
-              app/public/data/crypto-liquidity.json \
-              app/public/data/market-session.json \
-              app/public/data/equity-weekly.json \
-              app/public/data/equity-fast.json \
-              app/public/data/macro-calendar.json \
-              app/public/data/chip-chain-hotspots.json \
-              app/public/data/robot-chain-watchlist.json \
-              app/public/data/chart-series.json
-            echo "Restored the data baseline from origin/data-cache"
-          else
-            echo "origin/data-cache does not exist yet; bootstrapping from the checked-in baseline"
-          fi
-      - uses: actions/setup-node@v4
+      - uses: actions/download-artifact@v4
         with:
-          node-version: 22
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-          cache: "pip"
-          cache-dependency-path: app/requirements-equity.txt
-      - name: Install equity data dependencies
-        working-directory: app
-        run: python -m pip install -r requirements-equity.txt
-      - name: Refresh normalized monthly data
-        working-directory: app
-        run: node scripts/update-market-data.mjs
-      - name: Refresh crypto liquidity data
-        working-directory: app
-        env:
-          CMC_PRO_API_KEY: ${{ secrets.CMC_PRO_API_KEY }}
-          SOSOVALUE_API_KEY: ${{ secrets.SOSOVALUE_API_KEY }}
-          SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
-          BLOCKBEATS_API_KEY: ${{ secrets.BLOCKBEATS_API_KEY }}
-          BLOCKBEATS_AUX_ENABLED: ${{ vars.BLOCKBEATS_AUX_ENABLED }}
-        run: node scripts/update-crypto-liquidity-data.mjs
-      - name: Refresh market session data
-        working-directory: app
-        env:
-          CMC_PRO_API_KEY: ${{ secrets.CMC_PRO_API_KEY }}
-        run: node scripts/update-market-session-data.mjs
-      - name: Refresh chip-chain data
-        working-directory: app
-        env:
-          APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
-          APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
-          CHIP_CHAIN_US_FEED: ${{ vars.CHIP_CHAIN_US_FEED }}
-        run: node scripts/update-chip-chain-data.mjs
-      - name: Refresh robot-chain data
-        working-directory: app
-        env:
-          APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
-          APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
-          CHIP_CHAIN_US_FEED: ${{ vars.CHIP_CHAIN_US_FEED }}
-        run: node scripts/update-chip-chain-data.mjs robot
-      - name: Refresh weekly equity data
-        working-directory: app
-        env:
-          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
-        run: python scripts/update-equity-data.py
-      - name: Refresh fast equity indicators
-        working-directory: app
-        env:
-          CMC_PRO_API_KEY: ${{ secrets.CMC_PRO_API_KEY }}
-          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
-        run: python scripts/update-equity-fast-data.py
-      - name: Sync manual macro events
-        working-directory: app
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-        run: node scripts/sync-manual-macro-events-from-supabase.mjs
-      - name: Refresh macro calendar
-        working-directory: app
-        env:
-          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
-        run: python scripts/update-macro-calendar.py
-      - name: Refresh interactive chart series
-        working-directory: app
-        run: node scripts/update-chart-series-data.mjs
-      - name: Persist derived market metric history
-        working-directory: app
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-          CYCLELENS_REQUIRE_MARKET_HISTORY: ${{ vars.MARKET_HISTORY_REQUIRED || '0' }}
-        run: node scripts/persist-market-metric-history.mjs
-      - name: Publish the versioned data snapshot
+          name: public-market-snapshot
+          path: .
+      - name: Publish the isolated data-cache snapshot
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -- \
-            app/data/manual-macro-events.json \
-            app/public/data/market-monthly.json \
-            app/public/data/crypto-liquidity.json \
-            app/public/data/market-session.json \
-            app/public/data/equity-weekly.json \
-            app/public/data/equity-fast.json \
-            app/public/data/macro-calendar.json \
-            app/public/data/chip-chain-hotspots.json \
-            app/public/data/robot-chain-watchlist.json \
-            app/public/data/chart-series.json
+          git add -- app/data/manual-macro-events.json app/public/data
 
           snapshot_tree="$(git write-tree)"
-          if git show-ref --verify --quiet refs/remotes/origin/data-cache; then
+          if git fetch --no-tags origin data-cache:refs/remotes/origin/data-cache; then
             parent_commit="$(git rev-parse refs/remotes/origin/data-cache)"
           else
             parent_commit="$GITHUB_SHA"
@@ -144,7 +70,7 @@ jobs:
           if [ "$snapshot_tree" = "$parent_tree" ]; then
             if ! git show-ref --verify --quiet refs/remotes/origin/data-cache; then
               git push origin "$parent_commit:refs/heads/data-cache"
-              echo "Bootstrapped origin/data-cache from the current checked-in baseline"
+              echo "Bootstrapped origin/data-cache from the checked-in baseline"
               exit 0
             fi
             echo "Versioned data snapshot is already current"

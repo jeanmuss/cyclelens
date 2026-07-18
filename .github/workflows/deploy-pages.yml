@@ -18,124 +18,63 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  collect-persist:
+    uses: ./.github/workflows/_collect-persist.yml
+    with:
+      refresh_mode: ${{ github.event_name == 'schedule' && github.event.schedule == '15,30,45 * * * *' && 'fast' || 'full' }}
+      require_durable_baseline: ${{ github.event_name == 'schedule' && github.event.schedule == '15,30,45 * * * *' }}
+      public_crypto_market_data_approved: ${{ vars.PUBLIC_CRYPTO_MARKET_DATA_APPROVED == '1' }}
+      cmc_redistribution_approved: ${{ vars.CMC_REDISTRIBUTION_APPROVED == '1' }}
+      defillama_redistribution_approved: ${{ vars.DEFILLAMA_REDISTRIBUTION_APPROVED == '1' }}
+      sosovalue_redistribution_approved: ${{ vars.SOSOVALUE_REDISTRIBUTION_APPROVED == '1' }}
+      blockbeats_aux_enabled: ${{ vars.BLOCKBEATS_AUX_ENABLED == '1' }}
+      blockbeats_redistribution_approved: ${{ vars.BLOCKBEATS_REDISTRIBUTION_APPROVED == '1' }}
+      alpaca_redistribution_approved: ${{ vars.ALPACA_REDISTRIBUTION_APPROVED == '1' }}
+      fred_third_party_series_approved: ${{ vars.FRED_THIRD_PARTY_SERIES_APPROVED == '1' }}
+      adp_data_display_approved: ${{ vars.ADP_DATA_DISPLAY_APPROVED == '1' }}
+      cyclelens_require_market_history: ${{ vars.MARKET_HISTORY_REQUIRED == '1' }}
+    secrets: inherit
+
+  project-public-snapshots:
+    needs: collect-persist
+    uses: ./.github/workflows/_project-public-snapshots.yml
+    with:
+      cmc_redistribution_approved: ${{ vars.CMC_REDISTRIBUTION_APPROVED == '1' }}
+      defillama_redistribution_approved: ${{ vars.DEFILLAMA_REDISTRIBUTION_APPROVED == '1' }}
+      sosovalue_redistribution_approved: ${{ vars.SOSOVALUE_REDISTRIBUTION_APPROVED == '1' }}
+      blockbeats_aux_enabled: ${{ vars.BLOCKBEATS_AUX_ENABLED == '1' }}
+      blockbeats_redistribution_approved: ${{ vars.BLOCKBEATS_REDISTRIBUTION_APPROVED == '1' }}
+
   build:
+    needs: project-public-snapshots
     runs-on: ubuntu-latest
     env:
       GITHUB_PAGES: "true"
+      CMC_REDISTRIBUTION_APPROVED: ${{ vars.CMC_REDISTRIBUTION_APPROVED || '0' }}
+      DEFILLAMA_REDISTRIBUTION_APPROVED: ${{ vars.DEFILLAMA_REDISTRIBUTION_APPROVED || '0' }}
+      SOSOVALUE_REDISTRIBUTION_APPROVED: ${{ vars.SOSOVALUE_REDISTRIBUTION_APPROVED || '0' }}
+      BLOCKBEATS_AUX_ENABLED: ${{ vars.BLOCKBEATS_AUX_ENABLED || '0' }}
+      BLOCKBEATS_REDISTRIBUTION_APPROVED: ${{ vars.BLOCKBEATS_REDISTRIBUTION_APPROVED || '0' }}
     steps:
       - uses: actions/checkout@v4
-      - name: Restore the last successful data baseline
-        id: restore-data-baseline
-        if: github.event_name == 'schedule'
-        uses: actions/cache/restore@v4
+      - uses: actions/download-artifact@v4
         with:
-          path: app/public/data
-          key: pages-data-${{ github.run_id }}-${{ github.run_attempt }}
-          restore-keys: |
-            pages-data-
-      - name: Restore the durable versioned data baseline
-        if: steps.restore-data-baseline.outputs.cache-hit == ''
-        shell: bash
-        run: |
-          if git fetch --no-tags origin data-cache:refs/remotes/origin/data-cache; then
-            git restore --source=refs/remotes/origin/data-cache -- app/public/data
-            echo "Restored the durable baseline from origin/data-cache"
-          elif [ "${{ github.event_name }}" = "schedule" ] && [ "${{ github.event.schedule }}" = "15,30,45 * * * *" ]; then
-            echo "A fast refresh requires either an Actions cache or origin/data-cache" >&2
-            exit 1
-          else
-            echo "No durable snapshot exists yet; the full refresh will use the checked-in baseline"
-          fi
+          name: public-market-snapshot
+          path: .
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
           cache-dependency-path: app/package-lock.json
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-          cache: "pip"
-          cache-dependency-path: app/requirements-equity.txt
       - name: Install frontend dependencies
         run: npm --prefix app ci
-      - name: Run source and calendar checks
+      - name: Verify source, data, and calendar contracts
         run: |
           npm --prefix app run lint
           npm --prefix app test
           npm --prefix app run verify-market-calendar
-      - name: Install equity data dependencies
-        run: python -m pip install -r app/requirements-equity.txt
-      - name: Refresh hourly crypto spot cache
-        if: github.event_name != 'schedule' || github.event.schedule == '0 * * * *'
-        run: npm --prefix app run update-data
-      - name: Refresh crypto liquidity cache
-        if: github.event_name != 'schedule' || github.event.schedule == '0 * * * *'
-        env:
-          CMC_PRO_API_KEY: ${{ secrets.CMC_PRO_API_KEY }}
-          SOSOVALUE_API_KEY: ${{ secrets.SOSOVALUE_API_KEY }}
-          SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
-          BLOCKBEATS_API_KEY: ${{ secrets.BLOCKBEATS_API_KEY }}
-          BLOCKBEATS_AUX_ENABLED: ${{ vars.BLOCKBEATS_AUX_ENABLED }}
-        run: npm --prefix app run update-crypto-liquidity
-      - name: Refresh US market cache
-        if: github.event_name != 'schedule' || github.event.schedule == '0 * * * *'
-        env:
-          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
-        run: npm --prefix app run update-equity-data
-      - name: Refresh fast US market indicators
-        env:
-          CMC_PRO_API_KEY: ${{ secrets.CMC_PRO_API_KEY }}
-          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
-        run: npm --prefix app run update-equity-fast-data
-      - name: Sync manual macro events
-        if: github.event_name != 'schedule' || github.event.schedule == '0 * * * *'
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-        run: npm --prefix app run sync-manual-macro-events
-      - name: Refresh macro calendar
-        if: github.event_name != 'schedule' || github.event.schedule == '0 * * * *'
-        env:
-          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
-        run: npm --prefix app run update-macro-calendar
-      - name: Refresh market session cache
-        if: github.event_name != 'schedule' || github.event.schedule == '0 * * * *'
-        env:
-          CMC_PRO_API_KEY: ${{ secrets.CMC_PRO_API_KEY }}
-        run: npm --prefix app run update-market-session
-      - name: Refresh chip-chain cache
-        if: github.event_name != 'schedule' || github.event.schedule == '0 * * * *'
-        env:
-          APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
-          APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
-          CHIP_CHAIN_US_FEED: ${{ vars.CHIP_CHAIN_US_FEED }}
-        run: npm --prefix app run update-chip-chain
-      - name: Refresh robot-chain cache
-        if: github.event_name != 'schedule' || github.event.schedule == '0 * * * *'
-        env:
-          APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
-          APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
-          CHIP_CHAIN_US_FEED: ${{ vars.CHIP_CHAIN_US_FEED }}
-        run: npm --prefix app run update-robot-chain
-      - name: Refresh interactive chart series
-        if: github.event_name != 'schedule' || github.event.schedule == '0 * * * *'
-        run: npm --prefix app run update-chart-series
-      - name: Persist derived market metric history
-        if: github.event_name != 'schedule' || github.event.schedule == '0 * * * *'
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-          CYCLELENS_REQUIRE_MARKET_HISTORY: ${{ vars.MARKET_HISTORY_REQUIRED || '0' }}
-        run: npm --prefix app run persist-market-history
       - name: Build static site for GitHub Pages
         run: npm --prefix app run build:pages
-      - name: Save the successful build data baseline
-        uses: actions/cache/save@v4
-        with:
-          path: app/public/data
-          key: pages-data-${{ github.run_id }}-${{ github.run_attempt }}
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

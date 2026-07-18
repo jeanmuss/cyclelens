@@ -1,0 +1,187 @@
+name: Collect and persist market data
+
+on:
+  workflow_call:
+    inputs:
+      refresh_mode:
+        type: string
+        required: true
+      require_durable_baseline:
+        type: boolean
+        default: false
+      public_crypto_market_data_approved:
+        type: boolean
+        default: false
+      cmc_redistribution_approved:
+        type: boolean
+        default: false
+      defillama_redistribution_approved:
+        type: boolean
+        default: false
+      sosovalue_redistribution_approved:
+        type: boolean
+        default: false
+      blockbeats_aux_enabled:
+        type: boolean
+        default: false
+      blockbeats_redistribution_approved:
+        type: boolean
+        default: false
+      alpaca_redistribution_approved:
+        type: boolean
+        default: false
+      fred_third_party_series_approved:
+        type: boolean
+        default: false
+      adp_data_display_approved:
+        type: boolean
+        default: false
+      cyclelens_require_market_history:
+        type: boolean
+        default: false
+    secrets:
+      CMC_PRO_API_KEY:
+        required: false
+      SOSOVALUE_API_KEY:
+        required: false
+      SEC_USER_AGENT:
+        required: false
+      BLOCKBEATS_API_KEY:
+        required: false
+      APCA_API_KEY_ID:
+        required: false
+      APCA_API_SECRET_KEY:
+        required: false
+      FRED_API_KEY:
+        required: false
+      SUPABASE_URL:
+        required: false
+      SUPABASE_SECRET_KEY:
+        required: false
+      SUPABASE_SERVICE_ROLE_KEY:
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  collect-persist:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Restore the durable last-known-good baseline
+        shell: bash
+        run: |
+          if git fetch --no-tags origin data-cache:refs/remotes/origin/data-cache; then
+            git restore --source=refs/remotes/origin/data-cache -- app/public/data app/data/manual-macro-events.json
+            echo "Restored origin/data-cache"
+          elif [ "${{ inputs.require_durable_baseline }}" = "true" ]; then
+            echo "This refresh mode requires origin/data-cache" >&2
+            exit 1
+          else
+            echo "No durable snapshot exists yet; preserving the checked-in baseline"
+          fi
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Refresh normalized monthly crypto data
+        if: inputs.refresh_mode == 'full' && inputs.public_crypto_market_data_approved
+        working-directory: app
+        run: node scripts/update-market-data.mjs
+      - name: Refresh crypto liquidity data
+        if: inputs.refresh_mode == 'full' && inputs.defillama_redistribution_approved
+        working-directory: app
+        env:
+          CMC_PRO_API_KEY: ${{ inputs.cmc_redistribution_approved && secrets.CMC_PRO_API_KEY || '' }}
+          CMC_REDISTRIBUTION_APPROVED: ${{ inputs.cmc_redistribution_approved && '1' || '0' }}
+          DEFILLAMA_REDISTRIBUTION_APPROVED: "1"
+          SOSOVALUE_API_KEY: ${{ inputs.sosovalue_redistribution_approved && secrets.SOSOVALUE_API_KEY || '' }}
+          SOSOVALUE_REDISTRIBUTION_APPROVED: ${{ inputs.sosovalue_redistribution_approved && '1' || '0' }}
+          SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+          BLOCKBEATS_API_KEY: ${{ inputs.blockbeats_aux_enabled && inputs.blockbeats_redistribution_approved && secrets.BLOCKBEATS_API_KEY || '' }}
+          BLOCKBEATS_AUX_ENABLED: ${{ inputs.blockbeats_aux_enabled && inputs.blockbeats_redistribution_approved && '1' || '0' }}
+          BLOCKBEATS_REDISTRIBUTION_APPROVED: ${{ inputs.blockbeats_redistribution_approved && '1' || '0' }}
+        run: node scripts/update-crypto-liquidity-data.mjs
+      - name: Refresh market session data
+        if: inputs.refresh_mode == 'full' && inputs.public_crypto_market_data_approved
+        working-directory: app
+        env:
+          CMC_PRO_API_KEY: ${{ inputs.cmc_redistribution_approved && secrets.CMC_PRO_API_KEY || '' }}
+          CMC_REDISTRIBUTION_APPROVED: ${{ inputs.cmc_redistribution_approved && '1' || '0' }}
+          PUBLIC_CRYPTO_MARKET_DATA_APPROVED: "1"
+        run: node scripts/update-market-session-data.mjs
+      - name: Refresh chip-chain data
+        if: inputs.refresh_mode == 'full' && inputs.alpaca_redistribution_approved
+        working-directory: app
+        env:
+          APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
+          APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
+          ALPACA_REDISTRIBUTION_APPROVED: "1"
+          CHIP_CHAIN_US_FEED: ${{ vars.CHIP_CHAIN_US_FEED }}
+        run: node scripts/update-chip-chain-data.mjs
+      - name: Refresh robot-chain data
+        if: inputs.refresh_mode == 'full' && inputs.alpaca_redistribution_approved
+        working-directory: app
+        env:
+          APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
+          APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
+          ALPACA_REDISTRIBUTION_APPROVED: "1"
+          CHIP_CHAIN_US_FEED: ${{ vars.CHIP_CHAIN_US_FEED }}
+        run: node scripts/update-chip-chain-data.mjs robot
+      - name: Refresh fast equity indicators
+        if: inputs.fred_third_party_series_approved
+        working-directory: app
+        env:
+          CMC_PRO_API_KEY: ${{ inputs.cmc_redistribution_approved && secrets.CMC_PRO_API_KEY || '' }}
+          CMC_REDISTRIBUTION_APPROVED: ${{ inputs.cmc_redistribution_approved && '1' || '0' }}
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+          FRED_THIRD_PARTY_SERIES_APPROVED: "1"
+        run: python scripts/update-equity-fast-data.py
+      - name: Sync manual macro events
+        if: inputs.refresh_mode == 'full'
+        working-directory: app
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: node scripts/sync-manual-macro-events-from-supabase.mjs
+      - name: Refresh macro calendar
+        if: inputs.refresh_mode == 'full' && inputs.adp_data_display_approved && inputs.fred_third_party_series_approved
+        working-directory: app
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+          FRED_THIRD_PARTY_SERIES_APPROVED: "1"
+          ADP_DATA_DISPLAY_APPROVED: "1"
+        run: python scripts/update-macro-calendar.py
+      - name: Refresh interactive chart series
+        if: inputs.refresh_mode == 'full'
+        working-directory: app
+        run: node scripts/update-chart-series-data.mjs
+      - name: Persist canonical market metric history
+        if: inputs.refresh_mode == 'full'
+        working-directory: app
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          CYCLELENS_REQUIRE_MARKET_HISTORY: ${{ inputs.cyclelens_require_market_history && '1' || '0' }}
+          CMC_REDISTRIBUTION_APPROVED: ${{ inputs.cmc_redistribution_approved && '1' || '0' }}
+          DEFILLAMA_REDISTRIBUTION_APPROVED: ${{ inputs.defillama_redistribution_approved && '1' || '0' }}
+          SOSOVALUE_REDISTRIBUTION_APPROVED: ${{ inputs.sosovalue_redistribution_approved && '1' || '0' }}
+          BLOCKBEATS_AUX_ENABLED: ${{ inputs.blockbeats_aux_enabled && inputs.blockbeats_redistribution_approved && '1' || '0' }}
+          BLOCKBEATS_REDISTRIBUTION_APPROVED: ${{ inputs.blockbeats_redistribution_approved && '1' || '0' }}
+        run: node scripts/persist-market-metric-history.mjs
+      - name: Upload collected private build input
+        uses: actions/upload-artifact@v4
+        with:
+          name: collected-market-data
+          path: |
+            app/data/manual-macro-events.json
+            app/public/data
+          if-no-files-found: error
+          retention-days: 1

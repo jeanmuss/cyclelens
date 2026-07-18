@@ -1,0 +1,60 @@
+name: Generate public market snapshots
+
+on:
+  workflow_call:
+    inputs:
+      cmc_redistribution_approved:
+        type: boolean
+        default: false
+      defillama_redistribution_approved:
+        type: boolean
+        default: false
+      sosovalue_redistribution_approved:
+        type: boolean
+        default: false
+      blockbeats_aux_enabled:
+        type: boolean
+        default: false
+      blockbeats_redistribution_approved:
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  project-public-snapshots:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Download collected build input
+        uses: actions/download-artifact@v4
+        with:
+          name: collected-market-data
+          path: .
+      - name: Generate page-scoped public projections
+        working-directory: app
+        env:
+          CMC_REDISTRIBUTION_APPROVED: ${{ inputs.cmc_redistribution_approved && '1' || '0' }}
+          DEFILLAMA_REDISTRIBUTION_APPROVED: ${{ inputs.defillama_redistribution_approved && '1' || '0' }}
+          SOSOVALUE_REDISTRIBUTION_APPROVED: ${{ inputs.sosovalue_redistribution_approved && '1' || '0' }}
+          BLOCKBEATS_AUX_ENABLED: ${{ inputs.blockbeats_aux_enabled && '1' || '0' }}
+          BLOCKBEATS_REDISTRIBUTION_APPROVED: ${{ inputs.blockbeats_redistribution_approved && '1' || '0' }}
+        run: node scripts/project-public-metrics.mjs
+      - name: Verify projection contracts and build the public manifest
+        working-directory: app
+        run: |
+          node --test test/metricPipeline.test.mjs test/dataManifest.test.mjs
+          node scripts/generate-data-manifest.mjs
+      - name: Upload reviewed public snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: public-market-snapshot
+          path: |
+            app/data/manual-macro-events.json
+            app/public/data
+          if-no-files-found: error
+          retention-days: 1

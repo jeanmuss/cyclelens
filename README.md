@@ -63,6 +63,8 @@ python -m pip install -r app/requirements-equity.txt
 
 `CHIP_CHAIN_US_FEED` 可以配置为 repository variable。默认使用 `iex`；只有在账户订阅和再分发条款允许时，才应改为 `delayed_sip` 或 `sip`。
 
+数据源密钥不等于公开展示许可。生产刷新还需要配置 [数据源审查清单](app/DATA_SOURCE_REVIEW.md) 中对应的非密钥 approval variables；未配置时，工作流保留 last-known-good 快照而不启用该来源。
+
 ## 部署
 
 `deploy-pages.yml` 会在推送到 `main`、手动触发和定时任务中刷新缓存并构建静态站点；`update-market-data.yml` 会把可审计的数据快照发布到机器管理的 `data-cache` 分支，但不会把生成数据合并回 `main`。

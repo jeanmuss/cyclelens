@@ -1,0 +1,168 @@
+{
+  "schemaVersion": 1,
+  "catalogVersion": 1,
+  "projectionId": "crypto-liquidity",
+  "generatedAt": "2026-07-16T08:49:09.863Z",
+  "freshness": {
+    "observedAt": "2026-06-28T22:30:00.000Z",
+    "firstFetchedAt": "2026-07-16T03:58:13.477Z",
+    "lastCheckedAt": "2026-07-16T03:58:13.477Z",
+    "transformedAt": "2026-07-16T08:49:09.863Z"
+  },
+  "metrics": [
+    {
+      "metricId": "treasury.mstr.btc_average_cost_usd",
+      "title": {
+        "zh": "Strategy 比特币平均成本",
+        "en": "Strategy bitcoin average cost"
+      },
+      "unit": "USD_per_asset",
+      "cadence": "disclosure",
+      "quality": {
+        "missing": "preserve_last_known_good",
+        "stale": "show_with_quality_flag",
+        "revisions": "retain"
+      },
+      "defaultDisplay": {
+        "format": "currency",
+        "precision": 0
+      },
+      "sources": [
+        {
+          "sourcePolicyId": "strategy-disclosures",
+          "label": "Strategy investor disclosures",
+          "attribution": "Strategy investor disclosures",
+          "termsUrl": "https://www.strategy.com/investor-relations"
+        }
+      ],
+      "observations": [
+        {
+          "observedAt": "2026-06-21T00:00:00.000Z",
+          "value": 75651,
+          "qualityStatus": "official_form_8k",
+          "firstFetchedAt": "2026-07-16T03:58:13.477Z",
+          "lastCheckedAt": "2026-07-16T03:58:13.477Z",
+          "sourcePolicyId": "strategy-disclosures",
+          "sourceUrl": "https://www.strategy.com/press/strategy-increases-its-usd-reserve-to-1-4-billion-and-btc-reserve-to-847363_06-22-2026",
+          "dimensions": {
+            "company": "Strategy",
+            "ticker": "MSTR",
+            "asset": "BTC"
+          }
+        }
+      ]
+    },
+    {
+      "metricId": "treasury.bmnr.eth_holdings",
+      "title": {
+        "zh": "BitMine 以太坊持仓",
+        "en": "BitMine ether holdings"
+      },
+      "unit": "ETH",
+      "cadence": "disclosure",
+      "quality": {
+        "missing": "preserve_last_known_good",
+        "stale": "show_with_quality_flag",
+        "revisions": "retain"
+      },
+      "defaultDisplay": {
+        "format": "compact_number",
+        "precision": 0
+      },
+      "sources": [
+        {
+          "sourcePolicyId": "sec-edgar",
+          "label": "SEC EDGAR",
+          "attribution": "SEC EDGAR",
+          "termsUrl": "https://www.sec.gov/about/webmaster-frequently-asked-questions"
+        }
+      ],
+      "observations": [
+        {
+          "observedAt": "2026-06-21T19:00:00.000Z",
+          "value": 5672956,
+          "qualityStatus": "official_sec_exhibit_corrected_release",
+          "firstFetchedAt": "2026-07-16T03:58:13.477Z",
+          "lastCheckedAt": "2026-07-16T03:58:13.477Z",
+          "sourcePolicyId": "sec-edgar",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1829311/000149315226029507/ex99-1.htm",
+          "dimensions": {
+            "company": "BitMine Immersion Technologies",
+            "ticker": "BMNR",
+            "asset": "ETH"
+          }
+        },
+        {
+          "observedAt": "2026-06-28T19:00:00.000Z",
+          "value": 5700040,
+          "qualityStatus": "official_sec_exhibit_corrected_release",
+          "firstFetchedAt": "2026-07-16T03:58:13.477Z",
+          "lastCheckedAt": "2026-07-16T03:58:13.477Z",
+          "sourcePolicyId": "sec-edgar",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1829311/000149315226030428/ex99-1.htm",
+          "dimensions": {
+            "company": "BitMine Immersion Technologies",
+            "ticker": "BMNR",
+            "asset": "ETH"
+          }
+        },
+        {
+          "observedAt": "2026-06-28T22:30:00.000Z",
+          "value": 5742237,
+          "qualityStatus": "official_sec_exhibit_corrected_release",
+          "firstFetchedAt": "2026-07-16T03:58:13.477Z",
+          "lastCheckedAt": "2026-07-16T03:58:13.477Z",
+          "sourcePolicyId": "sec-edgar",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1829311/000149315226032090/ex99-1.htm",
+          "dimensions": {
+            "company": "BitMine Immersion Technologies",
+            "ticker": "BMNR",
+            "asset": "ETH"
+          }
+        }
+      ]
+    },
+    {
+      "metricId": "treasury.bmnr.eth_average_cost_usd",
+      "title": {
+        "zh": "BitMine 以太坊平均成本",
+        "en": "BitMine ether average cost"
+      },
+      "unit": "USD_per_asset",
+      "cadence": "disclosure",
+      "quality": {
+        "missing": "preserve_last_known_good",
+        "stale": "show_with_quality_flag",
+        "revisions": "retain"
+      },
+      "defaultDisplay": {
+        "format": "currency",
+        "precision": 0
+      },
+      "sources": [
+        {
+          "sourcePolicyId": "sec-edgar",
+          "label": "SEC EDGAR",
+          "attribution": "SEC EDGAR",
+          "termsUrl": "https://www.sec.gov/about/webmaster-frequently-asked-questions"
+        }
+      ],
+      "observations": [
+        {
+          "observedAt": "2026-02-28T00:00:00.000Z",
+          "value": 3794.2554072810326,
+          "qualityStatus": "official_quarterly_filing_derived",
+          "firstFetchedAt": "2026-07-16T03:58:13.477Z",
+          "lastCheckedAt": "2026-07-16T03:58:13.477Z",
+          "sourcePolicyId": "sec-edgar",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1829311/000149315226016560/form10-q.htm",
+          "dimensions": {
+            "company": "BitMine Immersion Technologies",
+            "ticker": "BMNR",
+            "asset": "ETH"
+          }
+        }
+      ]
+    }
+  ]
+}

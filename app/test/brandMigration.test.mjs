@@ -50,18 +50,19 @@ test("market-data User-Agent defaults no longer identify the legacy repository",
 });
 
 test("repository docs, icons, and workflows advertise only the current product name", async () => {
-  const [rootReadme, appReadme, pinwheel, tide, deploy, update] = await Promise.all([
+  const [rootReadme, appReadme, pinwheel, tide, deploy, update, collect] = await Promise.all([
     source("README.md"),
     source("app/README.md"),
     source("app/public/favicon-pinwheel.svg"),
     source("app/public/favicon-tide.svg"),
     source(".github/workflows/deploy-pages.yml"),
     source(".github/workflows/update-market-data.yml"),
+    source(".github/workflows/_collect-persist.yml"),
   ]);
   assert.match(rootReadme, /^# CycleLens$/m);
   assert.match(appReadme, /^# CycleLens$/m);
   assert.match(pinwheel, /<title id="title">CycleLens -/);
   assert.match(tide, /<title id="title">CycleLens -/);
-  assert.match(`${deploy}\n${update}`, /CYCLELENS_REQUIRE_MARKET_HISTORY/);
-  assert.doesNotMatch(`${deploy}\n${update}`, /CYCLE_MAP_REQUIRE_MARKET_HISTORY/);
+  assert.match(`${deploy}\n${update}\n${collect}`, /CYCLELENS_REQUIRE_MARKET_HISTORY/);
+  assert.doesNotMatch(`${deploy}\n${update}\n${collect}`, /CYCLE_MAP_REQUIRE_MARKET_HISTORY/);
 });

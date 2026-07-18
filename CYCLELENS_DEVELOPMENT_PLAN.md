@@ -192,15 +192,22 @@ app/src/
 
 ### Phase 3：指标目录与数据管道重构
 
-- [ ] 新建 `metric_catalog` 概念，统一 `metric_id`、标题、单位、频率、来源、可见性、质量和默认展示方式。
-- [ ] 保留并扩展现有 `market_metric_observations`，避免为每个新页面创建互不兼容的数据格式。
-- [ ] 为每类数据源建立 adapter：fetch、normalize、validate、persist、project 五个阶段。
-- [ ] 数据持久化采用幂等 upsert，保留首次抓取、最后检查、修订历史和 last-known-good。
-- [ ] 生成按页面裁剪的公开投影文件，并对投影文件做 schema/contract 测试。
-- [ ] 将 Actions 拆为“采集持久化”“生成公开快照”“构建部署”，用 reusable workflow 减少重复。
-- [ ] 审查每个数据源的许可、再分发、缓存和署名要求；未审核来源不能进入生产。
+- [x] 新建 `metric_catalog` 概念，统一 `metric_id`、标题、单位、频率、来源、可见性、质量和默认展示方式。（`src/domain/metrics/metricCatalog.js` 与 Phase 3 migration 共同覆盖当前 14 个持久化指标，并由合同测试校验一致性。）
+- [x] 保留并扩展现有 `market_metric_observations`，避免为每个新页面创建互不兼容的数据格式。（新增 catalog 外键边界但不拆事实表；同时新增私有 `dashboard_snapshot_runs`，浏览器角色继续无表权限。）
+- [x] 为每类数据源建立 adapter：fetch、normalize、validate、persist、project 五个阶段。（统一 adapter contract 覆盖 JSON API、CSV、HTML、官方披露与禁止的旧非官方 transport，现有 market-history 已完成五阶段纵向接入。）
+- [x] 数据持久化采用幂等 upsert，保留首次抓取、最后检查、修订历史和 last-known-good。（继续以 `metric_id + observed_at + source_key` upsert；`fetched_at` 保持首次抓取，`last_checked_at` 单调前进，修订 trigger 与上游失败不写投影的行为均有测试。）
+- [x] 生成按页面裁剪的公开投影文件，并对投影文件做 schema/contract 测试。（生成 `projections/crypto-liquidity.json` 与 `projections/us-equity.json`，只保留白名单字段、来源和分离的新鲜度时间。）
+- [x] 将 Actions 拆为“采集持久化”“生成公开快照”“构建部署”，用 reusable workflow 减少重复。（新增 `_collect-persist.yml` 与 `_project-public-snapshots.yml`；Pages 构建和 `data-cache` 发布只消费通过合同测试的短期 artifact。）
+- [x] 审查每个数据源的许可、再分发、缓存和署名要求；未审核来源不能进入生产。（`DATA_SOURCE_REVIEW.md` 与可执行 source policy 记录审查结论；商业/公共行情来源需显式 approval variable，AKShare/Yahoo 定时生产抓取默认禁止。）
 
 验收：任一上游失败不会清空上次成功数据；公开快照不包含密钥、内部字段或个人数据；来源和新鲜度可追踪。
+
+执行记录（2026-07-18，Phase 3 指标目录与数据管道完成批次）：
+
+- 完成内容：新增统一 metric catalog、来源发布策略、五阶段 adapter contract 和 market-history adapter；新增本地 Supabase migration，扩展私有 catalog/快照运行记录、RLS/最小授权、事实表 catalog 边界与首次抓取/最后检查语义；生成两个按页面裁剪的公开 projection，并纳入 data manifest 与构建；把采集持久化、公开投影、构建部署拆成 reusable workflow 与 artifact 边界；同步来源审查文档和 Phase 8 变量迁移清单。
+- 验证结果：`npm run check` 通过（source lint、138/138 单元测试、官方美/韩/中市场日历边界验证、生产构建）；定向 metric/history/manifest 合同测试 21/21 通过；公开 projection 和浏览器 bundle 凭据字段扫描通过；`git diff --check` 通过。上游 fetch 失败时 adapter 在 persist/project 前停止，已由回归测试确认 last-known-good 不被清空。
+- 剩余风险：本机未安装 Supabase CLI，一次性下载执行 CLI 因供应链安全策略被阻止，因此 migration 采用仓库时间戳规范创建并只完成静态/RLS 合同验证，尚未连接或修改远端数据库；reusable workflow 尚未在 GitHub 运行，留待迁移前的 CI 验证；新 approval variables 默认关闭，未明确确认许可的来源只保留旧 last-known-good 且不会进入新 projection，当前本地公开 projection 因此仅包含已允许的官方披露/JGB 数据。
+- 下一步：进入 Phase 4，新增只消费公开 dashboard projection 的首页和 widget registry；继续保持 Phase 8 前不推送、不添加新 remote、不克隆 `cyclelens`。
 
 ### Phase 4：首页可定制数据看板
 
