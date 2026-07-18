@@ -5,26 +5,22 @@ import { readRobotChainStateFromHash, replaceHashState } from "../shared/routing
 import { useLiveData } from "../useLiveData.js";
 import { PageNav } from "../shared/routing/PageNav.jsx";
 import { robotChainCopy } from "../shared/i18n/robotChain.js";
+import { CacheStatus } from "../shared/components/CacheStatus.jsx";
+import { DataFreshnessSummary, DataTrustFooter, buildFreshnessItem } from "../shared/components/DataTrust.jsx";
+import { DataState } from "../shared/components/DataState.jsx";
+import { LanguageToggle } from "../shared/components/LanguageToggle.jsx";
+import { Segmented } from "../shared/components/Segmented.jsx";
+import { ChainTreemapSummary, ChipSparkline } from "../features/supply-chain/SupplyChainVisuals.jsx";
 import {
-  Segmented,
-  LanguageToggle,
-  CacheStatus,
-  buildFreshnessItem,
-  DataFreshnessSummary,
-  DataTrustFooter,
-} from "./AppShared.jsx";
-import {
-  ChipSparkline,
-  ChainTreemapSummary,
   robotAttributeLabel,
   robotCategoryRows,
   robotTopMovers,
-} from "./ChipChainPage.jsx";
+} from "../features/robot-chain/robotChainModel.js";
 import { currentPage } from "../routeState.js";
 
 export function RobotChainTable({ rows, range, language, copy }) {
   if (!rows.length) {
-    return <div className="chip-empty-board">{copy.noRows}</div>;
+    return <DataState variant="empty" className="chip-empty-board">{copy.noRows}</DataState>;
   }
   const sectorLabelParts = (row) => {
     if (row.category.id !== "warehouse-service") {
@@ -106,10 +102,10 @@ export function RobotChainPage({ language, setLanguage, t }) {
   const rangeOptions = (dataset?.ranges || []).map((item) => ({ value: item.value, label: item.label }));
 
   if (error) {
-    return <main className="status-page"><h1>{copy.unavailable}</h1><p>{error.status ? `${t.status.dataFileFailed} (${error.status})` : error.message}</p></main>;
+    return <DataState as="main" variant="error" className="status-page"><h1>{copy.unavailable}</h1><p>{error.status ? `${t.status.dataFileFailed} (${error.status})` : error.message}</p></DataState>;
   }
   if (!dataset) {
-    return <main className="status-page"><p>{copy.loading}</p></main>;
+    return <DataState as="main" variant="loading" className="status-page"><p>{copy.loading}</p></DataState>;
   }
 
   return (

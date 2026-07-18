@@ -9,13 +9,12 @@ import { CRYPTO_LIVE_DATA } from "../shared/data/liveDataDefinitions.js";
 import { readCryptoStateFromHash, replaceHashState } from "../shared/routing/routeViewState.js";
 import { useLiveData } from "../useLiveData.js";
 import { PageNav } from "../shared/routing/PageNav.jsx";
+import { CacheStatus } from "../shared/components/CacheStatus.jsx";
+import { DataFreshnessSummary, DataTrustFooter, buildFreshnessItem } from "../shared/components/DataTrust.jsx";
+import { DataState } from "../shared/components/DataState.jsx";
+import { LanguageToggle } from "../shared/components/LanguageToggle.jsx";
+import { Segmented } from "../shared/components/Segmented.jsx";
 import {
-  Segmented,
-  LanguageToggle,
-  CacheStatus,
-  buildFreshnessItem,
-  DataFreshnessSummary,
-  DataTrustFooter,
   AssetSwitch,
   LatestStrip,
   AssetSpotSummary,
@@ -26,7 +25,7 @@ import {
   DetailBand,
   Tooltip,
   Legend,
-} from "./AppShared.jsx";
+} from "../features/crypto-cycle/CryptoCycleComponents.jsx";
 import { currentPage } from "../routeState.js";
 
 export function CryptoCyclePage({ language, setLanguage, t }) {
@@ -85,10 +84,10 @@ export function CryptoCyclePage({ language, setLanguage, t }) {
     : "";
 
   if (error) {
-    return <main className="status-page"><h1>{t.status.dataUnavailable}</h1><p>{errorText}</p></main>;
+    return <DataState as="main" variant="error" className="status-page"><h1>{t.status.dataUnavailable}</h1><p>{errorText}</p></DataState>;
   }
   if (!dataset) {
-    return <main className="status-page"><p>{t.status.loading}</p></main>;
+    return <DataState as="main" variant="loading" className="status-page"><p>{t.status.loading}</p></DataState>;
   }
 
   return (

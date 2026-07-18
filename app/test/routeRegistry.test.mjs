@@ -5,6 +5,7 @@ import test from "node:test";
 import { fileURLToPath } from "node:url";
 
 import { PAGE_IDENTITIES, pageIdentity, pageMetadata } from "../src/shared/i18n/pageIdentity.js";
+import { PUBLIC_ROUTE_LOADERS } from "../src/shared/routing/routeLoaders.js";
 import {
   ADMIN_ROUTE_DEFINITION,
   DEFAULT_ROUTE_ID,
@@ -29,7 +30,7 @@ const EXPECTED_PUBLIC_ROUTES = [
   ["robotChain", "robot-chain", "/robot-chain"],
 ];
 
-test("the public registry owns unique route, navigation, loader, and data contracts", () => {
+test("the public registry owns unique route, navigation, and data contracts", () => {
   assert.equal(DEFAULT_ROUTE_ID, "crypto");
   assert.deepEqual(
     PUBLIC_ROUTE_REGISTRY.map(({ id, hashPath, matchPath }) => [id, hashPath, matchPath]),
@@ -40,7 +41,8 @@ test("the public registry owns unique route, navigation, loader, and data contra
   for (const route of PUBLIC_ROUTE_REGISTRY) {
     assert.equal(route.admin, false);
     assert.equal(route.navigation, true);
-    assert.equal(typeof route.loadRoute, "function");
+    assert.equal(route.loadRoute, undefined, "route metadata must not depend on lazy page modules");
+    assert.equal(typeof PUBLIC_ROUTE_LOADERS[route.id], "function");
     assert.ok(route.dataDependencies.length > 0, `${route.id} must declare its static data dependencies`);
     assert.ok(Object.isFrozen(route));
     assert.ok(Object.isFrozen(route.dataDependencies));
@@ -92,7 +94,7 @@ test("route navigation labels and metadata have one bilingual identity source", 
 
 test("route wrappers pass registry ids while App keeps the admin loader statically gated", async () => {
   const appSource = await readFile(resolve(appRoot, "src", "App.jsx"), "utf8");
-  assert.match(appSource, /PUBLIC_ROUTE_REGISTRY\.map\(\(route\) => \[route\.id, lazy\(route\.loadRoute\)\]\)/);
+  assert.match(appSource, /PUBLIC_ROUTE_REGISTRY\.map\(\(route\) => \[route\.id, lazy\(PUBLIC_ROUTE_LOADERS\[route\.id\]\)\]\)/);
   assert.match(appSource, /ADMIN_PAGE_ENABLED\s*\?\s*lazy\(\(\) => import\("\.\/routes\/MacroAdminRoute\.js"\)\)\s*:\s*null/);
 
   const routeFiles = {

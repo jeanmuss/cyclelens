@@ -1,4 +1,4 @@
-import { routePathname as resolveRoutePathname } from "./routeResolver.js";
+import { routePathname as resolveRoutePathname } from "./shared/routing/pathname.js";
 
 export const ASSETS = [
   { symbol: "BTC", name: "Bitcoin", accent: "asset-btc" },

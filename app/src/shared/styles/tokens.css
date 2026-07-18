@@ -1,0 +1,19 @@
+:root {
+  font-family: Inter, "Noto Sans SC", "Microsoft YaHei", Arial, sans-serif;
+  color: #171717;
+  background: #f8f8f1;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  --title-serif-en: "Times New Roman", Georgia, Times, serif;
+  --title-serif-zh: "Noto Serif SC", "Source Han Serif SC", "Songti SC", STSong, SimSun, serif;
+  --ink: #171717;
+  --paper: #fcfcf7;
+  --canvas: #f8f8f1;
+  --muted: #696961;
+  --line: #262626;
+  --soft-line: #b5b5aa;
+  --red: #e43e50;
+  --green: #2f9b56;
+  --yellow: #fff000;
+  --blue: #b7d5ff;
+}

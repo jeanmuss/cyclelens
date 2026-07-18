@@ -98,8 +98,8 @@ test("replaceHashState writes only when the browser URL changes", () => {
   assert.doesNotThrow(() => replaceHashState("crypto-liquidity", {}));
 });
 
-test("AppShared no longer owns data or route-state definitions", async () => {
-  const appShared = await readFile(resolve(appRoot, "src", "pages", "AppShared.jsx"), "utf8");
-  assert.ok(appShared.split(/\r?\n/).length < 800);
-  assert.doesNotMatch(appShared, /DEFAULT_.*_STATE|VALID_.*|hashParams|read.*StateFromHash|replaceHashState/);
+test("feature components no longer own route-state definitions", async () => {
+  const cryptoComponents = await readFile(resolve(appRoot, "src", "features", "crypto-cycle", "CryptoCycleComponents.jsx"), "utf8");
+  await assert.rejects(readFile(resolve(appRoot, "src", "pages", "AppShared.jsx"), "utf8"), { code: "ENOENT" });
+  assert.doesNotMatch(cryptoComponents, /DEFAULT_.*_STATE|VALID_.*|hashParams|read.*StateFromHash|replaceHashState/);
 });

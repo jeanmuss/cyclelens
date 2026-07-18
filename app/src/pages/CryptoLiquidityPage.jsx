@@ -14,14 +14,11 @@ import { CRYPTO_LIQUIDITY_LIVE_DATA } from "../shared/data/liveDataDefinitions.j
 import { replaceHashState } from "../shared/routing/routeViewState.js";
 import { useLiveData } from "../useLiveData.js";
 import { PageNav } from "../shared/routing/PageNav.jsx";
-import {
-  buildFreshnessItem,
-  CacheStatus,
-  DataFreshnessSummary,
-  DataTrustFooter,
-  LanguageToggle,
-  Segmented,
-} from "./AppShared.jsx";
+import { CacheStatus } from "../shared/components/CacheStatus.jsx";
+import { DataFreshnessSummary, DataTrustFooter, buildFreshnessItem } from "../shared/components/DataTrust.jsx";
+import { DataState } from "../shared/components/DataState.jsx";
+import { LanguageToggle } from "../shared/components/LanguageToggle.jsx";
+import { Segmented } from "../shared/components/Segmented.jsx";
 
 const COPY = {
   zh: {
@@ -311,14 +308,14 @@ export function CryptoLiquidityPage({ language, setLanguage, t }) {
   const rangeWindowEnd = dataset?.generatedAt || dataset?.timestamps?.transformedAt || dataset?.timestamps?.observedAt;
   const freshnessItems = dataset ? [buildFreshnessItem(language === "en" ? "Crypto liquidity" : "\u52a0\u5bc6\u6d41\u52a8\u6027", freshness.cryptoLiquidity, dataset)] : [];
 
-  if (error && !dataset) return <main className="status-page"><p>{copy.unavailable}</p><small>{error.message}</small></main>;
-  if (!dataset) return <main className="status-page"><p>{copy.loading}</p></main>;
+  if (error && !dataset) return <DataState as="main" variant="error" className="status-page"><p>{copy.unavailable}</p><small>{error.message}</small></DataState>;
+  if (!dataset) return <DataState as="main" variant="loading" className="status-page"><p>{copy.loading}</p></DataState>;
 
   return (
     <main className="app-page crypto-liquidity-page">
       <header className="app-header">
         <div className="title-block"><p className="eyebrow">{copy.eyebrow}</p><h1>{copy.title}</h1><p>{copy.subtitle}</p><PageNav page="cryptoLiquidity" t={t} /></div>
-        <div className="freshness-block"><LanguageToggle language={language} onChange={setLanguage} t={t} /><CacheStatus label={copy.cache} tooltip={copy.cacheTooltip} /><strong className={dataset.status === "available" ? "macro-up" : "macro-flat"}>{dataset.status === "available" ? "LIVE" : copy.partial}</strong><small>{freshnessLabel(dataset.timestamps?.observedAt, language)}</small></div>
+        <div className="freshness-block"><LanguageToggle language={language} onChange={setLanguage} t={t} /><CacheStatus label={copy.cache} tooltip={copy.cacheTooltip} />{dataset.status === "available" ? <strong className="macro-up">LIVE</strong> : <DataState as="strong" variant="partial" className="macro-flat">{copy.partial}</DataState>}<small>{freshnessLabel(dataset.timestamps?.observedAt, language)}</small></div>
       </header>
       <DataFreshnessSummary items={freshnessItems} language={language} t={t} />
 

@@ -54,10 +54,10 @@ test("route data dependencies are backed by shared live-data definitions", () =>
   assert.equal(EQUITY_CHART_LIVE_DATA[0].required, false);
 });
 
-test("deferred chart activation keeps cleanup semantics outside AppShared", async () => {
-  const [hookSource, appShared, equityPage, liquidityPage] = await Promise.all([
+test("deferred chart activation keeps cleanup semantics outside page components", async () => {
+  const [hookSource, cryptoComponents, equityPage, liquidityPage] = await Promise.all([
     readFile(resolve(appRoot, "src", "shared", "data", "useDeferredActivation.js"), "utf8"),
-    readFile(resolve(appRoot, "src", "pages", "AppShared.jsx"), "utf8"),
+    readFile(resolve(appRoot, "src", "features", "crypto-cycle", "CryptoCycleComponents.jsx"), "utf8"),
     readFile(resolve(appRoot, "src", "pages", "EquityPage.jsx"), "utf8"),
     readFile(resolve(appRoot, "src", "pages", "CryptoLiquidityPage.jsx"), "utf8"),
   ]);
@@ -66,5 +66,5 @@ test("deferred chart activation keeps cleanup semantics outside AppShared", asyn
   assert.match(hookSource, /return \(\) => window\.clearTimeout\(timeoutId\)/);
   assert.match(equityPage, /from "\.\.\/shared\/data\/useDeferredActivation\.js"/);
   assert.match(liquidityPage, /CRYPTO_LIQUIDITY_LIVE_DATA.*from "\.\.\/shared\/data\/liveDataDefinitions\.js"/s);
-  assert.doesNotMatch(appShared, /FIVE_MINUTES_MS|_LIVE_DATA|useDeferredActivation/);
+  assert.doesNotMatch(cryptoComponents, /FIVE_MINUTES_MS|_LIVE_DATA|useDeferredActivation/);
 });

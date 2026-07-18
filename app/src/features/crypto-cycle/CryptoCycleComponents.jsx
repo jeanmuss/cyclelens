@@ -1,206 +1,14 @@
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import {
   ASSETS,
   HALVING_MONTHS,
-  delayLabel,
   formatPct,
   formatPrice,
-  freshnessLabel,
   isCycleGroupStartYear,
   returnClass,
-} from "../data.js";
-import { cycleLabel, extremeMoveMeta } from "../shared/i18n/crypto.js";
-
-
-export function optionLabel(options, value) {
-  return options.find((option) => option.value === value)?.label || value;
-}
-
-
-export function Segmented({ label, options, value, onChange, compact = false }) {
-  return (
-    <div className={`segmented ${compact ? "segmented-compact" : ""}`} role="group" aria-label={label}>
-      {options.map((option) => (
-        <button
-          type="button"
-          key={option.value}
-          className={value === option.value ? "is-active" : ""}
-          aria-pressed={value === option.value}
-          onClick={() => onChange(option.value)}
-        >
-          {option.label}
-        </button>
-      ))}
-    </div>
-  );
-}
-
-export function LanguageToggle({ language, onChange, t }) {
-  return (
-    <div className="language-toggle" role="group" aria-label={t.language.aria}>
-      <button
-        type="button"
-        className={language === "zh" ? "is-active" : ""}
-        aria-pressed={language === "zh"}
-        onClick={() => onChange("zh")}
-      >
-        {t.language.zh}
-      </button>
-      <button
-        type="button"
-        className={language === "en" ? "is-active" : ""}
-        aria-pressed={language === "en"}
-        onClick={() => onChange("en")}
-      >
-        {t.language.en}
-      </button>
-    </div>
-  );
-}
-
-export function CacheStatus({ label, tooltip }) {
-  const [hovered, setHovered] = useState(false);
-  const [focused, setFocused] = useState(false);
-  const [pinned, setPinned] = useState(false);
-  const open = hovered || focused || pinned;
-  return (
-    <div
-      className="cache-status"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      <button
-        type="button"
-        className="cache-badge"
-        aria-expanded={open}
-        aria-describedby="cache-status-tooltip"
-        onClick={() => setPinned((value) => !value)}
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
-      >
-        {label}
-      </button>
-      <span
-        id="cache-status-tooltip"
-        role="tooltip"
-        className={`cache-tooltip ${open ? "is-open" : ""}`}
-      >
-        {tooltip}
-      </span>
-    </div>
-  );
-}
-
-export function textBlock(value) {
-  if (Array.isArray(value)) return value.filter(Boolean).join(" ");
-  return value || "";
-}
-
-export function buildFreshnessItem(label, metadata, dataset) {
-  const timestamps = dataset?.timestamps || {};
-  return {
-    label,
-    observedAt: metadata?.observedAt || timestamps.observedAt || null,
-    fetchedAt: metadata?.fetchedAt || timestamps.fetchedAt || null,
-    transformedAt: metadata?.transformedAt || timestamps.transformedAt || dataset?.generatedAt || null,
-    deployedAt: metadata?.deployedAt || null,
-    clientCheckedAt: metadata?.clientCheckedAt || null,
-    timestampFallback: metadata?.timestampFallback || null,
-  };
-}
-
-export function TimestampValue({ value, language, unknown }) {
-  if (!value) return <span>{unknown}</span>;
-  return (
-    <span data-timestamp={value} title={freshnessLabel(value, language)}>
-      <b>{delayLabel(value, language)}</b>
-      <small>{freshnessLabel(value, language)}</small>
-    </span>
-  );
-}
-
-export function DataFreshnessSummary({ items, language, t }) {
-  return (
-    <div className="freshness-summary" data-testid="freshness-summary">
-      {items.map((item) => (
-        <strong key={item.label} title={`${t.footer.observedAt}: ${freshnessLabel(item.observedAt, language)}; ${t.footer.clientCheckedAt}: ${freshnessLabel(item.clientCheckedAt, language)}`}>
-          <span>{item.label}</span>
-          {t.footer.observedAt} {delayLabel(item.observedAt, language)} · {t.footer.clientCheckedAt} {delayLabel(item.clientCheckedAt, language)}
-        </strong>
-      ))}
-    </div>
-  );
-}
-
-export function FreshnessAuditTable({ items, language, t }) {
-  const fields = ["observedAt", "fetchedAt", "transformedAt", "deployedAt", "clientCheckedAt"];
-  return (
-    <div className="freshness-audit-shell">
-      <table className="freshness-audit-table" data-testid="freshness-audit">
-        <caption>{t.footer.timeAudit}</caption>
-        <thead>
-          <tr>
-            <th scope="col">{t.footer.dataset}</th>
-            {fields.map((field) => <th scope="col" key={field}>{t.footer[field]}</th>)}
-          </tr>
-        </thead>
-        <tbody>
-          {items.map((item) => (
-            <tr key={item.label}>
-              <th scope="row">{item.label}</th>
-              {fields.map((field) => <td key={field}><TimestampValue value={item[field]} language={language} unknown={t.footer.unknown} /></td>)}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      {items.some((item) => item.timestampFallback) ? <p className="timestamp-fallback-note">{t.footer.legacyTimestamp}</p> : null}
-    </div>
-  );
-}
-
-export function DataTrustFooter({
-  t,
-  language,
-  freshnessItems = [],
-  sources = [],
-  methodology,
-  limitations,
-  failures = 0,
-}) {
-  const failureCount = Array.isArray(failures) ? failures.length : Number(failures) || 0;
-  const sourceItems = sources.filter(Boolean);
-  const methodologyText = textBlock(methodology) || t.footer.unknown;
-  const limitationsText = textBlock(limitations) || t.footer.staticCacheOnly;
-  return (
-    <footer className="source-footer data-trust-footer">
-      <div className="data-trust-top">
-        <div>
-          <strong>{t.footer.trustTitle}</strong>
-          <span className={`data-trust-status ${failureCount ? "is-partial" : "is-healthy"}`}>
-            {failureCount ? t.footer.partialStatus(failureCount) : t.footer.healthyStatus}
-          </span>
-        </div>
-      </div>
-      <FreshnessAuditTable items={freshnessItems} language={language} t={t} />
-      <div className="data-trust-grid">
-        <section>
-          <small>{t.footer.sources}</small>
-          <div className="data-trust-tags">
-            {sourceItems.length ? sourceItems.map((source) => <span key={source}>{source}</span>) : <span>{t.footer.unknown}</span>}
-          </div>
-        </section>
-        <section>
-          <small>{t.footer.methodology}</small>
-          <p>{methodologyText}</p>
-        </section>
-        <section>
-          <small>{t.footer.limitations}</small>
-          <p>{limitationsText}</p>
-        </section>
-      </div>
-    </footer>
-  );
-}
+} from "../../data.js";
+import { optionLabel } from "../../shared/formatting/metrics.js";
+import { cycleLabel, extremeMoveMeta } from "../../shared/i18n/crypto.js";
 
 export function AssetSwitch({ value, onChange, t }) {
   return (
@@ -459,7 +267,7 @@ export function MobilePinnedDetail({ selected, dataset, metric, onClear, t }) {
   const selectedLabel = isAnnual ? selected.year || selected.monthKey : selected.monthKey;
   return (
     <aside className="mobile-detail-dock" aria-live="polite">
-      <button type="button" className="dock-close" onClick={onClear} aria-label={t.detail.closePinned}>×</button>
+      <button type="button" className="dock-close" onClick={onClear} aria-label={t.detail.closePinned}>脳</button>
       <div>
         <small>{isAnnual ? t.detail.selectedYear : t.detail.selectedMonth}</small>
         <strong>{selected.symbol}{t.separator}{selectedLabel}</strong>
@@ -697,7 +505,7 @@ export function Tooltip({ value, dataset, t }) {
 
 export function Legend({ t }) {
   const stops = [
-    ["≤ -30%", -35], ["-20%", -20], ["-10%", -10], ["0%", 0], ["+10%", 10], ["+20%", 20], ["≥ +40%", 40],
+    ["鈮?-30%", -35], ["-20%", -20], ["-10%", -10], ["0%", 0], ["+10%", 10], ["+20%", 20], ["鈮?+40%", 40],
   ];
   return (
     <div className="legend" aria-label={t.legend.aria}>
@@ -707,76 +515,4 @@ export function Legend({ t }) {
       <span className="halving-cell">{t.legend.halving}</span>
     </div>
   );
-}
-
-export function formatNumber(value, digits = 2) {
-  if (!Number.isFinite(Number(value))) return "N/A";
-  return new Intl.NumberFormat("en-US", {
-    maximumFractionDigits: digits,
-    minimumFractionDigits: digits,
-  }).format(Number(value));
-}
-
-
-export function formatSignedNumber(value, digits = 2) {
-  if (!Number.isFinite(Number(value))) return "N/A";
-  const normalized = Math.abs(Number(value)) < 10 ** -digits ? 0 : Number(value);
-  return new Intl.NumberFormat("en-US", {
-    maximumFractionDigits: digits,
-    minimumFractionDigits: digits,
-    signDisplay: normalized === 0 ? "never" : "always",
-  }).format(normalized);
-}
-
-export function formatCompactPrice(value) {
-  if (!Number.isFinite(Number(value))) return "N/A";
-  return `${new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 }).format(Number(value))} USD`;
-}
-
-export function formatBp(value, digits = 0) {
-  if (!Number.isFinite(Number(value))) return "N/A";
-  const normalized = Math.abs(Number(value)) < 0.005 ? 0 : Number(value);
-  return `${normalized > 0 ? "+" : ""}${normalized.toFixed(digits)} bp`;
-}
-
-export function latestMacro(week, id) {
-  return week?.macro?.[id] || null;
-}
-
-export function macroClass(value) {
-  if (!Number.isFinite(Number(value)) || Number(value) === 0) return "";
-  return Number(value) > 0 ? "positive" : "negative";
-}
-
-export function isMacroNumber(value) {
-  return value !== null && value !== undefined && value !== "" && Number.isFinite(Number(value));
-}
-
-export function macroMoveClass(value) {
-  if (!isMacroNumber(value) || Number(value) === 0) return "";
-  return Number(value) > 0 ? "macro-up" : "macro-down";
-}
-
-
-export function formatMacroValue(value, unit) {
-  if (!isMacroNumber(value)) return "N/A";
-  if (unit === "percent" || unit === "percent_spread") return `${formatNumber(value, 2)}%`;
-  if (unit === "thousand_persons") return `${formatNumber(value, 0)}K`;
-  if (unit === "persons") return formatNumber(value, 0);
-  if (unit === "usd_millions") return `$${formatNumber(Number(value) / 1000, 1)}B`;
-  if (unit === "usd_billions" || unit === "usd_billions_chained") return `$${formatNumber(value, 1)}B`;
-  if (unit === "usd_per_hour") return `$${formatNumber(value, 2)}`;
-  return formatNumber(value, unit === "fx" ? 4 : 2);
-}
-
-export function formatMacroChange(item) {
-  if (!item) return "N/A";
-  if (isMacroNumber(item.changeBp)) return formatBp(item.changeBp, 0);
-  if (item.unit === "thousand_persons" && isMacroNumber(item.change)) return `${formatSignedNumber(item.change, 0)}K`;
-  if (item.unit === "persons" && isMacroNumber(item.change)) return formatSignedNumber(item.change, 0);
-  if (item.unit === "usd_millions" && isMacroNumber(item.change)) return `$${formatSignedNumber(Number(item.change) / 1000, 1)}B`;
-  if ((item.unit === "usd_billions" || item.unit === "usd_billions_chained") && isMacroNumber(item.change)) return `$${formatSignedNumber(item.change, 1)}B`;
-  if (isMacroNumber(item.pctChange)) return formatPct(item.pctChange, 2);
-  if (isMacroNumber(item.change)) return formatSignedNumber(item.change, 2);
-  return "N/A";
 }

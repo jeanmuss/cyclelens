@@ -153,12 +153,12 @@ app/src/
 
 ### Phase 2：前端模块化重构
 
-- [ ] 先拆 `AppShared.jsx`：路由/导航、i18n、数据定义、公共组件、加密周期组件分别落位。（进展：2026-07-18 第一批已提取统一路由/导航 registry 与双语页面身份/元数据；第二批已提取完整 `TRANSLATIONS`、语言 helper、各 feature copy 和宏观/加密文案 helper；第三批已提取全部 live-data 配置、延迟激活 hook 与 default/valid/hash state helper，并将 `AppShared.jsx` 从 2240 行降到 736 行；公共组件和加密周期组件仍待拆分。）
-- [ ] 将每个页面的纯计算函数、数据适配和 React 展示拆开，并为计算函数补单元测试。
-- [ ] 按 `tokens.css`、`base.css`、`components.css`、各 feature stylesheet 拆分 `styles.css`。
-- [ ] 保留 lazy route 边界，确保首页不会加载 A 股、图表和管理员代码。
-- [ ] 删除页面间的反向依赖；功能模块只能依赖 `shared`/`domain`，不能互相导入整个页面。（进展：2026-07-18 已按真实引用移除 29 处无效导入，包括 Market Clock 对整个 Macro 页面和 Crypto 对 chip 数据模块的无效依赖；仍在使用的跨页面 helper/组件待提取。）
-- [ ] 建立统一 loading、error、empty、stale、partial-data 状态组件。
+- [x] 先拆 `AppShared.jsx`：路由/导航、i18n、数据定义、公共组件、加密周期组件分别落位。`AppShared.jsx` 已删除，路由、文案、数据定义、格式化、公共组件和加密周期组件均有稳定边界。
+- [x] 将每个页面的纯计算函数、数据适配和 React 展示拆开，并为计算函数补单元测试。宏观、美股、市场时钟、芯片链、机器人链和管理员适配均已拆到无 React 的 model/domain 模块，加密与流动性继续复用既有纯计算模块和测试。
+- [x] 按 `tokens.css`、`base.css`、`components.css`、各 feature stylesheet 拆分 `styles.css`。入口仅保留有序 `@import`，拆分时逐字节重组验证与原文件一致。
+- [x] 保留 lazy route 边界，确保首页不会加载 A 股、图表和管理员代码。路由元数据与 lazy loader 已解耦，公开构建生成 7 个独立路由 chunk，管理员页面代码未进入公开构建。
+- [x] 删除页面间的反向依赖；功能模块只能依赖 `shared`/`domain`，不能互相导入整个页面。日期与供应链通用计算已下沉，完整本地 import 图无循环依赖。
+- [x] 建立统一 loading、error、empty、stale、partial-data 状态组件。公开页面和路由 fallback 已统一消费 `DataState`，五种状态值由契约测试保护。
 
 验收：无循环依赖；主要路由仍为独立构建 chunk；视觉与现有版本无非预期变化；`npm run check` 通过。
 
@@ -182,6 +182,13 @@ app/src/
 - 验证结果：live-data、URL state、路由与现有轮询策略定向回归 23/23 通过；`npm run check` 通过（source lint、117 项测试、官方美/韩/中市场日历边界和生产构建）；显式 `/cyclelens/` public 构建生成 7 个公开路由 chunk、资源 base 正确且无 `MacroAdminRoute`；浏览器逐一验证 7 个公开路由的标题、H1、导航和 active 状态，并验证有效/非法 hash、控件触发 URL 更新与 public 管理员 hash 安全回退，页面日志为空；44 个前端模块的静态 import 图循环依赖为 0、未使用命名导入为 0；`git diff --check` 通过。
 - 剩余风险：`AppShared.jsx` 仍包含公共控件、新鲜度/可信度展示、格式化函数和加密周期组件；`routeViewState.js` 暂时仍通过根 `data.js` 读取资产列表与 base helper，后续应随 shared/domain 边界继续下沉；`EquityPage`/`MacroAdminPage` 对 `MacroPage`、`RobotChainPage` 对 `ChipChainPage` 的在用跨页面依赖仍待消除；registry 的数据依赖仍是受测试保护的声明，尚未直接驱动 loader。
 - 下一步：继续 Phase 2，先把通用格式化 helper 与 loading/error/empty/stale/partial-data、分段控件和新鲜度/可信度展示组件提取到 `shared/formatting` 与 `shared/components`，再独立加密周期组件；保持 hook 顺序、effect 清理、视觉、URL、lazy chunk 和 public 管理员裁剪不变。
+
+执行记录（2026-07-18，Phase 2 前端模块化完成批次）：
+
+- 完成内容：删除剩余 `AppShared.jsx`，将分段控件、语言切换、缓存/新鲜度/可信度展示、格式化 helper 和加密周期展示组件拆入 `shared`/feature；新增统一 `DataState`；将宏观日历、美股图表、市场时钟、芯片链、机器人链和宏观管理员的纯计算/适配拆入无 React model/domain，并把跨 feature 的日期与供应链通用逻辑下沉到 `shared/dates` 和 `domain`；将路由元数据与 lazy loader 解耦；把单体样式按 tokens、base、components、responsive 和 feature 拆为有序样式入口。
+- 验证结果：新增模型、架构、样式、状态、路由契约定向测试 18/18 通过；`npm run check` 通过（source lint、130 项测试、官方美/韩/中市场日历边界验证和生产构建）；完整前端相对 import 图循环依赖为 0，feature 模块无页面或兄弟 feature 反向导入；公开构建生成 7 个独立路由 chunk、无 `MacroAdminRoute` chunk；样式拆分时 19 个片段按原顺序重组与原文件逐字节一致；浏览器在桌面宽度和 390px 验证框（内容宽 375px）逐一验证 7 个公开路由，全部 H1 正常、无 error/loading 残留、无横向页面溢出，运行日志为空；`git diff --check` 通过。
+- 剩余风险：Vite 仍会把源级拆分样式合并成单个生产 CSS 资源，这是当前预期；路由 registry 的数据依赖仍是受测试保护的声明，尚未直接驱动 loader；`stale` 状态契约已建立，但在没有可靠的按数据集过期阈值前不做主观判定，页面继续展示可审计的 observed/fetched/deployed/client-checked 时间；本批未引入新依赖或密钥。
+- 下一步：进入 Phase 3，先定义 `metric_catalog` 的最小 schema 与兼容迁移边界，再选择一个现有数据集完成 fetch/normalize/validate/persist/project 的纵向 adapter 样板，并保持 Phase 8 前不推送或克隆新仓库。
 
 ### Phase 3：指标目录与数据管道重构
 

@@ -75,13 +75,12 @@ test("feature copy modules keep matching bilingual shapes and safe fallbacks", (
   assert.equal(plannedSourceLabel("invalid"), "经审查的后端行情缓存");
 });
 
-test("AppShared no longer owns i18n definitions and route runtime consumes the shared boundary", async () => {
-  const appShared = await readFile(resolve(appRoot, "src", "pages", "AppShared.jsx"), "utf8");
+test("shared components no longer use an AppShared barrel and route runtime consumes the i18n boundary", async () => {
+  const cryptoComponents = await readFile(resolve(appRoot, "src", "features", "crypto-cycle", "CryptoCycleComponents.jsx"), "utf8");
   const routeRuntime = await readFile(resolve(appRoot, "src", "pages", "RouteRuntime.jsx"), "utf8");
-  const lineCount = appShared.split(/\r?\n/).length;
 
-  assert.ok(lineCount < 1_000, `AppShared should stay below 1,000 lines after i18n extraction; got ${lineCount}`);
-  assert.doesNotMatch(appShared, /export const TRANSLATIONS|readLanguagePreference|EQUITY_MARKET_TEXT|MARKET_CLOCK_TEXT|CHIP_CHAIN_TEXT|ROBOT_CHAIN_TEXT/);
+  await assert.rejects(readFile(resolve(appRoot, "src", "pages", "AppShared.jsx"), "utf8"), { code: "ENOENT" });
+  assert.doesNotMatch(cryptoComponents, /export const TRANSLATIONS|readLanguagePreference|EQUITY_MARKET_TEXT|MARKET_CLOCK_TEXT|CHIP_CHAIN_TEXT|ROBOT_CHAIN_TEXT/);
   assert.match(routeRuntime, /from "\.\.\/shared\/i18n\/language\.js"/);
   assert.match(routeRuntime, /from "\.\.\/shared\/i18n\/translations\.js"/);
   assert.match(routeRuntime, /const t = translationFor\(language\)/);

@@ -1,0 +1,81 @@
+.positive {
+  color: #15783a;
+}
+
+.negative {
+  color: #c6273b;
+}
+
+.asset-btc {
+  color: #9b7100;
+}
+
+.asset-eth {
+  color: #315dc1;
+}
+
+.asset-sol {
+  color: #12845c;
+}
+
+.asset-hype {
+  color: #bd3a50;
+}
+
+.asset-bnb {
+  color: #8b6d00;
+}
+
+.control-bar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 0 12px;
+}
+
+.control-primary {
+  justify-self: start;
+}
+
+.control-secondary {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.segmented {
+  display: inline-flex;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+}
+
+.segmented button {
+  min-height: 36px;
+  padding: 7px 16px;
+  border: 0;
+  border-right: 1px solid var(--ink);
+  background: transparent;
+  font-size: 13px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.segmented button:last-child {
+  border-right: 0;
+}
+
+.segmented button:hover {
+  background: #efefe7;
+}
+
+.segmented button.is-active {
+  background: var(--ink);
+  color: #fff;
+}
+
+.segmented-compact button {
+  min-height: 32px;
+  padding: 5px 11px;
+  font-size: 12px;
+}

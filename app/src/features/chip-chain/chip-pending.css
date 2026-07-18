@@ -1,0 +1,55 @@
+.chip-pending-section {
+  border-color: color-mix(in srgb, var(--line) 72%, #d69e2e 28%);
+  background: color-mix(in srgb, var(--surface) 94%, #f6e6ad 6%);
+}
+
+.chip-pending-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.chip-pending-card {
+  padding: 14px;
+  border: 1px dashed color-mix(in srgb, var(--line) 65%, #d69e2e 35%);
+  border-radius: 14px;
+  background: var(--surface);
+}
+
+.chip-pending-card header,
+.chip-pending-card header div,
+.chip-pending-card dl div {
+  display: flex;
+  gap: 6px;
+}
+
+.chip-pending-card header {
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.chip-pending-card header div,
+.chip-pending-card dl div {
+  flex-direction: column;
+}
+
+.chip-pending-card header span,
+.chip-pending-card header small,
+.chip-pending-card dt {
+  color: var(--muted);
+}
+
+.chip-pending-card dl {
+  display: grid;
+  gap: 10px;
+  margin: 14px 0 0;
+}
+
+.chip-pending-card dt,
+.chip-pending-card dd {
+  margin: 0;
+}
+
+.chip-pending-card dd {
+  overflow-wrap: anywhere;
+}

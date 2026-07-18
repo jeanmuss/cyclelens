@@ -1,0 +1,89 @@
+.equity-strip {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.equity-summary-card {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: baseline;
+  gap: 5px 10px;
+  min-width: 0;
+  padding: 12px 14px;
+  border-right: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  background: var(--paper);
+}
+
+.equity-summary-card small {
+  grid-column: 2 / 4;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.equity-summary-card .ticker {
+  width: auto;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.equity-summary-card .latest-price,
+.equity-summary-card .latest-return,
+.equity-summary-lines strong,
+.equity-summary-lines em {
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+.equity-macro-summary {
+  align-content: start;
+}
+
+.equity-macro-summary .ticker {
+  grid-column: 1 / -1;
+  width: auto;
+  white-space: nowrap;
+}
+
+.equity-summary-lines {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.equity-summary-lines span {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 3px;
+}
+
+.equity-summary-lines b,
+.equity-summary-lines strong,
+.equity-summary-lines em {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-style: normal;
+}
+
+.equity-summary-lines strong {
+  font-weight: 750;
+}
+
+.equity-summary-lines em {
+  justify-self: end;
+  font-weight: 850;
+  font-variant-numeric: tabular-nums;
+}
+
+.equity-macro-dates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 8px;
+}
+
+.equity-summary-lines b {
+  font-size: 12px;
+}

@@ -1,0 +1,571 @@
+@media (max-width: 900px) {
+  .app-page {
+    width: min(100% - 24px, 1320px);
+    padding-top: 18px;
+  }
+
+  .visualization-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .app-header {
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: 10px;
+  }
+
+  .freshness-block {
+    min-width: 0;
+    justify-self: end;
+    justify-items: end;
+    text-align: right;
+  }
+
+  .latest-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .control-bar {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .control-primary {
+    justify-self: start;
+  }
+
+  .control-secondary {
+    justify-self: end;
+    flex-wrap: wrap;
+  }
+
+  .method-note {
+    text-align: left;
+  }
+
+  .data-trust-top {
+    flex-direction: column;
+  }
+
+  .data-trust-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .detail-band {
+    grid-template-columns: repeat(3, minmax(100px, 1fr));
+  }
+
+  .macro-environment-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .market-clock-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .market-limit-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .market-limit-market header {
+    min-height: 0;
+  }
+
+  .chip-hotspot-summary,
+  .chip-chain-board {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .chip-treemap-summary {
+    height: 340px;
+  }
+
+  .market-clock-detail {
+    grid-template-columns: repeat(3, minmax(100px, 1fr));
+  }
+
+  .chip-detail-band {
+    grid-template-columns: repeat(3, minmax(100px, 1fr));
+  }
+
+  .macro-section-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .macro-month-controls {
+    align-self: stretch;
+  }
+
+  .macro-month-controls strong {
+    flex: 1;
+    text-align: center;
+  }
+
+  .macro-date-detail-item {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .macro-date-detail-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .macro-date-detail-item {
+    gap: 7px;
+    padding: 9px 10px;
+  }
+
+  .macro-date-detail-item:nth-child(odd) {
+    border-right: 1px solid var(--soft-line);
+  }
+
+  .macro-date-detail-item > strong {
+    font-size: 12px;
+    line-height: 1.2;
+  }
+
+  .macro-date-detail-item > small {
+    overflow-wrap: anywhere;
+    font-size: 9px;
+    line-height: 1.25;
+  }
+
+  .macro-date-detail-item dl {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .macro-date-detail-item dt {
+    font-size: 8px;
+  }
+
+  .macro-date-detail-item dd {
+    white-space: normal;
+    font-size: 11px;
+    line-height: 1.15;
+  }
+
+  .metric-compare-heading > span {
+    max-width: none;
+    text-align: left;
+  }
+
+  .metric-chart-controls {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .metric-select {
+    grid-column: span 2;
+  }
+
+  .metric-chart-meta {
+    grid-template-columns: 1fr;
+  }
+
+  .metric-chart-svg {
+    min-height: 300px;
+  }
+
+  .admin-macro-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-toolbar .admin-primary-action {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 560px) {
+  .title-block h1 {
+    font-size: 30px;
+  }
+
+  .page-nav {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+  }
+
+  .page-nav a {
+    justify-content: center;
+    border-bottom: 1px solid var(--ink);
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .page-nav a:nth-last-child(-n + 2) {
+    border-bottom: 1px solid var(--ink);
+  }
+
+  .page-nav a:nth-child(2n) {
+    border-right: 0;
+  }
+
+  .page-nav a:last-child {
+    border-bottom: 0;
+    border-right: 0;
+  }
+
+  .admin-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-field:last-child {
+    grid-column: auto;
+  }
+
+  .admin-preview dl div {
+    grid-template-columns: 1fr;
+  }
+
+  .latest-strip,
+  .asset-switch,
+  .chip-hotspot-summary,
+  .chip-chain-board {
+    grid-template-columns: 1fr;
+  }
+
+  .chip-treemap-summary {
+    height: 440px;
+  }
+
+  .chip-treemap-tile {
+    gap: 3px;
+    padding: 5px;
+  }
+
+  .chip-treemap-tile.chip-move-text-4 strong,
+  .chip-treemap-tile.chip-move-text-5 strong {
+    font-size: 16px;
+  }
+
+  .chip-treemap-tile.chip-move-text-4 em,
+  .chip-treemap-tile.chip-move-text-5 em {
+    font-size: 14px;
+  }
+
+  .chip-treemap-tile.is-compact.chip-move-text-4 strong,
+  .chip-treemap-tile.is-compact.chip-move-text-5 strong {
+    font-size: 14px;
+  }
+
+  .chip-treemap-tile.is-compact.chip-move-text-4 em,
+  .chip-treemap-tile.is-compact.chip-move-text-5 em {
+    font-size: 12px;
+  }
+
+  .equity-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .equity-summary-card {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 4px 8px;
+    padding: 10px 11px;
+  }
+
+  .equity-summary-card .ticker {
+    grid-column: 1;
+    grid-row: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .equity-summary-card .latest-price {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    overflow: visible;
+    text-overflow: clip;
+    white-space: nowrap;
+    font-size: 14px;
+  }
+
+  .equity-summary-card .latest-return {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+    font-size: 14px;
+  }
+
+  .equity-summary-card small {
+    grid-column: 1 / -1;
+    grid-row: 3;
+  }
+
+  .equity-macro-summary .ticker,
+  .equity-macro-summary .equity-summary-lines {
+    grid-column: 1 / -1;
+    grid-row: auto;
+  }
+
+  .equity-macro-summary .ticker {
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+    line-height: 1.1;
+  }
+
+  .equity-summary-lines b {
+    font-size: 11px;
+  }
+
+  .asset-spot-summary {
+    grid-template-columns: 4ch minmax(0, 1fr);
+  }
+
+  .asset-spot-summary .latest-return,
+  .asset-spot-summary small {
+    grid-column: 2;
+  }
+
+  .segmented {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  .segmented button {
+    flex: 0 0 auto;
+  }
+
+  .metric-chart-controls {
+    grid-template-columns: 1fr;
+    padding: 10px;
+  }
+
+  .metric-select {
+    grid-column: auto;
+  }
+
+  .metric-select select {
+    font-size: 12px;
+  }
+
+  .metric-chart-svg {
+    min-height: 260px;
+  }
+
+  .metric-tooltip {
+    top: 10px;
+    width: min(270px, calc(100% - 18px));
+  }
+
+  .insight-card {
+    grid-template-columns: 1fr;
+    gap: 9px;
+    padding: 11px 12px;
+  }
+
+  .insight-meta {
+    justify-content: flex-start;
+    max-width: none;
+    text-align: left;
+  }
+
+  .insight-meta small {
+    font-size: 10px;
+  }
+
+  .detail-band {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .macro-environment-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .macro-environment-card {
+    padding: 8px 7px;
+  }
+
+  .macro-environment-card small {
+    font-size: 8px;
+    line-height: 1.2;
+  }
+
+  .macro-environment-card strong {
+    margin-top: 4px;
+    font-size: 13px;
+    line-height: 1.15;
+    white-space: normal;
+  }
+
+  .macro-environment-card span {
+    font-size: 10px;
+    line-height: 1.2;
+  }
+
+  .market-clock-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .market-clock-detail {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .market-limit-market dl div {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+
+  .market-limit-market dt {
+    border-right: 0;
+    border-bottom: 1px solid var(--soft-line);
+    padding-bottom: 5px;
+  }
+
+  .market-limit-market dd {
+    padding-top: 7px;
+  }
+
+  .chip-detail-band {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .chip-chain-page {
+    padding-bottom: 310px;
+  }
+
+  .chip-detail-band,
+  .chip-detail-empty {
+    position: static;
+    bottom: auto;
+    left: auto;
+    width: 100%;
+    max-height: none;
+    margin-top: 12px;
+    transform: none;
+  }
+
+  .chip-category-card h3,
+  .chip-category-card p {
+    white-space: normal;
+  }
+
+  .chip-ticker-button {
+    grid-template-columns: minmax(84px, 0.9fr) minmax(74px, 1fr) auto;
+    gap: 6px;
+  }
+
+  .chip-sparkline {
+    min-width: 64px;
+  }
+
+  .macro-week-carousel {
+    padding: 0 28px;
+  }
+
+  .macro-week-nav {
+    width: 24px;
+    height: 40px;
+    font-size: 14px;
+  }
+
+  .macro-week-calendar {
+    min-width: 720px;
+  }
+
+  .macro-month-day {
+    min-height: 78px;
+    padding: 5px;
+  }
+
+  .macro-month-day strong {
+    font-size: 12px;
+  }
+
+  .macro-month-tag {
+    padding: 1px 3px;
+    font-size: 8px;
+  }
+
+  .macro-month-items {
+    gap: 2px;
+    margin-top: 4px;
+  }
+
+  .macro-date-detail-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .macro-date-detail-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .macro-date-detail-item {
+    padding: 8px;
+  }
+
+  .macro-date-detail-item dl {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 5px 6px;
+  }
+
+  .macro-date-detail-item > strong {
+    font-size: 11px;
+  }
+
+  .macro-date-detail-item > small {
+    font-size: 8px;
+  }
+
+  .macro-date-detail-item dd {
+    font-size: 10px;
+  }
+
+  .detail-empty {
+    flex-direction: column;
+  }
+
+  .has-mobile-dock {
+    padding-bottom: 150px;
+  }
+
+  .mobile-detail-dock {
+    position: fixed;
+    right: 12px;
+    bottom: calc(10px + env(safe-area-inset-bottom));
+    left: 12px;
+    z-index: 30;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px 10px;
+    padding: 12px 42px 12px 12px;
+    border: 1px solid var(--ink);
+    background: rgba(252, 252, 247, 0.96);
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+
+  .mobile-detail-dock small,
+  .mobile-detail-dock strong {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .mobile-detail-dock small {
+    margin-bottom: 3px;
+    color: var(--muted);
+    font-size: 10px;
+  }
+
+  .mobile-detail-dock strong {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 360px) {
+  .equity-summary-lines span {
+    grid-template-columns: 32px minmax(0, 1fr) auto;
+    gap: 1px;
+  }
+
+  .equity-summary-lines b {
+    font-size: 10px;
+  }
+}

@@ -9,247 +9,27 @@ import {
   chipCategoryRows,
   chipPendingAssets,
   chipTopMovers,
-  isChipSampleAsset,
 } from "../chipData.js";
-import {
-  Segmented,
-  LanguageToggle,
-  CacheStatus,
-  buildFreshnessItem,
-  DataFreshnessSummary,
-  DataTrustFooter,
-  formatNumber,
-} from "./AppShared.jsx";
+import { CacheStatus } from "../shared/components/CacheStatus.jsx";
+import { DataFreshnessSummary, DataTrustFooter, buildFreshnessItem } from "../shared/components/DataTrust.jsx";
+import { DataState } from "../shared/components/DataState.jsx";
+import { LanguageToggle } from "../shared/components/LanguageToggle.jsx";
+import { Segmented } from "../shared/components/Segmented.jsx";
+import { formatNumber } from "../shared/formatting/metrics.js";
 import { currentPage } from "../routeState.js";
-
-export function localizedField(item, field, language) {
-  return item?.[`${field}${language === "en" ? "En" : "Zh"}`] || item?.[field] || "";
-}
-export function chipHeatClass(value) {
-  if (!Number.isFinite(value)) return "chip-heat-na";
-  if (value >= 8) return "chip-heat-up-4";
-  if (value >= 4) return "chip-heat-up-3";
-  if (value >= 1.5) return "chip-heat-up-2";
-  if (value >= 0) return "chip-heat-up-1";
-  if (value > -1.5) return "chip-heat-down-1";
-  if (value > -4) return "chip-heat-down-2";
-  if (value > -8) return "chip-heat-down-3";
-  return "chip-heat-down-4";
-}
-
-export function chipStageLabel(stage, copy) {
-  return copy.stage?.[stage] || stage || "";
-}
-
-export function chipSourceLabel(asset, copy) {
-  if (!asset) return "N/A";
-  if (asset.sourceLabel) return asset.sourceLabel;
-  return asset.sourceKind === "sample" ? copy.sampleSource : asset.sourceKind || "N/A";
-}
-
-export function formatMarketCap(value) {
-  const n = Number(value);
-  if (!Number.isFinite(n)) return "N/A";
-  if (n >= 1000) return `${formatNumber(n / 1000, 2)}T USD`;
-  return `${formatNumber(n, n >= 10 ? 0 : 1)}B USD`;
-}
-
-export function formatWeek52Position(value) {
-  const n = Number(value);
-  if (!Number.isFinite(n)) return "N/A";
-  return `${Math.round(n * 100)}%`;
-}
-
-export function hasRealCachedPricePath(asset) {
-  return !isChipSampleAsset(asset);
-}
-
-export function chipSparkValues(asset, range) {
-  if (!hasRealCachedPricePath(asset)) return [];
-  return (asset?.pricePaths?.[range] || [])
-    .map((point) => Number(point?.c ?? point?.close ?? point?.price ?? point))
-    .filter(Number.isFinite);
-}
-
-export function chipSparkGeometry(values, width = 94, height = 28) {
-  const numeric = values.filter(Number.isFinite);
-  const min = Math.min(...numeric);
-  const max = Math.max(...numeric);
-  const spread = Math.max(1, max - min);
-  const points = values.map((value, index) => {
-    const x = values.length > 1 ? (index / (values.length - 1)) * width : 0;
-    const y = height - ((value - min) / spread) * (height - 6) - 3;
-    return { x, y };
-  });
-  return {
-    points: points.map((point) => `${point.x.toFixed(1)},${point.y.toFixed(1)}`).join(" "),
-    end: points[points.length - 1] || { x: 0, y: height / 2 },
-    midY: height / 2,
-  };
-}
-
-export function equityMoveClass(value) {
-  if (!Number.isFinite(Number(value)) || Number(value) === 0) return "";
-  return Number(value) > 0 ? "positive" : "negative";
-}
-
-export function sourceTimeLabel(iso, language) {
-  const date = new Date(iso);
-  if (Number.isNaN(date.getTime())) return "N/A";
-  return new Intl.DateTimeFormat(language === "en" ? "en-US" : "zh-CN", {
-    timeZone: language === "en" ? "America/New_York" : "Asia/Shanghai",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  }).format(date);
-}
-
-export function ChipSparkline({ asset, range }) {
-  const returnPct = Number(asset?.returns?.[range]);
-  const values = chipSparkValues(asset, range);
-  if (values.length < 2) {
-    return (
-      <span className="chip-sparkline chip-sparkline-empty" title="No real cached price path" aria-hidden="true">
-        <span />
-      </span>
-    );
-  }
-  const geometry = chipSparkGeometry(values);
-  return (
-    <span className={`chip-sparkline ${returnPct >= 0 ? "positive" : "negative"}`} aria-hidden="true">
-      <svg viewBox="0 0 94 28" focusable="false">
-        <polyline className="chip-sparkline-mid" points={`0,${geometry.midY} 94,${geometry.midY}`} />
-        <polyline className="chip-sparkline-line" points={geometry.points} />
-        <circle className="chip-sparkline-dot" cx={geometry.end.x} cy={geometry.end.y} r="2.2" />
-      </svg>
-    </span>
-  );
-}
-
-export function chipTreemapWeight(value) {
-  const numeric = Number(value);
-  if (!Number.isFinite(numeric)) return 0;
-  return Math.abs(numeric) + 0.25;
-}
-
-export function splitChipTreemapItems(items, rect) {
-  if (!items.length) return [];
-  if (items.length === 1) {
-    return [{ ...items[0], rect }];
-  }
-  const total = items.reduce((sum, item) => sum + item.weight, 0);
-  if (total <= 0) return [];
-  const half = total / 2;
-  let running = 0;
-  let splitIndex = 1;
-  let bestDistance = Infinity;
-  for (let index = 0; index < items.length - 1; index += 1) {
-    running += items[index].weight;
-    const distance = Math.abs(half - running);
-    if (distance < bestDistance) {
-      bestDistance = distance;
-      splitIndex = index + 1;
-    }
-  }
-  const first = items.slice(0, splitIndex);
-  const second = items.slice(splitIndex);
-  const firstWeight = first.reduce((sum, item) => sum + item.weight, 0);
-  const ratio = firstWeight / total;
-  if (rect.width >= rect.height) {
-    const firstWidth = rect.width * ratio;
-    return [
-      ...splitChipTreemapItems(first, { ...rect, width: firstWidth }),
-      ...splitChipTreemapItems(second, { ...rect, x: rect.x + firstWidth, width: rect.width - firstWidth }),
-    ];
-  }
-  const firstHeight = rect.height * ratio;
-  return [
-    ...splitChipTreemapItems(first, { ...rect, height: firstHeight }),
-    ...splitChipTreemapItems(second, { ...rect, y: rect.y + firstHeight, height: rect.height - firstHeight }),
-  ];
-}
-
-export function chipTreemapTiles(movers, range) {
-  const items = movers
-    .map((asset) => {
-      const value = Number(asset.returns?.[range]);
-      return {
-        asset,
-        value,
-        weight: chipTreemapWeight(value),
-      };
-    })
-    .filter((item) => item.weight > 0)
-    .sort((a, b) => b.weight - a.weight || b.value - a.value || a.asset.symbol.localeCompare(b.asset.symbol));
-  return splitChipTreemapItems(items, { x: 0, y: 0, width: 100, height: 100 });
-}
-
-export function chipTreemapSymbol(symbol) {
-  return String(symbol || "").replace(/\.(KS|KQ)$/i, "");
-}
-
-export function chipTreemapTextClass(value) {
-  const magnitude = Math.abs(Number(value));
-  if (!Number.isFinite(magnitude)) return "chip-move-text-1";
-  if (magnitude >= 7) return "chip-move-text-5";
-  if (magnitude >= 4) return "chip-move-text-4";
-  if (magnitude >= 2) return "chip-move-text-3";
-  if (magnitude >= 0.8) return "chip-move-text-2";
-  return "chip-move-text-1";
-}
-
-export function ChainTreemapSummary({ movers, range, selectedSymbol, onSelect, copy, className = "" }) {
-  const tiles = useMemo(() => chipTreemapTiles(movers, range), [movers, range]);
-  if (!tiles.length) {
-    return (
-      <section className={`chip-hotspot-summary chip-treemap-summary ${className}`.trim()} aria-label={copy.latest}>
-        <div className="chip-treemap-empty">{copy.noRows}</div>
-      </section>
-    );
-  }
-  const selectable = typeof onSelect === "function";
-  return (
-    <section className={`chip-hotspot-summary chip-treemap-summary ${className}`.trim()} aria-label={copy.latest}>
-      {tiles.map(({ asset, value, rect }) => {
-        const area = rect.width * rect.height;
-        const tinyTile = rect.width < 5 || rect.height < 5 || area < 170;
-        const compactTile = !tinyTile && (rect.height < 16 || area < 300 || (rect.width < 10 && area < 360));
-        const densityClass = tinyTile ? "is-tiny" : compactTile ? "is-compact" : "";
-        const shapeClass = rect.width < 6 || rect.height < 6 ? "is-narrow" : "";
-        const TileElement = selectable ? "button" : "div";
-        const interactiveProps = selectable
-          ? {
-              type: "button",
-              onClick: () => onSelect(asset.symbol),
-              "aria-pressed": selectedSymbol === asset.symbol,
-            }
-          : {};
-        return (
-          <TileElement
-            {...interactiveProps}
-            className={`chip-treemap-tile ${chipHeatClass(value)} ${chipTreemapTextClass(value)} ${densityClass} ${shapeClass} ${selectable ? "" : "is-static"} ${selectedSymbol === asset.symbol ? "is-selected" : ""}`}
-            key={asset.symbol}
-            aria-label={`${asset.symbol} ${asset.name} ${formatPct(value, 1)}`}
-            title={`${asset.symbol} ${asset.name} ${formatPct(value, 1)}`}
-            style={{
-              left: `${rect.x}%`,
-              top: `${rect.y}%`,
-              width: `${rect.width}%`,
-              height: `${rect.height}%`,
-            }}
-          >
-            <span className="chip-treemap-label">
-              <strong>{chipTreemapSymbol(asset.symbol)}</strong>
-            </span>
-            <em>{formatPct(value, 1)}</em>
-          </TileElement>
-        );
-      })}
-    </section>
-  );
-}
+import {
+  chipHeatClass,
+  equityMoveClass,
+} from "../domain/supplyChain.js";
+import {
+  localizedField,
+  chipStageLabel,
+  chipSourceLabel,
+  formatMarketCap,
+  formatWeek52Position,
+  sourceTimeLabel,
+} from "../features/chip-chain/chipChainModel.js";
+import { ChainTreemapSummary, ChipSparkline } from "../features/supply-chain/SupplyChainVisuals.jsx";
 
 export function ChipTickerButton({ asset, range, selected, onSelect, copy }) {
   const value = Number(asset.returns?.[range]);
@@ -312,7 +92,7 @@ export function ChipCategoryCard({ row, range, selectedSymbol, onSelect, languag
 
 export function ChipChainBoard({ rows, range, selectedSymbol, onSelect, language, copy }) {
   if (!rows.length) {
-    return <div className="chip-empty-board">{copy.noRows}</div>;
+    return <DataState variant="empty" className="chip-empty-board">{copy.noRows}</DataState>;
   }
   return (
     <div className="chip-chain-board">
@@ -503,10 +283,10 @@ export function ChipChainPage({ language, setLanguage, t }) {
   }, [dataset, movers, selectedSymbol, selectionCleared]);
 
   if (error) {
-    return <main className="status-page"><h1>{copy.unavailable}</h1><p>{error.status ? `${t.status.dataFileFailed} (${error.status})` : error.message}</p></main>;
+    return <DataState as="main" variant="error" className="status-page"><h1>{copy.unavailable}</h1><p>{error.status ? `${t.status.dataFileFailed} (${error.status})` : error.message}</p></DataState>;
   }
   if (!dataset) {
-    return <main className="status-page"><p>{copy.loading}</p></main>;
+    return <DataState as="main" variant="loading" className="status-page"><p>{copy.loading}</p></DataState>;
   }
 
   return (
@@ -563,29 +343,4 @@ export function ChipChainPage({ language, setLanguage, t }) {
       />
     </main>
   );
-}
-
-export function robotAttributeLabel(attribute, copy) {
-  return copy.attributeLabels?.[attribute] || attribute || "N/A";
-}
-
-export function robotCategoryRows(dataset) {
-  const assetMap = dataset?.assets || {};
-  return (dataset?.categories || []).map((category) => ({
-    category,
-    assets: (category.tickers || []).map((symbol) => assetMap[symbol]).filter(Boolean),
-  })).filter((row) => row.assets.length);
-}
-
-export function robotTopMovers(rows, range) {
-  const seen = new Set();
-  return rows
-    .flatMap((row) => row.assets)
-    .filter((asset) => {
-      if (seen.has(asset.symbol)) return false;
-      seen.add(asset.symbol);
-      return true;
-    })
-    .filter((asset) => Number.isFinite(Number(asset.returns?.[range])))
-    .sort((a, b) => Number(b.returns?.[range]) - Number(a.returns?.[range]));
 }
