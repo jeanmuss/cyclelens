@@ -13,15 +13,15 @@ async function source(path) {
 }
 
 test("browser metadata and the primary page heading use CycleLens identity", async () => {
-  const [index, runtime, shared] = await Promise.all([
+  const [index, runtime, translations] = await Promise.all([
     source("app/index.html"),
     source("app/src/pages/RouteRuntime.jsx"),
-    source("app/src/pages/AppShared.jsx"),
+    source("app/src/shared/i18n/translations.js"),
   ]);
   assert.match(index, /<title>CycleLens<\/title>/);
   assert.match(runtime, /productPageTitle\(pageMetadata\.title\)/);
-  assert.match(shared, /eyebrow: PRODUCT_CONFIG\.name\.toUpperCase\(\)/);
-  assert.doesNotMatch(shared, /RISK ASSET CYCLE MAP/);
+  assert.match(translations, /eyebrow: PRODUCT_CONFIG\.name\.toUpperCase\(\)/);
+  assert.doesNotMatch(translations, /RISK ASSET CYCLE MAP/);
 });
 
 test("local admin client and loopback API share the configured CycleLens request marker", async () => {

@@ -153,11 +153,11 @@ app/src/
 
 ### Phase 2：前端模块化重构
 
-- [ ] 先拆 `AppShared.jsx`：路由/导航、i18n、数据定义、公共组件、加密周期组件分别落位。（进展：2026-07-18 第一批已提取统一路由/导航 registry 与双语页面身份/元数据，并移除 `AppShared.jsx` 内的导航组件和重复路由元数据；完整 `TRANSLATIONS`、数据定义、公共组件和加密周期组件仍待拆分。）
+- [ ] 先拆 `AppShared.jsx`：路由/导航、i18n、数据定义、公共组件、加密周期组件分别落位。（进展：2026-07-18 第一批已提取统一路由/导航 registry 与双语页面身份/元数据；第二批已提取完整 `TRANSLATIONS`、语言 helper、各 feature copy 和宏观/加密文案 helper，并将 `AppShared.jsx` 从 2240 行降到 923 行；数据定义、公共组件和加密周期组件仍待拆分。）
 - [ ] 将每个页面的纯计算函数、数据适配和 React 展示拆开，并为计算函数补单元测试。
 - [ ] 按 `tokens.css`、`base.css`、`components.css`、各 feature stylesheet 拆分 `styles.css`。
 - [ ] 保留 lazy route 边界，确保首页不会加载 A 股、图表和管理员代码。
-- [ ] 删除页面间的反向依赖；功能模块只能依赖 `shared`/`domain`，不能互相导入整个页面。
+- [ ] 删除页面间的反向依赖；功能模块只能依赖 `shared`/`domain`，不能互相导入整个页面。（进展：2026-07-18 已按真实引用移除 29 处无效导入，包括 Market Clock 对整个 Macro 页面和 Crypto 对 chip 数据模块的无效依赖；仍在使用的跨页面 helper/组件待提取。）
 - [ ] 建立统一 loading、error、empty、stale、partial-data 状态组件。
 
 验收：无循环依赖；主要路由仍为独立构建 chunk；视觉与现有版本无非预期变化；`npm run check` 通过。
@@ -168,6 +168,13 @@ app/src/
 - 验证结果：定向测试 19/19 通过；`npm run lint` 通过；`npm run check` 通过（105 项测试、官方市场日历边界检查和生产构建）；显式 `/cyclelens/` 公开构建保留 7 个独立公开路由 chunk 且不包含管理员 chunk；浏览器逐一验证 7 个公开路由的标题、描述、导航与 active 状态，验证中英文切换，并确认公开构建访问管理员 hash 安全回退且控制台无 warning/error；`git diff --check` 通过。
 - 剩余风险：`AppShared.jsx` 仍包含完整 `TRANSLATIONS`、大部分数据/格式化定义和公共展示组件，部分页面的共享导入仍偏宽；registry 中的数据依赖目前是可测试的声明性契约，尚未直接驱动数据加载；本批通过模块构建与测试排除已知循环依赖，但尚未引入独立依赖图检查工具。
 - 下一步：继续 Phase 2，提取完整 `TRANSLATIONS`、语言偏好 helper 与各 feature copy 到 `shared/i18n`，补翻译 shape/fallback 测试并收窄页面导入；继续保持 UI、URL、lazy route 和公开构建管理员裁剪行为不变。
+
+执行记录（2026-07-18，Phase 2 i18n 与依赖收窄批次）：
+
+- 完成内容：将完整 `TRANSLATIONS`、语言初始化/locale fallback、US Equity、Market Clock、Chip Chain、Robot Chain 文案以及宏观/加密文案 helper 提取到 `shared/i18n`；`RouteRuntime` 改为从 shared 边界读取语言与翻译。按 AST 真实引用集合收窄所有页面和 `AppShared.jsx` 的命名导入，删除 29 处无效导入并移除失效的 `AppShared` 管理员 re-export；`AppShared.jsx` 从 2240 行降到 923 行。新增 4 项 i18n shape/fallback/架构契约测试，并更新品牌契约测试读取新的单一来源。
+- 验证结果：i18n、路由和偏好定向回归 14/14 通过，品牌/i18n 定向回归 8/8 通过；`npm run check` 通过（source lint、109 项测试、官方美/韩/中市场日历边界和生产构建）；显式 `/cyclelens/` 公开构建保留 7 个公开路由 chunk 且管理员 chunk 缺席；浏览器在中英文下逐一验证 7 个公开路由的标题、H1、导航和 active 状态，公开管理员 hash 安全回退且页面诊断日志为空；AST 复核相关页面与 i18n 模块未使用命名导入为 0，41 个前端模块的本地 import 图循环依赖为 0；`git diff --check` 通过。
+- 剩余风险：`AppShared.jsx` 仍包含 live-data 配置、hash/default state、公共展示组件、格式化函数和加密周期组件；`EquityPage`/`MacroAdminPage` 仍从 `MacroPage` 读取正在使用的日期 helper，`RobotChainPage` 仍从 `ChipChainPage` 读取正在使用的组件/helper，需要在后续批次提取到 shared/domain 或 feature 内稳定边界；全局 `translations.js` 仍较大，但已是无 React/页面依赖的纯文案模块。
+- 下一步：继续 Phase 2，先把 `*_LIVE_DATA` 与轮询常量提取到 `shared/data`，把 default/valid/hash state helper 提取到 `shared/routing`，补纯配置和 URL state 测试；保持页面视觉、路由、语言、lazy chunk 与管理员裁剪行为不变。
 
 ### Phase 3：指标目录与数据管道重构
 

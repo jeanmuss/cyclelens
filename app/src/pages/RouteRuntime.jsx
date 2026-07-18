@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 
 import { productPageTitle } from "../../product.config.mjs";
 import { writeLanguagePreference } from "../localPreferences.js";
+import { getInitialLanguage } from "../shared/i18n/language.js";
+import { translationFor } from "../shared/i18n/translations.js";
 import { metadataForRoute } from "../shared/routing/routeRegistry.js";
-import { getInitialLanguage, TRANSLATIONS } from "./AppShared.jsx";
 
 export function RouteRuntime({ PageComponent, routeId }) {
   const [language, setLanguage] = useState(getInitialLanguage);
-  const t = TRANSLATIONS[language];
+  const t = translationFor(language);
 
   useEffect(() => {
     document.documentElement.lang = t.htmlLang;
