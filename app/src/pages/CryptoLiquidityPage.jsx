@@ -10,6 +10,8 @@ import {
   recentEtfFlowPoints,
   recentTreasuryDemandPoints,
 } from "../cryptoLiquidityCharts.js";
+import { CRYPTO_LIQUIDITY_LIVE_DATA } from "../shared/data/liveDataDefinitions.js";
+import { replaceHashState } from "../shared/routing/routeViewState.js";
 import { useLiveData } from "../useLiveData.js";
 import { PageNav } from "../shared/routing/PageNav.jsx";
 import {
@@ -18,13 +20,8 @@ import {
   DataFreshnessSummary,
   DataTrustFooter,
   LanguageToggle,
-  replaceHashState,
   Segmented,
 } from "./AppShared.jsx";
-
-const CRYPTO_LIQUIDITY_LIVE_DATA = [
-  { id: "cryptoLiquidity", path: "data/crypto-liquidity.json", pollIntervalMs: 300_000 },
-];
 
 const COPY = {
   zh: {

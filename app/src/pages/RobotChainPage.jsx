@@ -1,12 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { formatPct, formatPrice } from "../data.js";
+import { ROBOT_CHAIN_LIVE_DATA } from "../shared/data/liveDataDefinitions.js";
+import { readRobotChainStateFromHash, replaceHashState } from "../shared/routing/routeViewState.js";
 import { useLiveData } from "../useLiveData.js";
 import { PageNav } from "../shared/routing/PageNav.jsx";
 import { robotChainCopy } from "../shared/i18n/robotChain.js";
 import {
-  ROBOT_CHAIN_LIVE_DATA,
-  readRobotChainStateFromHash,
-  replaceHashState,
   Segmented,
   LanguageToggle,
   CacheStatus,

@@ -1,13 +1,15 @@
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { formatPct, returnClass } from "../data.js";
+import {
+  EQUITY_CHART_LIVE_DATA,
+  EQUITY_SUMMARY_LIVE_DATA,
+} from "../shared/data/liveDataDefinitions.js";
+import { useDeferredActivation } from "../shared/data/useDeferredActivation.js";
+import { replaceHashState } from "../shared/routing/routeViewState.js";
 import { useLiveData } from "../useLiveData.js";
 import { PageNav } from "../shared/routing/PageNav.jsx";
 import { equityCopy } from "../shared/i18n/usEquity.js";
 import {
-  EQUITY_SUMMARY_LIVE_DATA,
-  EQUITY_CHART_LIVE_DATA,
-  useDeferredActivation,
-  replaceHashState,
   LanguageToggle,
   CacheStatus,
   buildFreshnessItem,

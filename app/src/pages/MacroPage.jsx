@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { formatPct } from "../data.js";
+import { MACRO_LIVE_DATA } from "../shared/data/liveDataDefinitions.js";
 import { useLiveData } from "../useLiveData.js";
 import { PageNav } from "../shared/routing/PageNav.jsx";
 import {
@@ -8,9 +9,8 @@ import {
   macroCategoryLabel,
   macroDateMeaningLabel,
 } from "../shared/i18n/macro.js";
+import { replaceHashState } from "../shared/routing/routeViewState.js";
 import {
-  MACRO_LIVE_DATA,
-  replaceHashState,
   LanguageToggle,
   CacheStatus,
   buildFreshnessItem,

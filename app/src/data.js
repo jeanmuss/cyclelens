@@ -15,7 +15,7 @@ export const HALVING_MONTHS = new Set(["2012-11", "2016-07", "2020-05", "2024-04
 export const CYCLE_START_YEAR = 2011;
 export const CYCLE_ANCHOR_YEAR = 2024;
 
-export const APP_BASE_URL = import.meta.env.BASE_URL || "/";
+export const APP_BASE_URL = import.meta.env?.BASE_URL || "/";
 
 export function appUrl(path = "") {
   const base = APP_BASE_URL.endsWith("/") ? APP_BASE_URL : `${APP_BASE_URL}/`;

@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { formatPct, formatPrice } from "../data.js";
+import { CHIP_CHAIN_LIVE_DATA } from "../shared/data/liveDataDefinitions.js";
+import { readChipChainStateFromHash, replaceHashState } from "../shared/routing/routeViewState.js";
 import { useLiveData } from "../useLiveData.js";
 import { PageNav } from "../shared/routing/PageNav.jsx";
 import { chipChainCopy, plannedSourceLabel } from "../shared/i18n/chipChain.js";
@@ -10,9 +12,6 @@ import {
   isChipSampleAsset,
 } from "../chipData.js";
 import {
-  CHIP_CHAIN_LIVE_DATA,
-  readChipChainStateFromHash,
-  replaceHashState,
   Segmented,
   LanguageToggle,
   CacheStatus,

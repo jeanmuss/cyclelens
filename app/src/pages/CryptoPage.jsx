@@ -5,12 +5,11 @@ import {
   makeAssetMaps,
   monthlyStats,
 } from "../data.js";
+import { CRYPTO_LIVE_DATA } from "../shared/data/liveDataDefinitions.js";
+import { readCryptoStateFromHash, replaceHashState } from "../shared/routing/routeViewState.js";
 import { useLiveData } from "../useLiveData.js";
 import { PageNav } from "../shared/routing/PageNav.jsx";
 import {
-  CRYPTO_LIVE_DATA,
-  readCryptoStateFromHash,
-  replaceHashState,
   Segmented,
   LanguageToggle,
   CacheStatus,

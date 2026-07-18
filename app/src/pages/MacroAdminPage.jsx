@@ -3,8 +3,8 @@ import { PRODUCT_CONFIG } from "../../product.config.mjs";
 import { freshnessLabel } from "../data.js";
 import { PageNav } from "../shared/routing/PageNav.jsx";
 import { macroCategoryLabel, macroDateMeaningLabel } from "../shared/i18n/macro.js";
+import { replaceHashState } from "../shared/routing/routeViewState.js";
 import {
-  replaceHashState,
   LanguageToggle,
   CacheStatus,
 } from "./AppShared.jsx";

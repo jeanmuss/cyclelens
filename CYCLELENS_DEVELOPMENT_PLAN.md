@@ -153,7 +153,7 @@ app/src/
 
 ### Phase 2：前端模块化重构
 
-- [ ] 先拆 `AppShared.jsx`：路由/导航、i18n、数据定义、公共组件、加密周期组件分别落位。（进展：2026-07-18 第一批已提取统一路由/导航 registry 与双语页面身份/元数据；第二批已提取完整 `TRANSLATIONS`、语言 helper、各 feature copy 和宏观/加密文案 helper，并将 `AppShared.jsx` 从 2240 行降到 923 行；数据定义、公共组件和加密周期组件仍待拆分。）
+- [ ] 先拆 `AppShared.jsx`：路由/导航、i18n、数据定义、公共组件、加密周期组件分别落位。（进展：2026-07-18 第一批已提取统一路由/导航 registry 与双语页面身份/元数据；第二批已提取完整 `TRANSLATIONS`、语言 helper、各 feature copy 和宏观/加密文案 helper；第三批已提取全部 live-data 配置、延迟激活 hook 与 default/valid/hash state helper，并将 `AppShared.jsx` 从 2240 行降到 736 行；公共组件和加密周期组件仍待拆分。）
 - [ ] 将每个页面的纯计算函数、数据适配和 React 展示拆开，并为计算函数补单元测试。
 - [ ] 按 `tokens.css`、`base.css`、`components.css`、各 feature stylesheet 拆分 `styles.css`。
 - [ ] 保留 lazy route 边界，确保首页不会加载 A 股、图表和管理员代码。
@@ -175,6 +175,13 @@ app/src/
 - 验证结果：i18n、路由和偏好定向回归 14/14 通过，品牌/i18n 定向回归 8/8 通过；`npm run check` 通过（source lint、109 项测试、官方美/韩/中市场日历边界和生产构建）；显式 `/cyclelens/` 公开构建保留 7 个公开路由 chunk 且管理员 chunk 缺席；浏览器在中英文下逐一验证 7 个公开路由的标题、H1、导航和 active 状态，公开管理员 hash 安全回退且页面诊断日志为空；AST 复核相关页面与 i18n 模块未使用命名导入为 0，41 个前端模块的本地 import 图循环依赖为 0；`git diff --check` 通过。
 - 剩余风险：`AppShared.jsx` 仍包含 live-data 配置、hash/default state、公共展示组件、格式化函数和加密周期组件；`EquityPage`/`MacroAdminPage` 仍从 `MacroPage` 读取正在使用的日期 helper，`RobotChainPage` 仍从 `ChipChainPage` 读取正在使用的组件/helper，需要在后续批次提取到 shared/domain 或 feature 内稳定边界；全局 `translations.js` 仍较大，但已是无 React/页面依赖的纯文案模块。
 - 下一步：继续 Phase 2，先把 `*_LIVE_DATA` 与轮询常量提取到 `shared/data`，把 default/valid/hash state helper 提取到 `shared/routing`，补纯配置和 URL state 测试；保持页面视觉、路由、语言、lazy chunk 与管理员裁剪行为不变。
+
+执行记录（2026-07-18，Phase 2 数据定义与 URL 状态批次）：
+
+- 完成内容：将 8 组 live-data 数据集定义与统一轮询常量集中到 `shared/data/liveDataDefinitions.js`，将图表延迟激活 hook 提取到独立模块并保留 idle/timeout 清理语义；将加密、股票、宏观、芯片和机器人页面的默认值、允许值、hash 解析及 URL 序列化/替换 helper 提取到 `shared/routing/routeViewState.js`。所有消费页面改为从稳定 shared 边界导入，Crypto Liquidity 删除重复配置；`AppShared.jsx` 从 923 行降到 736 行。新增 live-data registry 对齐、不可变配置、URL fail-closed 解析、序列化和架构边界测试；`data.js` 的 Vite base 读取改为可选访问，使纯模块可由原生 Node 安全加载而不改变浏览器构建结果。
+- 验证结果：live-data、URL state、路由与现有轮询策略定向回归 23/23 通过；`npm run check` 通过（source lint、117 项测试、官方美/韩/中市场日历边界和生产构建）；显式 `/cyclelens/` public 构建生成 7 个公开路由 chunk、资源 base 正确且无 `MacroAdminRoute`；浏览器逐一验证 7 个公开路由的标题、H1、导航和 active 状态，并验证有效/非法 hash、控件触发 URL 更新与 public 管理员 hash 安全回退，页面日志为空；44 个前端模块的静态 import 图循环依赖为 0、未使用命名导入为 0；`git diff --check` 通过。
+- 剩余风险：`AppShared.jsx` 仍包含公共控件、新鲜度/可信度展示、格式化函数和加密周期组件；`routeViewState.js` 暂时仍通过根 `data.js` 读取资产列表与 base helper，后续应随 shared/domain 边界继续下沉；`EquityPage`/`MacroAdminPage` 对 `MacroPage`、`RobotChainPage` 对 `ChipChainPage` 的在用跨页面依赖仍待消除；registry 的数据依赖仍是受测试保护的声明，尚未直接驱动 loader。
+- 下一步：继续 Phase 2，先把通用格式化 helper 与 loading/error/empty/stale/partial-data、分段控件和新鲜度/可信度展示组件提取到 `shared/formatting` 与 `shared/components`，再独立加密周期组件；保持 hook 顺序、effect 清理、视觉、URL、lazy chunk 和 public 管理员裁剪不变。
 
 ### Phase 3：指标目录与数据管道重构
 
