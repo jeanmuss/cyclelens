@@ -1,6 +1,7 @@
+import { ADMIN_PAGE_ENABLED } from "./buildTarget.js";
 import { pageForLocation } from "./routeResolver.js";
 
-export const ADMIN_PAGE_ENABLED = import.meta.env.DEV;
+export { ADMIN_PAGE_ENABLED };
 
 export function currentPage() {
   if (typeof window === "undefined") return "crypto";

@@ -46,7 +46,9 @@ test("route selection without browser location data falls back to the crypto pag
 });
 
 test("the admin route gate remains statically removable from production builds", async () => {
-  const source = await readFile(resolve(testDirectory, "..", "src", "routeState.js"), "utf8");
-  assert.match(source, /ADMIN_PAGE_ENABLED = import\.meta\.env\.DEV;/);
-  assert.doesNotMatch(source, /Boolean\(import\.meta\.env/);
+  const buildTargetSource = await readFile(resolve(testDirectory, "..", "src", "buildTarget.js"), "utf8");
+  const viteSource = await readFile(resolve(testDirectory, "..", "vite.config.mjs"), "utf8");
+  assert.match(buildTargetSource, /ADMIN_PAGE_ENABLED = import\.meta\.env\.CYCLELENS_ADMIN_ENABLED;/);
+  assert.match(viteSource, /"import\.meta\.env\.CYCLELENS_ADMIN_ENABLED"/);
+  assert.match(viteSource, /isAdminBuildTarget\(buildTarget\)/);
 });

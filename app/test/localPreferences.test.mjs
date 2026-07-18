@@ -3,6 +3,7 @@ import test from "node:test";
 
 import {
   LEGACY_PREFERENCE_KEYS,
+  PREFERENCE_KEYS,
   readLanguagePreference,
   readShowCryptoPreference,
   writeLanguagePreference,
@@ -22,7 +23,7 @@ function memoryStorage(initial = {}) {
   };
 }
 
-test("current language and market-clock preferences retain their existing behavior", () => {
+test("legacy preferences are read once and future writes use the CycleLens namespace", () => {
   const storage = memoryStorage({
     [LEGACY_PREFERENCE_KEYS.language]: "en",
     [LEGACY_PREFERENCE_KEYS.hideCrypto]: "1",
@@ -31,34 +32,27 @@ test("current language and market-clock preferences retain their existing behavi
   assert.equal(readShowCryptoPreference({ storage }), false);
   assert.equal(writeLanguagePreference("zh", { storage }), true);
   assert.equal(writeShowCryptoPreference(true, { storage }), true);
-  assert.equal(storage.values.get(LEGACY_PREFERENCE_KEYS.language), "zh");
-  assert.equal(storage.values.get(LEGACY_PREFERENCE_KEYS.hideCrypto), "0");
+  assert.equal(storage.values.get(PREFERENCE_KEYS.language), "zh");
+  assert.equal(storage.values.get(PREFERENCE_KEYS.hideCrypto), "0");
+  assert.equal(storage.values.get(LEGACY_PREFERENCE_KEYS.language), "en");
+  assert.equal(storage.values.get(LEGACY_PREFERENCE_KEYS.hideCrypto), "1");
 });
 
-test("a future primary key can read a legacy value without deleting it", () => {
-  const primaryKey = "cyclelens:language";
+test("compatibility reads do not eagerly copy or delete the legacy value", () => {
   const storage = memoryStorage({ [LEGACY_PREFERENCE_KEYS.language]: "en" });
-  const language = readLanguagePreference({
-    storage,
-    key: primaryKey,
-    legacyKeys: [LEGACY_PREFERENCE_KEYS.language],
-  });
+  const language = readLanguagePreference({ storage });
 
   assert.equal(language, "en");
   assert.equal(storage.values.get(LEGACY_PREFERENCE_KEYS.language), "en");
-  assert.equal(storage.values.has(primaryKey), false);
+  assert.equal(storage.values.has(PREFERENCE_KEYS.language), false);
 });
 
 test("a valid primary preference wins over its legacy fallback", () => {
   const storage = memoryStorage({
-    "cyclelens:language": "zh",
+    [PREFERENCE_KEYS.language]: "zh",
     [LEGACY_PREFERENCE_KEYS.language]: "en",
   });
-  assert.equal(readLanguagePreference({
-    storage,
-    key: "cyclelens:language",
-    legacyKeys: [LEGACY_PREFERENCE_KEYS.language],
-  }), "zh");
+  assert.equal(readLanguagePreference({ storage }), "zh");
 });
 
 test("invalid, unavailable, or rejected storage safely falls back", () => {

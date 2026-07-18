@@ -18,6 +18,7 @@ import {
 } from "../data.js";
 import { useLiveData } from "../useLiveData.js";
 import { readLanguagePreference } from "../localPreferences.js";
+import { ADMIN_PAGE_ENABLED } from "../buildTarget.js";
 import {
   chipCategoryRows,
   chipPendingAssets,
@@ -99,7 +100,7 @@ export const VALID_EQUITY_RANGES = new Set(["26", "52", "all"]);
 export const VALID_MACRO_CATEGORIES = new Set(["all", "inflation", "growth", "rates", "volatility", "liquidity", "other"]);
 export const VALID_CHIP_CHAIN_RANGES = new Set(["1d", "5d", "1m", "3m"]);
 export const VALID_ROBOT_CHAIN_RANGES = new Set(["1d", "5d", "1m", "3m"]);
-export const ADMIN_PAGE_ENABLED = import.meta.env.DEV;
+export { ADMIN_PAGE_ENABLED };
 
 export const MACRO_CALENDAR_TIME_ZONES = {
   zh: "Asia/Shanghai",

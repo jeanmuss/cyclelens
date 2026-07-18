@@ -123,10 +123,10 @@ app/src/
 ### Phase 1：建立安全网并完成品牌迁移准备
 
 - [x] 为路由注册、`useLiveData`、数据 manifest、旧本地偏好迁移增加测试。（2026-07-18 已增加路由解析/管理员 gate、live-data 策略、manifest 生命周期与哈希、本地偏好兼容读取测试；运行时仍使用旧 key，待下一批启用新命名空间。）
-- [ ] 新增集中产品配置：产品名、仓库基础路径、存储 key 命名空间、构建目标。
-- [ ] 将存储 key 改为 `cyclelens:*`；只做一次兼容读取旧 `cycle-map-*` key，不删除旧站数据。
+- [x] 新增集中产品配置：产品名、仓库基础路径、存储 key 命名空间、构建目标。（2026-07-18 已新增 `app/product.config.mjs`，Vite 与浏览器构建 gate 读取同一配置。）
+- [x] 将存储 key 改为 `cyclelens:*`；只做一次兼容读取旧 `cycle-map-*` key，不删除旧站数据。（新 key 缺失时读取旧值，后续 effect 只写新 key；测试确认旧值保持不变。）
 - [ ] 将硬编码的 `cycle-map` 标识逐步改为配置值，包括页面标题、错误头、管理员 actor 和文档。
-- [ ] 保持 Vite 根据 `GITHUB_REPOSITORY` 自动生成 `/cyclelens/` base path 的能力。
+- [x] 保持 Vite 根据 `GITHUB_REPOSITORY` 自动生成 `/cyclelens/` base path 的能力。（已分别以 `jeanmuss/cycle-map` 和 `jeanmuss/cyclelens` 完成真实生产构建，资源路径分别为 `/cycle-map/` 与 `/cyclelens/`。）
 
 验收：`npm run check` 通过；旧 URL 仍可运行；新 base path 的本地构建与资源路径正确。
 
@@ -136,6 +136,13 @@ app/src/
 - 验证结果：`npm run check` 通过（source lint、90 项单元测试、官方交易日历边界验证和生产构建全部成功）；生产产物保持页面 lazy chunks，未包含 `MacroAdminRoute`；`git diff --check` 通过。
 - 剩余风险：本地偏好迁移算法已有测试但尚未在运行时启用 `cyclelens:*`；`useLiveData` 当前覆盖纯策略，真实 effect/定时器/可见性切换仍依赖后续浏览器集成测试；路由元数据尚未集中为统一 registry。
 - 下一步：新增集中产品配置，并用它驱动产品名、仓库 base、存储命名空间和构建目标；随后启用新 key 写入与旧 key 只读回退，不删除旧站数据。
+
+执行记录（2026-07-18，Phase 1 集中配置与存储迁移批次）：
+
+- 完成内容：新增产品名、默认/旧仓库名、Pages base、存储命名空间和 `public`/`development`/`admin` 构建目标的集中配置；公共 build 默认 fail-closed，开发目标保留本地管理员入口；语言与市场时钟偏好改为写入 `cyclelens:*`，仅在新 key 无有效值时读取旧 key。
+- 验证结果：`npm run check` 通过（source lint、94 项单元测试、官方交易日历边界验证和生产构建全部成功）；旧 `/cycle-map/` 与新 `/cyclelens/` base 分别完成额外生产构建；两种公共构建均未生成 `MacroAdminRoute` chunk；`git diff --check` 通过。
+- 剩余风险：页面标题、错误头、管理员 actor、数据脚本 User-Agent、文档和本地管理员 header 中仍有旧 `cycle-map` 标识；`admin` 构建目标目前只是安全的构建边界基础，尚未部署或开放远程访问。
+- 下一步：完成 Phase 1 剩余的品牌标识替换，优先让页面标题、错误信息、管理员审计 actor 和文档读取集中配置，同时保持本地管理员 header 只作为本地误操作防护、绝不作为远程认证。
 
 ### Phase 2：前端模块化重构
 

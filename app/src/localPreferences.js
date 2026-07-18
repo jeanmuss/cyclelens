@@ -1,6 +1,13 @@
+import { PRODUCT_CONFIG, productStorageKey } from "../product.config.mjs";
+
+export const PREFERENCE_KEYS = Object.freeze({
+  language: productStorageKey(PRODUCT_CONFIG.storageKeys.language),
+  hideCrypto: productStorageKey(PRODUCT_CONFIG.storageKeys.marketClockHideCrypto),
+});
+
 export const LEGACY_PREFERENCE_KEYS = Object.freeze({
-  language: "cycle-map-language",
-  hideCrypto: "cycle-map-hide-crypto",
+  language: PRODUCT_CONFIG.legacyStorageKeys.language,
+  hideCrypto: PRODUCT_CONFIG.legacyStorageKeys.marketClockHideCrypto,
 });
 
 function browserStorage() {
@@ -41,8 +48,8 @@ export function writePreference({ storage = browserStorage(), key, value }) {
 
 export function readLanguagePreference({
   storage = browserStorage(),
-  key = LEGACY_PREFERENCE_KEYS.language,
-  legacyKeys = [],
+  key = PREFERENCE_KEYS.language,
+  legacyKeys = [LEGACY_PREFERENCE_KEYS.language],
 } = {}) {
   return readPreference({
     storage,
@@ -55,7 +62,7 @@ export function readLanguagePreference({
 
 export function writeLanguagePreference(language, {
   storage = browserStorage(),
-  key = LEGACY_PREFERENCE_KEYS.language,
+  key = PREFERENCE_KEYS.language,
 } = {}) {
   if (language !== "en" && language !== "zh") return false;
   return writePreference({ storage, key, value: language });
@@ -63,8 +70,8 @@ export function writeLanguagePreference(language, {
 
 export function readShowCryptoPreference({
   storage = browserStorage(),
-  key = LEGACY_PREFERENCE_KEYS.hideCrypto,
-  legacyKeys = [],
+  key = PREFERENCE_KEYS.hideCrypto,
+  legacyKeys = [LEGACY_PREFERENCE_KEYS.hideCrypto],
 } = {}) {
   return readPreference({
     storage,
@@ -77,7 +84,7 @@ export function readShowCryptoPreference({
 
 export function writeShowCryptoPreference(showCrypto, {
   storage = browserStorage(),
-  key = LEGACY_PREFERENCE_KEYS.hideCrypto,
+  key = PREFERENCE_KEYS.hideCrypto,
 } = {}) {
   return writePreference({ storage, key, value: showCrypto ? "0" : "1" });
 }
