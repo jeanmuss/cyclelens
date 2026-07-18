@@ -127,7 +127,7 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-          CYCLE_MAP_REQUIRE_MARKET_HISTORY: ${{ vars.MARKET_HISTORY_REQUIRED || '0' }}
+          CYCLELENS_REQUIRE_MARKET_HISTORY: ${{ vars.MARKET_HISTORY_REQUIRED || '0' }}
         run: npm --prefix app run persist-market-history
       - name: Build static site for GitHub Pages
         run: npm --prefix app run build:pages

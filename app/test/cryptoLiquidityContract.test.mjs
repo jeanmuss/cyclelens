@@ -36,13 +36,15 @@ function runUpdaterWithoutCredentials() {
   const env = {
     ...process.env,
     BLOCKBEATS_AUX_ENABLED: "0",
-    CYCLE_MAP_DISABLE_PUBLIC_HISTORY: "1",
-    CYCLE_MAP_SKIP_LOCAL_ENV: "1",
+    CYCLELENS_DISABLE_PUBLIC_HISTORY: "1",
+    CYCLELENS_SKIP_LOCAL_ENV: "1",
   };
   delete env.CMC_PRO_API_KEY;
   delete env.SOSOVALUE_API_KEY;
   delete env.BLOCKBEATS_API_KEY;
   delete env.SEC_USER_AGENT;
+  delete env.CYCLE_MAP_DISABLE_PUBLIC_HISTORY;
+  delete env.CYCLE_MAP_SKIP_LOCAL_ENV;
 
   return new Promise((resolvePromise, reject) => {
     const child = spawn(process.execPath, [updaterPath], {

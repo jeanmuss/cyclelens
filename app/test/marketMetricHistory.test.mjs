@@ -265,7 +265,8 @@ test("market metric migration denies browser roles and grants only service-side 
 test("market history persistence supports opaque keys and an explicit required mode", async () => {
   const source = await readFile(persistScriptPath, "utf8");
   assert.match(source, /key && !key\.startsWith\("sb_"\)/, "opaque secret keys must not be sent as bearer JWTs");
-  assert.match(source, /CYCLE_MAP_REQUIRE_MARKET_HISTORY === "1"/);
+  assert.match(source, /"CYCLELENS_REQUIRE_MARKET_HISTORY"/);
+  assert.match(source, /"CYCLE_MAP_REQUIRE_MARKET_HISTORY"/, "the old variable remains a migration fallback");
   assert.match(source, /if \(historyRequired\) throw new Error\(detail\)/);
   assert.match(source, /initialBackfillDays: 400/);
   assert.match(source, /slice\(0, 500\)/, "provider errors written to CI logs must be bounded");

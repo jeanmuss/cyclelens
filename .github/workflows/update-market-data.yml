@@ -114,7 +114,7 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-          CYCLE_MAP_REQUIRE_MARKET_HISTORY: ${{ vars.MARKET_HISTORY_REQUIRED || '0' }}
+          CYCLELENS_REQUIRE_MARKET_HISTORY: ${{ vars.MARKET_HISTORY_REQUIRED || '0' }}
         run: node scripts/persist-market-metric-history.mjs
       - name: Publish the versioned data snapshot
         shell: bash

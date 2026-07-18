@@ -1,6 +1,6 @@
-# Risk Asset Cycle Map
+# CycleLens
 
-一个静态部署的风险资产观察面板，用矩阵、周历、市场时钟和产业链表格追踪加密资产、宏观流动性、美股大盘、全球开市轮动、AI 芯片链和机器人链。
+CycleLens 是一个静态部署的风险资产观察面板，用矩阵、周历、市场时钟和产业链表格追踪加密资产、宏观流动性、美股大盘、全球开市轮动、AI 芯片链和机器人链。
 
 ## 当前页面
 
@@ -65,6 +65,6 @@ python -m pip install -r app/requirements-equity.txt
 
 ## 部署
 
-GitHub Pages workflow 会在推送到 `main`、手动触发和定时任务中构建静态站点；`deploy-fast-equity-data.yml` 会按 15 分钟目标频率刷新美股大盘快缓存并重新部署 Pages。
+`deploy-pages.yml` 会在推送到 `main`、手动触发和定时任务中刷新缓存并构建静态站点；`update-market-data.yml` 会把可审计的数据快照发布到机器管理的 `data-cache` 分支，但不会把生成数据合并回 `main`。
 
 如果中国大陆访问 GitHub Pages 不稳定，可以把同一个 `app/dist` 镜像到更稳定的静态托管服务；只要浏览器继续读取静态 JSON，就不需要把 provider 密钥暴露给前端。

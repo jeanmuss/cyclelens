@@ -5,7 +5,10 @@ import {
   PRODUCT_CONFIG,
   githubPagesBase,
   isAdminBuildTarget,
+  preferredEnvironmentValue,
+  productPageTitle,
   productStorageKey,
+  productUserAgent,
   repositoryNameFromGitHub,
   resolveBuildTarget,
 } from "../product.config.mjs";
@@ -15,11 +18,26 @@ test("CycleLens product identity and storage namespace have one canonical defini
   assert.equal(PRODUCT_CONFIG.name, "CycleLens");
   assert.equal(PRODUCT_CONFIG.repositoryName, "cyclelens");
   assert.equal(PRODUCT_CONFIG.legacyRepositoryName, "cycle-map");
+  assert.equal(PRODUCT_CONFIG.localAdmin.requestHeader, "x-cyclelens-admin");
+  assert.equal(PRODUCT_CONFIG.localAdmin.defaultActor, "cyclelens_local_admin");
   assert.equal(productStorageKey(PRODUCT_CONFIG.storageKeys.language), "cyclelens:language");
   assert.equal(
     productStorageKey(PRODUCT_CONFIG.storageKeys.marketClockHideCrypto),
     "cyclelens:market-clock:hide-crypto",
   );
+});
+
+test("page titles, User-Agent values, and environment aliases follow CycleLens identity", () => {
+  assert.equal(productPageTitle("Risk Asset Dashboard"), "Risk Asset Dashboard | CycleLens");
+  assert.equal(productPageTitle("CycleLens"), "CycleLens");
+  assert.equal(productPageTitle(""), "CycleLens");
+  assert.equal(productUserAgent("market-data"), "cyclelens-market-data/1.0");
+  assert.equal(productUserAgent("data-cache", "2.0"), "cyclelens-data-cache/2.0");
+  assert.throws(() => productUserAgent(""), /component is required/);
+
+  assert.equal(preferredEnvironmentValue({ NEW_NAME: "new", OLD_NAME: "old" }, "NEW_NAME", "OLD_NAME"), "new");
+  assert.equal(preferredEnvironmentValue({ OLD_NAME: "old" }, "NEW_NAME", "OLD_NAME"), "old");
+  assert.equal(preferredEnvironmentValue({ NEW_NAME: "", OLD_NAME: "old" }, "NEW_NAME", "OLD_NAME"), "");
 });
 
 test("GitHub repository context selects both old and new Pages base paths", () => {

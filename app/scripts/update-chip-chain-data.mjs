@@ -3,6 +3,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
+import { productUserAgent } from "../product.config.mjs";
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const appRoot = resolve(scriptDir, "..");
@@ -126,7 +127,7 @@ async function fetchJson(url, options = {}) {
         signal: controller.signal,
         headers: {
           Accept: "application/json",
-          "User-Agent": "cycle-map-chip-chain/1.0",
+          "User-Agent": productUserAgent("chip-chain"),
           ...(options.headers || {}),
         },
       });
@@ -146,13 +147,13 @@ async function fetchJsonWithPowerShell(url, options = {}) {
   const script = `
     $headers = @{
       Accept = 'application/json'
-      'User-Agent' = 'cycle-map-chip-chain/1.0'
+      'User-Agent' = $env:CYCLELENS_FETCH_USER_AGENT
     }
     if ($env:ALPACA_KEY_ID) {
       $headers['APCA-API-KEY-ID'] = $env:ALPACA_KEY_ID
       $headers['APCA-API-SECRET-KEY'] = $env:ALPACA_SECRET_KEY
     }
-    $response = Invoke-RestMethod -Uri $env:CYCLE_MAP_FETCH_URL -Headers $headers -TimeoutSec 25
+    $response = Invoke-RestMethod -Uri $env:CYCLELENS_FETCH_URL -Headers $headers -TimeoutSec 25
     $response | ConvertTo-Json -Depth 80 -Compress
   `;
   const { stdout } = await execFileAsync(
@@ -161,7 +162,8 @@ async function fetchJsonWithPowerShell(url, options = {}) {
     {
       env: {
         ...process.env,
-        CYCLE_MAP_FETCH_URL: url,
+        CYCLELENS_FETCH_URL: url,
+        CYCLELENS_FETCH_USER_AGENT: productUserAgent("chip-chain"),
         ALPACA_KEY_ID: headers["APCA-API-KEY-ID"] || "",
         ALPACA_SECRET_KEY: headers["APCA-API-SECRET-KEY"] || "",
       },

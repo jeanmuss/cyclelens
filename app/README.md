@@ -1,6 +1,6 @@
-# Risk Asset Cycle Map
+# CycleLens
 
-Interactive return tables for risk assets:
+CycleLens provides interactive return tables and cached market context for risk assets:
 
 - Crypto cycle map: monthly BTC, ETH, SOL, and HYPE returns.
 - Macro and liquidity calendar: six-month macro, rates, dollar, volatility, and credit context.
@@ -100,6 +100,10 @@ npm run dev
 ```
 
 Use the Supabase secret key only in ignored local environment setup or GitHub Actions secrets. The Vite frontend must never receive this key through `VITE_*` variables. If Supabase is not configured, the admin API exposes `data/manual-macro-events.json` for read-only inspection but rejects save and publish requests with HTTP 503.
+
+The local client and loopback API share the configured `x-cyclelens-admin` request marker. It is only a local accidental-action guard, not authentication, and must never be trusted by an internet-facing service. `CYCLELENS_ADMIN_ACTOR` and `CYCLELENS_PYTHON` are the current local configuration names; the corresponding `CYCLE_MAP_*` names remain read-only migration fallbacks.
+
+Other product-prefixed script controls now use `CYCLELENS_SKIP_LOCAL_ENV`, `CYCLELENS_DISABLE_PUBLIC_HISTORY`, `CYCLELENS_FORCE_HISTORY_REFRESH`, `CYCLELENS_REQUIRE_MARKET_HISTORY`, and `CYCLELENS_CHART_BASELINE_GIT_REF`. Their former `CYCLE_MAP_*` spellings remain temporary compatibility fallbacks, while repository workflows set only the current names.
 
 For manual legislation, policy, or surprise events, use `category: other`, an uppercase stable `seriesId` such as `MANUAL_BILL_STABLECOIN_20260718`, `role: policy_legislation_event` for legislation or `role: manual_attention_event` for one-off surprises, and `unit: event`. Keep the source field specific enough to audit later.
 

@@ -1,6 +1,7 @@
 import { readFile, mkdir, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { productUserAgent } from "../product.config.mjs";
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const appRoot = resolve(scriptDir, "..");
@@ -188,7 +189,7 @@ async function fetchJson(url, options = {}) {
       signal: controller.signal,
       headers: {
         Accept: "application/json",
-        "User-Agent": "cycle-map-data-cache/2.0",
+        "User-Agent": productUserAgent("data-cache", "2.0"),
         ...(options.headers || {}),
       },
     });

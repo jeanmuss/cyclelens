@@ -3,12 +3,23 @@ import test from "node:test";
 
 import {
   hasSupabaseManualEventsConfig,
+  manualEventsAdminActor,
   manualEventsCanonicalWriteAvailable,
   manualEventsStoreMode,
   readManualEventsPayloadFromSupabase,
 } from "../scripts/manual-macro-events-store.mjs";
 
 const ENV_NAMES = ["SUPABASE_URL", "SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"];
+
+test("manual-event audit actor uses the CycleLens name with a legacy fallback", () => {
+  assert.equal(manualEventsAdminActor({}), "cyclelens_local_admin");
+  assert.equal(manualEventsAdminActor({ CYCLELENS_ADMIN_ACTOR: "cyclelens_operator" }), "cyclelens_operator");
+  assert.equal(manualEventsAdminActor({ CYCLE_MAP_ADMIN_ACTOR: "legacy_operator" }), "legacy_operator");
+  assert.equal(manualEventsAdminActor({
+    CYCLELENS_ADMIN_ACTOR: "current_operator",
+    CYCLE_MAP_ADMIN_ACTOR: "legacy_operator",
+  }), "current_operator");
+});
 
 function withSupabaseEnv(values, callback) {
   const previous = Object.fromEntries(ENV_NAMES.map((name) => [name, process.env[name]]));

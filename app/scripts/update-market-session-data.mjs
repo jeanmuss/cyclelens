@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { buildOfficialMarketCalendar } from "./market-session-calendar.mjs";
+import { productUserAgent } from "../product.config.mjs";
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const appRoot = resolve(scriptDir, "..");
@@ -267,7 +268,7 @@ async function fetchJson(url, options = {}) {
         signal: controller.signal,
         headers: {
           Accept: "application/json",
-          "User-Agent": "cycle-map-market-session/1.0",
+          "User-Agent": productUserAgent("market-session"),
           ...(options.headers || {}),
         },
       });
@@ -287,11 +288,11 @@ async function fetchJsonWithPowerShell(url, options = {}) {
   const hasCmcKey = Boolean(process.env.CMC_PRO_API_KEY);
   if (usesCmc && !hasCmcKey) throw new Error("CMC_PRO_API_KEY is not configured");
   const script = `
-    $Url = $env:CYCLE_MAP_FETCH_URL
-    $UsesCmc = $env:CYCLE_MAP_FETCH_CMC
+    $Url = $env:CYCLELENS_FETCH_URL
+    $UsesCmc = $env:CYCLELENS_FETCH_CMC
     $headers = @{
       Accept = 'application/json'
-      'User-Agent' = 'cycle-map-market-session/1.0'
+      'User-Agent' = $env:CYCLELENS_FETCH_USER_AGENT
     }
     if ($UsesCmc -eq '1') {
       $headers['X-CMC_PRO_API_KEY'] = $env:CMC_PRO_API_KEY
@@ -305,8 +306,9 @@ async function fetchJsonWithPowerShell(url, options = {}) {
     {
       env: {
         ...process.env,
-        CYCLE_MAP_FETCH_URL: url,
-        CYCLE_MAP_FETCH_CMC: usesCmc ? "1" : "0",
+        CYCLELENS_FETCH_URL: url,
+        CYCLELENS_FETCH_CMC: usesCmc ? "1" : "0",
+        CYCLELENS_FETCH_USER_AGENT: productUserAgent("market-session"),
       },
       maxBuffer: 5 * 1024 * 1024,
       windowsHide: true,

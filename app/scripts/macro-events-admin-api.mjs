@@ -4,6 +4,7 @@ import { readFile, rename, writeFile, mkdir } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
+import { PRODUCT_CONFIG, preferredEnvironmentValue } from "../product.config.mjs";
 import {
   hasSupabaseManualEventsConfig,
   manualEventsCanonicalWriteAvailable,
@@ -19,7 +20,7 @@ const macroCalendarPath = resolve(appRoot, "public", "data", "macro-calendar.jso
 const updateMacroCalendarScript = resolve(appRoot, "scripts", "update-macro-calendar.py");
 const host = process.env.MACRO_EVENTS_ADMIN_HOST || "127.0.0.1";
 const port = Number(process.env.MACRO_EVENTS_ADMIN_PORT || 5174);
-const pythonCommand = process.env.CYCLE_MAP_PYTHON || "python";
+const pythonCommand = preferredEnvironmentValue(process.env, "CYCLELENS_PYTHON", "CYCLE_MAP_PYTHON") || "python";
 const maxBodyBytes = 512 * 1024;
 const execFileAsync = promisify(execFile);
 const allowedOrigins = new Set([
@@ -48,7 +49,7 @@ function corsHeaders(origin) {
   return {
     "access-control-allow-origin": origin,
     "access-control-allow-methods": "GET, PUT, POST, OPTIONS",
-    "access-control-allow-headers": "content-type, x-cycle-map-admin",
+    "access-control-allow-headers": `content-type, ${PRODUCT_CONFIG.localAdmin.requestHeader}`,
     "access-control-max-age": "600",
     vary: "Origin",
   };
@@ -71,7 +72,7 @@ function requireAllowedOrigin(req, res) {
 function requireAdminRequest(req, res) {
   const origin = requireAllowedOrigin(req, res);
   if (!origin) return null;
-  if (req.headers["x-cycle-map-admin"] !== "1") {
+  if (req.headers[PRODUCT_CONFIG.localAdmin.requestHeader] !== "1") {
     jsonResponse(res, 403, { error: "admin_header_required" }, origin);
     return null;
   }

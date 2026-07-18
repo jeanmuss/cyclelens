@@ -556,7 +556,7 @@ def fetch_mof_jgb10y(failures: list[str], status: dict) -> pd.Series | None:
             response = requests.get(
                 source_url,
                 timeout=45,
-                headers={"User-Agent": "cycle-map-market-data/1.0"},
+                headers={"User-Agent": "cyclelens-market-data/1.0"},
             )
             response.raise_for_status()
             response.encoding = response.apparent_encoding or "utf-8"

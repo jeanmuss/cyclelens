@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useMemo, useState } from "react";
+import { PRODUCT_CONFIG } from "../../product.config.mjs";
 import {
   ASSETS,
   HALVING_MONTHS,
@@ -491,7 +492,7 @@ export function AdminMacroEventsPage({ language, setLanguage, t }) {
     setBusyAction(path);
     fetch(`${ADMIN_MACRO_API_BASE}/${path}`, {
       method: "POST",
-      headers: { "x-cycle-map-admin": "1" },
+      headers: { [PRODUCT_CONFIG.localAdmin.requestHeader]: "1" },
     })
       .then(adminResponseJson)
       .then((data) => {
@@ -563,7 +564,7 @@ export function AdminMacroEventsPage({ language, setLanguage, t }) {
       method: "PUT",
       headers: {
         "content-type": "application/json",
-        "x-cycle-map-admin": "1",
+        [PRODUCT_CONFIG.localAdmin.requestHeader]: "1",
       },
       body: JSON.stringify({ version: 1, events: payload.events }),
     })

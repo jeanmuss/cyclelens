@@ -1,3 +1,5 @@
+import { PRODUCT_CONFIG, preferredEnvironmentValue } from "../product.config.mjs";
+
 const SUPABASE_TABLE = "manual_macro_events";
 const SERVICE_KEY_ENV_NAMES = ["SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"];
 
@@ -51,6 +53,13 @@ function isoNow() {
 
 function cleanText(value) {
   return String(value ?? "").trim();
+}
+
+export function manualEventsAdminActor(environment = process.env) {
+  return cleanText(
+    preferredEnvironmentValue(environment, "CYCLELENS_ADMIN_ACTOR", "CYCLE_MAP_ADMIN_ACTOR")
+      || PRODUCT_CONFIG.localAdmin.defaultActor,
+  );
 }
 
 function nullableText(value) {
@@ -169,7 +178,7 @@ function eventToSupabaseRow(event) {
     source: cleanText(event.source),
     note: nullableText(event.note),
     metadata: metadataFromEvent(event),
-    updated_by: cleanText(process.env.CYCLE_MAP_ADMIN_ACTOR || "local_admin"),
+    updated_by: manualEventsAdminActor(),
   };
   for (const [eventField, rowField] of TEXT_FIELDS) {
     row[rowField] = eventField === "releaseTimeUtc" ? normalizeUtc(event[eventField]) : nullableText(event[eventField]);

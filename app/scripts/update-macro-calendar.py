@@ -352,7 +352,7 @@ def fetch_official_schedule_text(cache_key: str, source_url: str, failures: list
     if cached is not None:
         return cached
     try:
-        response = requests.get(source_url, timeout=30, headers={"User-Agent": "cycle-map-market-calendar/1.0"})
+        response = requests.get(source_url, timeout=30, headers={"User-Agent": "cyclelens-market-calendar/1.0"})
         response.raise_for_status()
         text = response.text
         write_text_cache(cache_key, source_url, text)

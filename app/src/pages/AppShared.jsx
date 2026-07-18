@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useMemo, useState } from "react";
+import { PRODUCT_CONFIG } from "../../product.config.mjs";
 import {
   ASSETS,
   HALVING_MONTHS,
@@ -779,7 +780,7 @@ export const TRANSLATIONS = {
       dataLoadFailed: "数据加载失败",
     },
     header: {
-      eyebrow: "RISK ASSET CYCLE MAP",
+      eyebrow: PRODUCT_CONFIG.name.toUpperCase(),
       titleAccent: "风险资产",
       titleRest: "周期与轮动图",
       subtitle: "按月观察 BTC、ETH、SOL、HYPE、BNB 的涨跌规律与轮动关系",
@@ -1181,7 +1182,7 @@ export const TRANSLATIONS = {
       dataLoadFailed: "Data loading failed",
     },
     header: {
-      eyebrow: "RISK ASSET CYCLE MAP",
+      eyebrow: PRODUCT_CONFIG.name.toUpperCase(),
       titleAccent: "Risk Assets",
       titleRest: "Cycle & Rotation Map",
       subtitle: "Track monthly return patterns and rotation across BTC, ETH, SOL, HYPE, and BNB",

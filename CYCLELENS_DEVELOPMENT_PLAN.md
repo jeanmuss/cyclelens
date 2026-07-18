@@ -39,7 +39,7 @@
 - 路由表、导航表、页面元数据分散，新增 A 股等页面需要修改多个位置。
 - `deploy-pages.yml` 与 `update-market-data.yml` 重复安装依赖和运行采集步骤，后续容易出现流程漂移。
 - 管理员页面当前只在开发模式启用，API 固定为 `127.0.0.1:5174`。
-- 当前 `x-cycle-map-admin: 1` 只是本地误操作防护，不是远程身份认证，不能直接暴露到互联网。
+- 当前 `x-cyclelens-admin: 1` 只是本地误操作防护，不是远程身份认证，不能直接暴露到互联网。
 - 当前后台“发布”会调用本地 Python 进程并写本地文件；Cloudflare Pages Functions/Workers 无法照搬该执行方式。
 - `cycle-map-*` 的 `localStorage` key 在同一个 `username.github.io` 源下会与新站共享，需要命名空间迁移。
 
@@ -125,7 +125,7 @@ app/src/
 - [x] 为路由注册、`useLiveData`、数据 manifest、旧本地偏好迁移增加测试。（2026-07-18 已增加路由解析/管理员 gate、live-data 策略、manifest 生命周期与哈希、本地偏好兼容读取测试；运行时仍使用旧 key，待下一批启用新命名空间。）
 - [x] 新增集中产品配置：产品名、仓库基础路径、存储 key 命名空间、构建目标。（2026-07-18 已新增 `app/product.config.mjs`，Vite 与浏览器构建 gate 读取同一配置。）
 - [x] 将存储 key 改为 `cyclelens:*`；只做一次兼容读取旧 `cycle-map-*` key，不删除旧站数据。（新 key 缺失时读取旧值，后续 effect 只写新 key；测试确认旧值保持不变。）
-- [ ] 将硬编码的 `cycle-map` 标识逐步改为配置值，包括页面标题、错误头、管理员 actor 和文档。
+- [x] 将硬编码的 `cycle-map` 标识逐步改为配置值，包括页面标题、错误头、管理员 actor 和文档。（2026-07-18 已由集中配置生成浏览器标题、本地主机管理员 header、默认审计 actor 和 Node 数据脚本 User-Agent；仓库文档、图标与 workflow 使用 CycleLens 名称，旧环境变量仅作兼容回退。）
 - [x] 保持 Vite 根据 `GITHUB_REPOSITORY` 自动生成 `/cyclelens/` base path 的能力。（已分别以 `jeanmuss/cycle-map` 和 `jeanmuss/cyclelens` 完成真实生产构建，资源路径分别为 `/cycle-map/` 与 `/cyclelens/`。）
 
 验收：`npm run check` 通过；旧 URL 仍可运行；新 base path 的本地构建与资源路径正确。
@@ -143,6 +143,13 @@ app/src/
 - 验证结果：`npm run check` 通过（source lint、94 项单元测试、官方交易日历边界验证和生产构建全部成功）；旧 `/cycle-map/` 与新 `/cyclelens/` base 分别完成额外生产构建；两种公共构建均未生成 `MacroAdminRoute` chunk；`git diff --check` 通过。
 - 剩余风险：页面标题、错误头、管理员 actor、数据脚本 User-Agent、文档和本地管理员 header 中仍有旧 `cycle-map` 标识；`admin` 构建目标目前只是安全的构建边界基础，尚未部署或开放远程访问。
 - 下一步：完成 Phase 1 剩余的品牌标识替换，优先让页面标题、错误信息、管理员审计 actor 和文档读取集中配置，同时保持本地管理员 header 只作为本地误操作防护、绝不作为远程认证。
+
+执行记录（2026-07-18，Phase 1 品牌标识迁移批次）：
+
+- 完成内容：集中配置新增页面标题、User-Agent、本地管理员 header 与默认 actor 契约；浏览器标题统一追加 `CycleLens`，主视图眉题、HTML 初始元数据、favicon、README 和 workflow 改用新品牌；Node/Python 数据脚本的默认 User-Agent 改为 `cyclelens-*`；运行时环境变量以 `CYCLELENS_*` 为主，旧 `CYCLE_MAP_*` 只作显式兼容回退；新增品牌迁移和 actor 优先级回归测试。
+- 验证结果：定向迁移测试 38 项通过，新增品牌/actor 定向测试 14 项通过；真实 loopback API 预检只声明 `content-type, x-cyclelens-admin`，旧 header 返回 HTTP 403，新 header 对只读校验返回 HTTP 200；`npm run check` 通过（source lint、100 项单元测试、官方市场日历边界验证和生产构建全部成功）；旧 `/cycle-map/` 与新 `/cyclelens/` 公共构建均成功且不含 `MacroAdminRoute`；浏览器预览确认标题为“风险资产周期与轮动图 | CycleLens”、眉题为 `CYCLELENS` 且无 console warning/error；`git diff --check` 通过。
+- 剩余风险：旧仓库名、旧 storage key、旧 Pages base 和 `CYCLE_MAP_*` 环境变量仍作为迁移兼容证据保留，不能在 Phase 8 前移除；本地管理员 header 仍然不是身份认证；路由元数据和超大的 `AppShared.jsx` 尚未模块化。
+- 下一步：进入 Phase 2 的第一个可验证批次，先从 `AppShared.jsx` 提取路由/导航 registry 与 i18n/元数据定义，保持所有 lazy route 边界和公共构建管理员裁剪契约不变，并为提取后的纯配置补测试。
 
 ### Phase 2：前端模块化重构
 
@@ -197,7 +204,7 @@ app/src/
 - [ ] 优先使用 Cloudflare 账号身份/MFA；备选是指定邮箱 OTP。不要实现共享静态密码。
 - [ ] 将本地 Node API 改为 Pages Function 或 Worker；Supabase secret 只保存为 Cloudflare secret。
 - [ ] API 校验 Access 身份、请求来源、方法、body 大小和字段 schema，并记录不含敏感信息的审计 actor。
-- [ ] 删除对 `x-cycle-map-admin: 1` 的远程信任；该 header 不能作为认证依据。
+- [ ] 删除对 `x-cyclelens-admin: 1` 的远程信任；该 header 不能作为认证依据。
 - [ ] 远程后台只负责数据库 CRUD。当前调用 Python 子进程生成 JSON 的“发布”流程改为排队，交给 GitHub Actions/定时投影任务执行。
 - [ ] 第一版允许“保存后等待下一轮发布”；确认确有需要后，再增加受限的 workflow dispatch，而不是在 Worker 内运行采集脚本。
 - [ ] 添加 `noindex`，但明确 URL 隐藏不是安全边界，Access 才是。

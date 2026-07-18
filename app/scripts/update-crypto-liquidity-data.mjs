@@ -1,6 +1,7 @@
 import { readFile, rename, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { preferredEnvironmentValue, productUserAgent } from "../product.config.mjs";
 
 import {
   attachHistoricalMetricFallbacks,
@@ -100,7 +101,7 @@ async function fetchJson(url, options = {}) {
       signal: controller.signal,
       headers: {
         Accept: "application/json",
-        "User-Agent": "cycle-map-crypto-liquidity/1.0",
+        "User-Agent": productUserAgent("crypto-liquidity"),
         ...options.headers,
       },
     });
@@ -120,7 +121,7 @@ async function fetchText(url, options = {}) {
       ...options,
       signal: controller.signal,
       headers: {
-        "User-Agent": "cycle-map-market-data/1.0",
+        "User-Agent": productUserAgent("market-data"),
         ...options.headers,
       },
     });
@@ -418,7 +419,7 @@ async function writeJsonAtomic(path, payload) {
   await rename(tempPath, path);
 }
 
-if (process.env.CYCLE_MAP_SKIP_LOCAL_ENV !== "1") {
+if (preferredEnvironmentValue(process.env, "CYCLELENS_SKIP_LOCAL_ENV", "CYCLE_MAP_SKIP_LOCAL_ENV") !== "1") {
   await loadEnvFile(resolve(appRoot, ".env.local"));
   await loadEnvFile(resolve(workspaceRoot, ".env.local"));
 }
@@ -445,8 +446,16 @@ if (!metrics) {
 let freshMetricHistory = {};
 let historyRefresh = existing?.historyRefresh || null;
 const historyNow = new Date();
-const publicHistoryDisabled = process.env.CYCLE_MAP_DISABLE_PUBLIC_HISTORY === "1";
-const historyRefreshForced = process.env.CYCLE_MAP_FORCE_HISTORY_REFRESH === "1" || process.argv.includes("--force-history");
+const publicHistoryDisabled = preferredEnvironmentValue(
+  process.env,
+  "CYCLELENS_DISABLE_PUBLIC_HISTORY",
+  "CYCLE_MAP_DISABLE_PUBLIC_HISTORY",
+) === "1";
+const historyRefreshForced = preferredEnvironmentValue(
+  process.env,
+  "CYCLELENS_FORCE_HISTORY_REFRESH",
+  "CYCLE_MAP_FORCE_HISTORY_REFRESH",
+) === "1" || process.argv.includes("--force-history");
 if (!publicHistoryDisabled && (historyRefreshForced || shouldRefreshCmcHistory(historyRefresh, historyNow))) {
   const attemptedAt = isoNow();
   const providerStatus = {};

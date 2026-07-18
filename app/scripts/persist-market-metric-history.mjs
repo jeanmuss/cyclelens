@@ -1,6 +1,7 @@
 import { readFile, rename, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { preferredEnvironmentValue } from "../product.config.mjs";
 
 import {
   dedupeMarketMetricRows,
@@ -160,13 +161,17 @@ async function upsertRows(rows) {
   }
 }
 
-if (process.env.CYCLE_MAP_SKIP_LOCAL_ENV !== "1") {
+if (preferredEnvironmentValue(process.env, "CYCLELENS_SKIP_LOCAL_ENV", "CYCLE_MAP_SKIP_LOCAL_ENV") !== "1") {
   await loadEnvFile(resolve(appRoot, ".env.local"));
   await loadEnvFile(resolve(workspaceRoot, ".env.local"));
 }
 
 const { url, key } = config();
-const historyRequired = process.env.CYCLE_MAP_REQUIRE_MARKET_HISTORY === "1";
+const historyRequired = preferredEnvironmentValue(
+  process.env,
+  "CYCLELENS_REQUIRE_MARKET_HISTORY",
+  "CYCLE_MAP_REQUIRE_MARKET_HISTORY",
+) === "1";
 if (!url || !key) {
   if (historyRequired) {
     throw new Error("Supabase market-history credentials are required in this environment");

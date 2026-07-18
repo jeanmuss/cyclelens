@@ -4,6 +4,7 @@ import { dirname, resolve } from "node:path";
 import { promisify } from "node:util";
 import { fileURLToPath } from "node:url";
 
+import { preferredEnvironmentValue } from "../product.config.mjs";
 import { compactSeriesPoints, mergeLastKnownGoodPoints } from "./chart-series-contract.mjs";
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
@@ -327,7 +328,11 @@ async function addMofJgbSeries(output, equityDataset, sourceFetchedAt) {
 }
 
 async function readBaselineOutput() {
-  const ref = String(process.env.CYCLE_MAP_CHART_BASELINE_GIT_REF || "").trim();
+  const ref = String(preferredEnvironmentValue(
+    process.env,
+    "CYCLELENS_CHART_BASELINE_GIT_REF",
+    "CYCLE_MAP_CHART_BASELINE_GIT_REF",
+  ) || "").trim();
   if (!ref) return readJson(outputPath);
   if (!/^[A-Za-z0-9._\/-]+$/.test(ref)) throw new Error("Invalid chart baseline git ref");
   const { stdout } = await execFileAsync("git", ["show", `${ref}:app/public/data/chart-series.json`], {

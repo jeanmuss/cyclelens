@@ -105,7 +105,7 @@ def fetch_json(url: str, headers: dict[str, str] | None = None) -> dict[str, Any
         url,
         headers={
             "Accept": "application/json",
-            "User-Agent": "cycle-map-equity-fast-cache/1.0",
+            "User-Agent": "cyclelens-equity-fast-cache/1.0",
             **(headers or {}),
         },
     )

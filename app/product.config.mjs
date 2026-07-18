@@ -14,6 +14,11 @@ const buildTargets = Object.freeze({
   admin: "admin",
 });
 
+const localAdmin = Object.freeze({
+  requestHeader: "x-cyclelens-admin",
+  defaultActor: "cyclelens_local_admin",
+});
+
 export const PRODUCT_CONFIG = Object.freeze({
   name: "CycleLens",
   repositoryName: "cyclelens",
@@ -22,7 +27,24 @@ export const PRODUCT_CONFIG = Object.freeze({
   storageKeys,
   legacyStorageKeys,
   buildTargets,
+  localAdmin,
 });
+
+export function productPageTitle(title, productName = PRODUCT_CONFIG.name) {
+  const pageTitle = String(title || "").trim();
+  return pageTitle && pageTitle !== productName ? `${pageTitle} | ${productName}` : productName;
+}
+
+export function productUserAgent(component, version = "1.0") {
+  const componentName = String(component || "").trim();
+  if (!componentName) throw new Error("A product User-Agent component is required");
+  return `${PRODUCT_CONFIG.repositoryName}-${componentName}/${version}`;
+}
+
+export function preferredEnvironmentValue(environment, primaryName, legacyName) {
+  const primaryValue = environment?.[primaryName];
+  return primaryValue == null ? environment?.[legacyName] : primaryValue;
+}
 
 export function productStorageKey(key, namespace = PRODUCT_CONFIG.storageNamespace) {
   return `${namespace}:${key}`;
