@@ -24,14 +24,17 @@ test("browser metadata and the primary page heading use CycleLens identity", asy
   assert.doesNotMatch(translations, /RISK ASSET CYCLE MAP/);
 });
 
-test("local admin client and loopback API share the configured CycleLens request marker", async () => {
-  const [client, api] = await Promise.all([
+test("local admin client and loopback API share the configured marker without granting remote trust", async () => {
+  const [page, client, api] = await Promise.all([
     source("app/src/pages/MacroAdminPage.jsx"),
+    source("app/src/features/admin-macro-events/adminMacroModel.js"),
     source("app/scripts/macro-events-admin-api.mjs"),
   ]);
   assert.match(client, /\[PRODUCT_CONFIG\.localAdmin\.requestHeader\]: "1"/);
+  assert.match(client, /ADMIN_MACRO_REMOTE \? \{\} :/);
+  assert.match(page, /headers: adminMutationHeaders/);
   assert.match(api, /req\.headers\[PRODUCT_CONFIG\.localAdmin\.requestHeader\]/);
-  assert.doesNotMatch(`${client}\n${api}`, /x-cycle-map-admin/);
+  assert.doesNotMatch(`${page}\n${client}\n${api}`, /x-cycle-map-admin/);
 });
 
 test("market-data User-Agent defaults no longer identify the legacy repository", async () => {

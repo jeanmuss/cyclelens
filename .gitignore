@@ -2,6 +2,9 @@
 .env
 .env.*
 !.env.example
+.dev.vars
+.dev.vars.*
+!app/.dev.vars.example
 secrets/
 *.pem
 *.key
@@ -18,6 +21,7 @@ app/.npm-cache/
 .cache/
 coverage/
 dist/
+.wrangler/
 *.log
 __pycache__/
 *.pyc

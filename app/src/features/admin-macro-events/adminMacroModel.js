@@ -1,6 +1,8 @@
 import { localDateKeyForLanguage } from "../../shared/dates/calendar.js";
+import { PRODUCT_CONFIG } from "../../../product.config.mjs";
 
-export const ADMIN_MACRO_API_BASE = "http://127.0.0.1:5174";
+export const ADMIN_MACRO_REMOTE = import.meta.env?.CYCLELENS_BUILD_TARGET === "admin";
+export const ADMIN_MACRO_API_BASE = ADMIN_MACRO_REMOTE ? "/api" : "http://127.0.0.1:5174";
 export const ADMIN_MACRO_CATEGORIES = ["inflation", "growth", "rates", "volatility", "liquidity", "other"];
 export const ADMIN_MACRO_DATE_MEANINGS = [
   "scheduled_beijing_date",
@@ -10,9 +12,9 @@ export const ADMIN_MACRO_DATE_MEANINGS = [
   "observed_holiday_date",
 ];
 
-export function adminMacroCopy(t) {
+export function adminMacroCopy(t, { remote = ADMIN_MACRO_REMOTE } = {}) {
   const zh = t.htmlLang === "zh-CN";
-  return zh ? {
+  const copy = zh ? {
     eyebrow: "LOCAL ADMIN",
     title: "宏观事件后台",
     subtitle: "配置 Supabase 时编辑数据库事件，并同步到本地缓存供日历脚本使用。",
@@ -151,6 +153,27 @@ export function adminMacroCopy(t) {
     newYorkDate: "New York date",
     displayDate: "Saved date",
     noReleaseTime: "Without a UTC release time, both calendar languages use the saved date.",
+  };
+  if (!remote) return copy;
+  return {
+    ...copy,
+    eyebrow: zh ? "SECURE ADMIN" : "SECURE ADMIN",
+    subtitle: zh
+      ? "通过 Cloudflare Access 访问并编辑 Supabase 规范事件；保存后等待下一轮静态投影。"
+      : "Edit canonical Supabase events behind Cloudflare Access; saved changes wait for the next static projection.",
+    api: zh ? "受保护 API" : "Protected API",
+    localOnly: zh
+      ? "浏览器只连接同源 Pages Function；Supabase 密钥仅保存在 Cloudflare secret 中。"
+      : "The browser only calls the same-origin Pages Function; the Supabase key stays in a Cloudflare secret.",
+    startApi: zh ? "需要先通过 Cloudflare Access。" : "Cloudflare Access authentication is required.",
+    savedQueued: zh ? "已保存；等待下一轮静态投影发布。" : "Saved; waiting for the next static projection.",
+  };
+}
+
+export function adminMutationHeaders({ json = false } = {}) {
+  return {
+    ...(json ? { "content-type": "application/json" } : {}),
+    ...(ADMIN_MACRO_REMOTE ? {} : { [PRODUCT_CONFIG.localAdmin.requestHeader]: "1" }),
   };
 }
 

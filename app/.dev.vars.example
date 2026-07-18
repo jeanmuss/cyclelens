@@ -1,0 +1,6 @@
+CF_ACCESS_TEAM_DOMAIN=https://your-team.cloudflareaccess.com
+CF_ACCESS_AUD=replace-with-access-application-audience
+CYCLELENS_ADMIN_ORIGINS=https://cyclelens-admin.pages.dev
+CYCLELENS_ADMIN_HOST_SUFFIXES=cyclelens-admin.pages.dev
+SUPABASE_URL=https://your-project-ref.supabase.co
+SUPABASE_SECRET_KEY=replace-in-app-dev-vars-only

@@ -12,6 +12,11 @@ import {
   readManualEventsPayloadFromSupabase,
   writeManualEventsPayloadToSupabase,
 } from "./manual-macro-events-store.mjs";
+import {
+  MANUAL_MACRO_EVENTS_MAX_BODY_BYTES,
+  normalizeManualMacroEvents,
+  normalizeManualMacroEventsPayload,
+} from "./manual-macro-events-contract.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appRoot = resolve(__dirname, "..");
@@ -21,7 +26,7 @@ const updateMacroCalendarScript = resolve(appRoot, "scripts", "update-macro-cale
 const host = process.env.MACRO_EVENTS_ADMIN_HOST || "127.0.0.1";
 const port = Number(process.env.MACRO_EVENTS_ADMIN_PORT || 5174);
 const pythonCommand = preferredEnvironmentValue(process.env, "CYCLELENS_PYTHON", "CYCLE_MAP_PYTHON") || "python";
-const maxBodyBytes = 512 * 1024;
+const maxBodyBytes = MANUAL_MACRO_EVENTS_MAX_BODY_BYTES;
 const execFileAsync = promisify(execFile);
 const allowedOrigins = new Set([
   "http://127.0.0.1:5173",
@@ -31,9 +36,6 @@ const allowedOrigins = new Set([
   "http://127.0.0.1:4173",
   "http://localhost:4173",
 ]);
-
-const allowedCategories = new Set(["inflation", "growth", "rates", "volatility", "liquidity", "other"]);
-const allowedStatuses = new Set(["published", "draft", "archived"]);
 
 function jsonResponse(res, status, payload, origin = null) {
   const body = JSON.stringify(payload, null, 2);
@@ -77,103 +79,6 @@ function requireAdminRequest(req, res) {
     return null;
   }
   return origin;
-}
-
-function parseNumberOrNull(value) {
-  if (value === "" || value == null) return null;
-  const number = Number(value);
-  return Number.isFinite(number) ? number : null;
-}
-
-function normalizeText(value, fallback = "") {
-  return String(value ?? fallback).trim();
-}
-
-function normalizeIso(value) {
-  const text = normalizeText(value);
-  if (!text) return "";
-  const date = new Date(text);
-  return Number.isNaN(date.getTime()) ? text : date.toISOString().replace(".000Z", "Z");
-}
-
-function isoNow() {
-  return new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
-}
-
-function validateDateKey(value) {
-  return /^\d{4}-\d{2}-\d{2}$/.test(String(value || ""));
-}
-
-function normalizeEvent(raw, index) {
-  if (!raw || typeof raw !== "object" || Array.isArray(raw)) {
-    throw new Error(`events[${index}] must be an object`);
-  }
-  const category = normalizeText(raw.category || "liquidity");
-  if (!allowedCategories.has(category)) throw new Error(`events[${index}].category is invalid`);
-  const date = normalizeText(raw.date);
-  if (!validateDateKey(date)) throw new Error(`events[${index}].date must be YYYY-MM-DD`);
-  const seriesId = normalizeText(raw.seriesId);
-  if (!/^[A-Z0-9_:-]{3,80}$/.test(seriesId)) throw new Error(`events[${index}].seriesId is invalid`);
-  const status = normalizeText(raw.status || "published");
-  if (!allowedStatuses.has(status)) throw new Error(`events[${index}].status is invalid`);
-  const labelZh = normalizeText(raw.labelZh);
-  const labelEn = normalizeText(raw.labelEn);
-  const label = normalizeText(raw.label, [labelZh, labelEn].filter(Boolean).join(" / "));
-  if (!label && !labelZh && !labelEn) throw new Error(`events[${index}] needs a label`);
-  const source = normalizeText(raw.source);
-  if (!source) throw new Error(`events[${index}].source is required`);
-  const normalized = {
-    status,
-    date,
-    seriesId,
-    label,
-    labelZh,
-    labelEn,
-    category,
-    role: normalizeText(raw.role || "manual_liquidity_event"),
-    cadence: normalizeText(raw.cadence || "event"),
-    unit: normalizeText(raw.unit || "event"),
-    source,
-    dateMeaning: normalizeText(raw.dateMeaning || "scheduled_beijing_date"),
-    actual: parseNumberOrNull(raw.actual),
-    previous: parseNumberOrNull(raw.previous),
-    forecast: parseNumberOrNull(raw.forecast),
-    change: parseNumberOrNull(raw.change),
-    changeBp: parseNumberOrNull(raw.changeBp),
-    pctChange: parseNumberOrNull(raw.pctChange),
-    yearAgo: parseNumberOrNull(raw.yearAgo),
-    yoyPct: parseNumberOrNull(raw.yoyPct),
-    note: normalizeText(raw.note),
-  };
-  const releaseTimeUtc = normalizeIso(raw.releaseTimeUtc || raw.releaseAtUtc);
-  if (releaseTimeUtc) normalized.releaseTimeUtc = releaseTimeUtc;
-  for (const key of ["sourceUrl", "country", "holidayName", "holidayNameZh", "observedDate", "legalDate", "referencePeriod"]) {
-    const value = normalizeText(raw[key]);
-    if (value) normalized[key] = value;
-  }
-  return normalized;
-}
-
-function normalizeEvents(events) {
-  if (!Array.isArray(events)) throw new Error("manual macro events JSON must contain an events array");
-  if (events.length > 300) throw new Error("Too many manual events");
-  const normalized = events.map(normalizeEvent);
-  const keys = new Set();
-  for (const event of normalized) {
-    const key = `${event.seriesId}::${event.date}`;
-    if (keys.has(key)) throw new Error(`Duplicate manual event key: ${key}`);
-    keys.add(key);
-  }
-  return normalized;
-}
-
-function normalizePayload(payload) {
-  const events = Array.isArray(payload?.events) ? payload.events : [];
-  return {
-    version: 1,
-    updatedAt: isoNow(),
-    events: normalizeEvents(events),
-  };
 }
 
 async function readManualEvents() {
@@ -224,7 +129,7 @@ function manualEventStatus(normalizedEvents, calendarPayload = null) {
 
 async function macroCalendarStatus() {
   const manualPayload = await readManualEvents();
-  const normalizedEvents = normalizeEvents(Array.isArray(manualPayload?.events) ? manualPayload.events : []);
+  const normalizedEvents = normalizeManualMacroEvents(Array.isArray(manualPayload?.events) ? manualPayload.events : []);
   let calendarPayload = null;
   let calendarError = null;
   try {
@@ -253,7 +158,7 @@ function macroPublishEnv() {
 
 async function validateManualEvents() {
   const manualPayload = await readManualEvents();
-  const normalizedEvents = normalizeEvents(Array.isArray(manualPayload?.events) ? manualPayload.events : []);
+  const normalizedEvents = normalizeManualMacroEvents(Array.isArray(manualPayload?.events) ? manualPayload.events : []);
   const status = await macroCalendarStatus();
   return {
     ok: true,
@@ -383,7 +288,7 @@ const server = createServer(async (req, res) => {
     if (req.method === "PUT") {
       const origin = requireAdminRequest(req, res);
       if (!origin) return;
-      const payload = normalizePayload(JSON.parse(await readRequestBody(req)));
+      const payload = normalizeManualMacroEventsPayload(JSON.parse(await readRequestBody(req)));
       const savedPayload = await writeManualEvents(payload);
       jsonResponse(res, 200, savedPayload, origin);
       return;

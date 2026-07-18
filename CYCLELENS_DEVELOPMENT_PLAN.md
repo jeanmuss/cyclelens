@@ -251,18 +251,27 @@ app/src/
 
 ### Phase 6：可联网访问的管理员后台 MVP
 
-- [ ] 使用独立管理员构建目标，公共 GitHub Pages 构建不包含管理员路由入口。
+部署、安全变量、验证与回滚交接见 [`docs/deployment/ADMIN_CLOUDFLARE.md`](docs/deployment/ADMIN_CLOUDFLARE.md)。
+
+- [x] 使用独立管理员构建目标，公共 GitHub Pages 构建不包含管理员路由入口。
 - [ ] 将管理员静态界面部署到免费的 `cyclelens-admin.pages.dev`（最终名称以 Cloudflare 可用性为准）。
 - [ ] 在 `*.pages.dev` 生产域和预览域前启用 Cloudflare Access，只允许 Cloudflare 账号成员或指定邮箱。
 - [ ] 优先使用 Cloudflare 账号身份/MFA；备选是指定邮箱 OTP。不要实现共享静态密码。
 - [ ] 将本地 Node API 改为 Pages Function 或 Worker；Supabase secret 只保存为 Cloudflare secret。
-- [ ] API 校验 Access 身份、请求来源、方法、body 大小和字段 schema，并记录不含敏感信息的审计 actor。
-- [ ] 删除对 `x-cyclelens-admin: 1` 的远程信任；该 header 不能作为认证依据。
-- [ ] 远程后台只负责数据库 CRUD。当前调用 Python 子进程生成 JSON 的“发布”流程改为排队，交给 GitHub Actions/定时投影任务执行。
-- [ ] 第一版允许“保存后等待下一轮发布”；确认确有需要后，再增加受限的 workflow dispatch，而不是在 Worker 内运行采集脚本。
-- [ ] 添加 `noindex`，但明确 URL 隐藏不是安全边界，Access 才是。
+- [x] API 校验 Access 身份、请求来源、方法、body 大小和字段 schema，并记录不含敏感信息的审计 actor。
+- [x] 删除对 `x-cyclelens-admin: 1` 的远程信任；该 header 不能作为认证依据。
+- [x] 远程后台只负责数据库 CRUD。当前调用 Python 子进程生成 JSON 的“发布”流程改为排队，交给 GitHub Actions/定时投影任务执行。
+- [x] 第一版允许“保存后等待下一轮发布”；确认确有需要后，再增加受限的 workflow dispatch，而不是在 Worker 内运行采集脚本。
+- [x] 添加 `noindex`，但明确 URL 隐藏不是安全边界，Access 才是。
 
 验收：未通过 Access 的请求拿不到 HTML 或 API；浏览器包中没有 Supabase secret；管理员修改有审计记录；公共站不受后台故障影响。
+
+执行记录（2026-07-18，Phase 6 本地安全构建批次）：
+
+- 完成内容：新增固定版本 Wrangler、独立 `admin` 构建、管理端根路由、`noindex` 与覆盖全部路径的 Pages Functions 路由；新增根 middleware，对 HTML/静态资源/API 验证 Cloudflare Access RS256 JWT；新增同源 Pages API、共享事件 schema、64 KiB/300 条上限、Supabase CRUD 映射和经哈希的非敏感审计 actor；远程 UI 改为同源 `/api`，静态移除本地 header、校验/发布按钮和 Python 发布调用，保存结果明确为等待下一轮静态投影；部署交接记录了变量、grants、Access、smoke test 和回滚边界。
+- 验证结果：`npm run check` 通过（source lint、158/158 单元测试、官方美/韩/中市场日历验证、公开 projection 生成与公开生产构建）；`npm run build:admin` 和 `npm run build:admin:functions` 通过，Wrangler 4.112.0 成功编译 Worker；公开产物边界扫描确认没有管理路由/API 标记、`_routes.json` 或 `noindex`，管理产物确认独立管理 chunk、`noindex`、`/*` 路由和远程代码边界；Worker 扫描未发现本地管理 header、回环地址、Python/子进程、即时发布命令或凭据值；新增依赖安装报告 0 vulnerabilities；`git diff --check` 通过。
+- 剩余风险：本批没有连接或修改远程 Cloudflare/Supabase。Pages 项目、生产/预览 Access policy、MFA/OTP、encrypted secrets 和真实 JWT 尚未验证；`manual_macro_events` 仍需一个通过 Supabase migration 历史创建并应用的最小 `service_role` grants migration 后才能远程 CRUD；整表替换当前由多次 PostgREST 请求组成，不是跨请求事务，多人并发前应升级为带版本校验的事务 RPC。
+- 下一步：部署批次先明确 Supabase 项目，使用已连接的 Supabase 工具或官方 CLI 创建/应用 grants migration 并运行 security/performance advisors；随后 Wrangler 登录、创建 Pages 项目、配置 Access 与 secrets、部署并按交接文档执行生产/预览 smoke test。上述账户配置可后补，本批无需用户提供或在对话中发送任何 secret。
 
 ### Phase 7：可选账号、跨设备同步与社媒预警
 

@@ -3,9 +3,16 @@ import { routePathname } from "./shared/routing/pathname.js";
 
 export { routePathname };
 
-export function pageForLocation({ hash = "", pathname = "/", baseUrl, adminEnabled = false } = {}) {
+export function pageForLocation({
+  hash = "",
+  pathname = "/",
+  baseUrl,
+  adminEnabled = false,
+  adminDefault = false,
+} = {}) {
   const hashPath = String(hash).replace(/^#/, "");
   if (hashPath.startsWith("/") || hashPath === "") {
+    if ((hashPath === "" || hashPath === "/") && adminEnabled && adminDefault) return "macroAdmin";
     return routeIdForPath(hashPath || "/", { adminEnabled });
   }
 

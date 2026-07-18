@@ -29,6 +29,8 @@ test("public hash routes resolve to the existing page identifiers", () => {
 test("admin routes remain gated by the build target", () => {
   assert.equal(pageForLocation({ hash: "#/admin/macro-events", adminEnabled: false }), "dashboard");
   assert.equal(pageForLocation({ hash: "#/admin/macro-events", adminEnabled: true }), "macroAdmin");
+  assert.equal(pageForLocation({ hash: "#/", adminEnabled: true, adminDefault: true }), "macroAdmin");
+  assert.equal(pageForLocation({ hash: "#/", adminEnabled: true, adminDefault: false }), "dashboard");
 });
 
 test("repository base paths are removed before pathname fallback routing", () => {
@@ -51,5 +53,6 @@ test("the admin route gate remains statically removable from production builds",
   const viteSource = await readFile(resolve(testDirectory, "..", "vite.config.mjs"), "utf8");
   assert.match(buildTargetSource, /ADMIN_PAGE_ENABLED = import\.meta\.env\.CYCLELENS_ADMIN_ENABLED;/);
   assert.match(viteSource, /"import\.meta\.env\.CYCLELENS_ADMIN_ENABLED"/);
+  assert.match(viteSource, /"import\.meta\.env\.CYCLELENS_ADMIN_DEFAULT_ROUTE"/);
   assert.match(viteSource, /isAdminBuildTarget\(buildTarget\)/);
 });

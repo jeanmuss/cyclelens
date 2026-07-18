@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import { PRODUCT_CONFIG } from "../../product.config.mjs";
 import { freshnessLabel } from "../data.js";
 import { PageNav } from "../shared/routing/PageNav.jsx";
 import { macroCategoryLabel, macroDateMeaningLabel } from "../shared/i18n/macro.js";
@@ -11,7 +10,9 @@ import {
   ADMIN_MACRO_API_BASE,
   ADMIN_MACRO_CATEGORIES,
   ADMIN_MACRO_DATE_MEANINGS,
+  ADMIN_MACRO_REMOTE,
   adminMacroCopy,
+  adminMutationHeaders,
   blankAdminMacroEvent,
   adminEventKey,
   adminEventLabel,
@@ -71,6 +72,10 @@ export function AdminMacroEventsPage({ language, setLanguage, t }) {
   const [canonicalWriteAvailable, setCanonicalWriteAvailable] = useState(false);
 
   const loadPublishStatus = () => {
+    if (ADMIN_MACRO_REMOTE) {
+      setPublishStatus(null);
+      return;
+    }
     fetch(`${ADMIN_MACRO_API_BASE}/macro-calendar-status`, { cache: "no-store" })
       .then(adminResponseJson)
       .then((data) => setPublishStatus(data))
@@ -103,7 +108,7 @@ export function AdminMacroEventsPage({ language, setLanguage, t }) {
     setBusyAction(path);
     fetch(`${ADMIN_MACRO_API_BASE}/${path}`, {
       method: "POST",
-      headers: { [PRODUCT_CONFIG.localAdmin.requestHeader]: "1" },
+      headers: adminMutationHeaders(),
     })
       .then(adminResponseJson)
       .then((data) => {
@@ -171,25 +176,25 @@ export function AdminMacroEventsPage({ language, setLanguage, t }) {
       setMessage(copy.readOnly || "Supabase 规范源未配置；当前仓库快照只读。");
       return;
     }
+    setBusyAction("save");
     fetch(`${ADMIN_MACRO_API_BASE}/manual-macro-events`, {
       method: "PUT",
-      headers: {
-        "content-type": "application/json",
-        [PRODUCT_CONFIG.localAdmin.requestHeader]: "1",
-      },
+      headers: adminMutationHeaders({ json: true }),
       body: JSON.stringify({ version: 1, events: payload.events }),
     })
       .then(adminResponseJson)
       .then((data) => {
         setPayload(data);
         setApiState("connected");
-        setMessage(copy.saved);
+        setMessage(ADMIN_MACRO_REMOTE ? copy.savedQueued : copy.saved);
         loadPublishStatus();
       })
       .catch((error) => {
-        setApiState("disconnected");
+        const networkIssue = error.message.includes("Failed to fetch") || error.message.includes("NetworkError");
+        setApiState(networkIssue ? "disconnected" : "connected");
         setMessage(error.message);
-      });
+      })
+      .finally(() => setBusyAction(""));
   };
 
   return (
@@ -216,9 +221,13 @@ export function AdminMacroEventsPage({ language, setLanguage, t }) {
         <button type="button" onClick={newEvent} disabled={!canWrite}>{copy.newEvent}</button>
         <button type="button" onClick={duplicateEvent} disabled={!canWrite}>{copy.duplicate}</button>
         <button type="button" onClick={deleteEvent} disabled={!selectedKey || !canWrite}>{copy.delete}</button>
-        <button type="button" onClick={() => runAdminCommand("validate-macro-events", copy.validationPassed)} disabled={apiState !== "connected" || Boolean(busyAction)}>{busyAction === "validate-macro-events" ? copy.publishing : copy.validate}</button>
-        <button type="button" onClick={() => runAdminCommand("publish-macro-calendar", copy.publishPassed)} disabled={!canWrite}>{busyAction === "publish-macro-calendar" ? copy.publishing : copy.publish}</button>
-        <button type="button" className="admin-primary-action" onClick={saveAll} disabled={!canWrite}>{copy.saveAll}</button>
+        {!ADMIN_MACRO_REMOTE ? (
+          <>
+            <button type="button" onClick={() => runAdminCommand("validate-macro-events", copy.validationPassed)} disabled={apiState !== "connected" || Boolean(busyAction)}>{busyAction === "validate-macro-events" ? copy.publishing : copy.validate}</button>
+            <button type="button" onClick={() => runAdminCommand("publish-macro-calendar", copy.publishPassed)} disabled={!canWrite}>{busyAction === "publish-macro-calendar" ? copy.publishing : copy.publish}</button>
+          </>
+        ) : null}
+        <button type="button" className="admin-primary-action" onClick={saveAll} disabled={!canWrite}>{busyAction === "save" ? copy.publishing : copy.saveAll}</button>
       </section>
 
       <div className="admin-macro-layout">

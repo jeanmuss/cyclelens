@@ -5,6 +5,8 @@ import {
   hasSupabaseManualEventsConfig,
   manualEventsAdminActor,
   manualEventsCanonicalWriteAvailable,
+  manualEventsPayloadToSupabaseRows,
+  manualEventsSupabaseRowsToPayload,
   manualEventsStoreMode,
   readManualEventsPayloadFromSupabase,
 } from "../scripts/manual-macro-events-store.mjs";
@@ -86,4 +88,37 @@ test("opaque Supabase keys use apikey without an invalid bearer header", async (
       else process.env[name] = previous[name];
     }
   }
+});
+
+test("manual-event rows use the caller-supplied non-sensitive audit actor", () => {
+  const rows = manualEventsPayloadToSupabaseRows({
+    events: [{
+      status: "published",
+      date: "2026-07-20",
+      seriesId: "MANUAL_TEST_EVENT",
+      labelEn: "Test event",
+      category: "liquidity",
+      source: "Official fixture",
+    }],
+  }, "cf-access:0123456789abcdef01234567");
+  assert.equal(rows.length, 1);
+  assert.equal(rows[0].updated_by, "cf-access:0123456789abcdef01234567");
+});
+
+test("stored metadata cannot override canonical manual-event fields", () => {
+  const payload = manualEventsSupabaseRowsToPayload([{
+    status: "published",
+    event_date: "2026-07-20",
+    series_id: "MANUAL_TEST_EVENT",
+    label_en: "Canonical label",
+    category: "liquidity",
+    role: "manual_liquidity_event",
+    cadence: "event",
+    unit: "event",
+    source: "Official fixture",
+    metadata: { seriesId: "OVERRIDE_ATTEMPT", source: "Untrusted metadata", custom: "preserved" },
+  }], "2026-07-18T00:00:00Z");
+  assert.equal(payload.events[0].seriesId, "MANUAL_TEST_EVENT");
+  assert.equal(payload.events[0].source, "Official fixture");
+  assert.equal(payload.events[0].custom, "preserved");
 });
