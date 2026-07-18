@@ -122,13 +122,20 @@ app/src/
 
 ### Phase 1：建立安全网并完成品牌迁移准备
 
-- [ ] 为路由注册、`useLiveData`、数据 manifest、旧本地偏好迁移增加测试。
+- [x] 为路由注册、`useLiveData`、数据 manifest、旧本地偏好迁移增加测试。（2026-07-18 已增加路由解析/管理员 gate、live-data 策略、manifest 生命周期与哈希、本地偏好兼容读取测试；运行时仍使用旧 key，待下一批启用新命名空间。）
 - [ ] 新增集中产品配置：产品名、仓库基础路径、存储 key 命名空间、构建目标。
 - [ ] 将存储 key 改为 `cyclelens:*`；只做一次兼容读取旧 `cycle-map-*` key，不删除旧站数据。
 - [ ] 将硬编码的 `cycle-map` 标识逐步改为配置值，包括页面标题、错误头、管理员 actor 和文档。
 - [ ] 保持 Vite 根据 `GITHUB_REPOSITORY` 自动生成 `/cyclelens/` base path 的能力。
 
 验收：`npm run check` 通过；旧 URL 仍可运行；新 base path 的本地构建与资源路径正确。
+
+执行记录（2026-07-18，Phase 1 安全网批次）：
+
+- 完成内容：提取纯路由解析、live-data 策略、本地偏好读写和 manifest contract；页面只改为调用等价 helper，仍写入原 `cycle-map-*` key；新增 19 项定向测试，并为生产管理员路由静态裁剪增加回归契约。
+- 验证结果：`npm run check` 通过（source lint、90 项单元测试、官方交易日历边界验证和生产构建全部成功）；生产产物保持页面 lazy chunks，未包含 `MacroAdminRoute`；`git diff --check` 通过。
+- 剩余风险：本地偏好迁移算法已有测试但尚未在运行时启用 `cyclelens:*`；`useLiveData` 当前覆盖纯策略，真实 effect/定时器/可见性切换仍依赖后续浏览器集成测试；路由元数据尚未集中为统一 registry。
+- 下一步：新增集中产品配置，并用它驱动产品名、仓库 base、存储命名空间和构建目标；随后启用新 key 写入与旧 key 只读回退，不删除旧站数据。
 
 ### Phase 2：前端模块化重构
 

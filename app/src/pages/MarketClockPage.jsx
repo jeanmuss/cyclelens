@@ -18,6 +18,7 @@ import {
 } from "../data.js";
 import { useLiveData } from "../useLiveData.js";
 import { assetSessionStatus } from "../marketClockStatus.js";
+import { readShowCryptoPreference, writeShowCryptoPreference } from "../localPreferences.js";
 import {
   chipCategoryRows,
   chipPendingAssets,
@@ -180,12 +181,7 @@ export const MARKET_CLOCK_DISPLAY_TIME_ZONES = {
 };
 
 export function getInitialShowCrypto() {
-  if (typeof window === "undefined") return true;
-  try {
-    return window.localStorage.getItem("cycle-map-hide-crypto") !== "1";
-  } catch {
-    return true;
-  }
+  return readShowCryptoPreference();
 }
 
 export function minutesFromTime(value) {
@@ -624,11 +620,7 @@ export function MarketClockPage({ language, setLanguage, t }) {
   }, []);
 
   useEffect(() => {
-    try {
-      window.localStorage.setItem("cycle-map-hide-crypto", showCrypto ? "0" : "1");
-    } catch {
-      // Preference persistence is optional.
-    }
+    writeShowCryptoPreference(showCrypto);
     if (!showCrypto && selected?.market === "crypto") setSelected(null);
   }, [showCrypto, selected]);
 

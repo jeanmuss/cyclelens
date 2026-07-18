@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+import { writeLanguagePreference } from "../localPreferences.js";
 import { getInitialLanguage, TRANSLATIONS } from "./AppShared.jsx";
 
 export function RouteRuntime({ PageComponent, metadata }) {
@@ -11,11 +12,7 @@ export function RouteRuntime({ PageComponent, metadata }) {
     const pageMetadata = metadata(t);
     document.title = pageMetadata.title;
     document.querySelector('meta[name="description"]')?.setAttribute("content", pageMetadata.description);
-    try {
-      window.localStorage.setItem("cycle-map-language", language);
-    } catch {
-      // Language persistence is optional.
-    }
+    writeLanguagePreference(language);
   }, [language, metadata, t]);
 
   return <PageComponent language={language} setLanguage={setLanguage} t={t} />;

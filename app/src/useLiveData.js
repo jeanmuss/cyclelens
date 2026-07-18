@@ -1,27 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { appUrl } from "./data.js";
+import {
+  initialLiveData,
+  manifestFreshness,
+  manifestVersion,
+  normalizePollInterval,
+  versionedDataUrl,
+} from "./liveDataPolicy.js";
 
 const MANIFEST_PATH = "data/data-manifest.json";
-const DEFAULT_POLL_INTERVAL_MS = 300_000;
-const MIN_POLL_INTERVAL_MS = 30_000;
-const MAX_POLL_INTERVAL_MS = 3_600_000;
-
-function initialData(definitions) {
-  return Object.fromEntries(definitions.map((definition) => [definition.id, null]));
-}
-
-function normalizedInterval(value, fallback = DEFAULT_POLL_INTERVAL_MS) {
-  const interval = Number(value);
-  if (!Number.isFinite(interval)) return fallback;
-  return Math.min(MAX_POLL_INTERVAL_MS, Math.max(MIN_POLL_INTERVAL_MS, interval));
-}
-
-function requestUrl(path, version) {
-  const url = appUrl(path);
-  if (!version) return url;
-  const separator = url.includes("?") ? "&" : "?";
-  return `${url}${separator}v=${encodeURIComponent(version)}`;
-}
 
 function loadError(response) {
   const error = new Error("data-file");
@@ -33,28 +20,9 @@ function publicError(error) {
   return { status: error?.status, message: error?.message || "data-file" };
 }
 
-function manifestVersion(value) {
-  return typeof value === "string" && /^[a-f0-9]{64}$/i.test(value) ? value : null;
-}
-
-function manifestTimestamp(value) {
-  return typeof value === "string" && Number.isFinite(Date.parse(value)) ? value : null;
-}
-
-function manifestFreshness(entry, clientCheckedAt) {
-  return {
-    observedAt: manifestTimestamp(entry?.observedAt),
-    fetchedAt: manifestTimestamp(entry?.fetchedAt),
-    transformedAt: manifestTimestamp(entry?.transformedAt),
-    deployedAt: manifestTimestamp(entry?.deployedAt),
-    clientCheckedAt,
-    timestampFallback: entry?.timestampFallback === "legacy-generatedAt" ? "legacy-generatedAt" : null,
-  };
-}
-
 export function useLiveData(definitions, { enabled = true } = {}) {
-  const [data, setData] = useState(() => initialData(definitions));
-  const [freshness, setFreshness] = useState(() => initialData(definitions));
+  const [data, setData] = useState(() => initialLiveData(definitions));
+  const [freshness, setFreshness] = useState(() => initialLiveData(definitions));
   const [error, setError] = useState(null);
   const dataRef = useRef(data);
   const requiredFailuresRef = useRef(new Map());
@@ -68,7 +36,7 @@ export function useLiveData(definitions, { enabled = true } = {}) {
     let active = true;
     let timer = null;
     let manifestRequestRunning = false;
-    let pollIntervalMs = Math.min(...definitions.map((item) => normalizedInterval(item.pollIntervalMs)));
+    let pollIntervalMs = Math.min(...definitions.map((item) => normalizePollInterval(item.pollIntervalMs)));
     const loadedVersions = new Map();
     const controller = new AbortController();
 
@@ -79,7 +47,7 @@ export function useLiveData(definitions, { enabled = true } = {}) {
 
     const loadDataset = async (definition, version) => {
       try {
-        const response = await fetch(requestUrl(definition.path, version), {
+        const response = await fetch(versionedDataUrl(appUrl(definition.path), version), {
           signal: controller.signal,
           cache: "no-store",
         });
@@ -112,7 +80,7 @@ export function useLiveData(definitions, { enabled = true } = {}) {
       if (!active || manifestRequestRunning) return;
       manifestRequestRunning = true;
       try {
-        const response = await fetch(requestUrl(MANIFEST_PATH, Date.now()), {
+        const response = await fetch(versionedDataUrl(appUrl(MANIFEST_PATH), Date.now()), {
           signal: controller.signal,
           cache: "no-store",
         });
@@ -126,7 +94,7 @@ export function useLiveData(definitions, { enabled = true } = {}) {
         ])));
         const configuredIntervals = definitions.map((definition) => {
           const manifestInterval = manifestDatasets[definition.id]?.pollIntervalMs;
-          return normalizedInterval(manifestInterval, normalizedInterval(definition.pollIntervalMs));
+          return normalizePollInterval(manifestInterval, normalizePollInterval(definition.pollIntervalMs));
         });
         pollIntervalMs = Math.min(...configuredIntervals);
 

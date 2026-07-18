@@ -17,6 +17,7 @@ import {
   returnClass,
 } from "../data.js";
 import { useLiveData } from "../useLiveData.js";
+import { readLanguagePreference } from "../localPreferences.js";
 import {
   chipCategoryRows,
   chipPendingAssets,
@@ -1472,13 +1473,7 @@ export const TRANSLATIONS = {
 };
 
 export function getInitialLanguage() {
-  if (typeof window === "undefined") return "zh";
-  try {
-    const stored = window.localStorage.getItem("cycle-map-language");
-    return stored === "en" || stored === "zh" ? stored : "zh";
-  } catch {
-    return "zh";
-  }
+  return readLanguagePreference();
 }
 
 export function cycleLabel(cycle, t) {

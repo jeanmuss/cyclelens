@@ -1,3 +1,5 @@
+import { routePathname as resolveRoutePathname } from "./routeResolver.js";
+
 export const ASSETS = [
   { symbol: "BTC", name: "Bitcoin", accent: "asset-btc" },
   { symbol: "ETH", name: "Ethereum", accent: "asset-eth" },
@@ -26,12 +28,8 @@ export function appHashUrl(path = "") {
   return `${appUrl()}#/${cleanPath}`;
 }
 
-export function routePathname(pathname) {
-  const path = pathname || "/";
-  const basePath = new URL(APP_BASE_URL, "https://cycle-map.local").pathname.replace(/\/$/, "");
-  if (basePath && path === basePath) return "/";
-  if (basePath && path.startsWith(`${basePath}/`)) return path.slice(basePath.length) || "/";
-  return path;
+export function routePathname(pathname, baseUrl = APP_BASE_URL) {
+  return resolveRoutePathname(pathname, baseUrl);
 }
 
 const CYCLE_INFO = {
