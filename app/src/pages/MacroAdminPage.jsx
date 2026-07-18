@@ -18,6 +18,7 @@ import {
   returnClass,
 } from "../data.js";
 import { useLiveData } from "../useLiveData.js";
+import { PageNav } from "../shared/routing/PageNav.jsx";
 import {
   chipCategoryRows,
   chipPendingAssets,
@@ -79,7 +80,6 @@ import {
   DataFreshnessSummary,
   FreshnessAuditTable,
   DataTrustFooter,
-  PageNav,
   AssetSwitch,
   yearBackground,
   HeatCell,
@@ -186,8 +186,6 @@ export const ADMIN_MACRO_DATE_MEANINGS = [
 export function adminMacroCopy(t) {
   const zh = t.htmlLang === "zh-CN";
   return zh ? {
-    docTitle: "宏观事件后台",
-    docDescription: "本地维护宏观流动性手动事件",
     eyebrow: "LOCAL ADMIN",
     title: "宏观事件后台",
     subtitle: "配置 Supabase 时编辑数据库事件，并同步到本地缓存供日历脚本使用。",
@@ -257,8 +255,6 @@ export function adminMacroCopy(t) {
     displayDate: "保存日期",
     noReleaseTime: "未填写 UTC 发布时间时，中英日历都按保存日期落点。",
   } : {
-    docTitle: "Macro Event Admin",
-    docDescription: "Local editor for manual macro-liquidity events",
     eyebrow: "LOCAL ADMIN",
     title: "Macro Event Admin",
     subtitle: "Edit Supabase-backed events when configured, with a local cache for the calendar script.",
@@ -728,5 +724,3 @@ export function AdminMacroEventsPage({ language, setLanguage, t }) {
     </main>
   );
 }
-
-export const macroAdminMetadata = (t) => { const copy = adminMacroCopy(t); return { title: copy.docTitle, description: copy.docDescription }; };

@@ -17,6 +17,7 @@ import {
   returnClass,
 } from "../data.js";
 import { useLiveData } from "../useLiveData.js";
+import { PageNav } from "../shared/routing/PageNav.jsx";
 import {
   chipCategoryRows,
   chipPendingAssets,
@@ -78,7 +79,6 @@ import {
   DataFreshnessSummary,
   FreshnessAuditTable,
   DataTrustFooter,
-  PageNav,
   AssetSwitch,
   yearBackground,
   HeatCell,
@@ -269,5 +269,3 @@ export function RobotChainPage({ language, setLanguage, t }) {
     </main>
   );
 }
-
-export const robotChainMetadata = (t) => { const copy = robotChainCopy(t); return { title: copy.docTitle, description: copy.docDescription }; };

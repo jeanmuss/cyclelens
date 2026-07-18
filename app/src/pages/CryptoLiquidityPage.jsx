@@ -11,13 +11,13 @@ import {
   recentTreasuryDemandPoints,
 } from "../cryptoLiquidityCharts.js";
 import { useLiveData } from "../useLiveData.js";
+import { PageNav } from "../shared/routing/PageNav.jsx";
 import {
   buildFreshnessItem,
   CacheStatus,
   DataFreshnessSummary,
   DataTrustFooter,
   LanguageToggle,
-  PageNav,
   replaceHashState,
   Segmented,
 } from "./AppShared.jsx";
@@ -28,8 +28,6 @@ const CRYPTO_LIQUIDITY_LIVE_DATA = [
 
 const COPY = {
   zh: {
-    docTitle: "\u52a0\u5bc6\u6d41\u52a8\u6027\u8109\u640f",
-    docDescription: "ETF\u3001\u5e02\u503c\u4e0e\u7a33\u5b9a\u5e01\u4f9b\u5e94\u7684\u52a0\u5bc6\u5e02\u573a\u6d41\u52a8\u6027\u89c2\u5bdf",
     eyebrow: "CRYPTO LIQUIDITY PULSE",
     title: "\u52a0\u5bc6\u6d41\u52a8\u6027\u8109\u640f",
     subtitle: "\u533a\u5206 ETF \u8d44\u91d1\u6d41\u3001\u7a33\u5b9a\u5e01\u4f9b\u5e94\u4e0e\u4ef7\u683c\u9a71\u52a8\u7684\u5e02\u503c\u53d8\u5316",
@@ -53,7 +51,6 @@ const COPY = {
     missingFlow: "\u7070\u8272\u865a\u7ebf = \u89c2\u6d4b\u503c\u7f3a\u5931\uff1b\u7a7a\u6863 = \u8be5\u65e5\u671f\u65e0\u89c2\u6d4b", noObservation: "\u8be5\u65e5\u671f\u65e0\u89c2\u6d4b", tradingDays: "\u4e2a\u4ea4\u6613\u65e5", historyLkg: "\u8d8b\u52bf\u5386\u53f2\u6765\u81ea\u6570\u636e\u5e93\u6700\u8fd1\u53ef\u7528\u7f13\u5b58\uff1a{source}\uff1b\u4e0d\u8986\u76d6\u4e0a\u65b9\u5b98\u65b9\u5f53\u524d\u503c\u3002", insufficientTrend: "\u53ef\u7528\u89c2\u6d4b\u4e0d\u8db3 2 \u4e2a\uff0c\u6682\u4e0d\u80fd\u5224\u65ad\u8d8b\u52bf\u3002", disclosureCadence: "\u6309\u62ab\u9732\u65e5", noTreasuryHistory: "\u9009\u5b9a\u533a\u95f4\u6682\u65e0\u6301\u4ed3\u53d8\u52a8\u62ab\u9732",
   },
   en: {
-    docTitle: "Crypto Liquidity Pulse", docDescription: "Crypto ETF flows, market-cap changes, and stablecoin supply signals",
     eyebrow: "CRYPTO LIQUIDITY PULSE", title: "Crypto Liquidity Pulse",
     subtitle: "Separate ETF capital flows and stablecoin supply from price-driven market-cap changes",
     cache: "Backend static snapshot", cacheTooltip: "The page reads only CI-generated static JSON; API keys never enter the browser.",
@@ -348,8 +345,3 @@ export function CryptoLiquidityPage({ language, setLanguage, t }) {
     </main>
   );
 }
-
-export const cryptoLiquidityMetadata = (t) => ({
-  title: t.htmlLang === "en" ? COPY.en.docTitle : COPY.zh.docTitle,
-  description: t.htmlLang === "en" ? COPY.en.docDescription : COPY.zh.docDescription,
-});

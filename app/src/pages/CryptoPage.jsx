@@ -17,6 +17,7 @@ import {
   returnClass,
 } from "../data.js";
 import { useLiveData } from "../useLiveData.js";
+import { PageNav } from "../shared/routing/PageNav.jsx";
 import {
   chipCategoryRows,
   chipPendingAssets,
@@ -78,7 +79,6 @@ import {
   DataFreshnessSummary,
   FreshnessAuditTable,
   DataTrustFooter,
-  PageNav,
   AssetSwitch,
   yearBackground,
   HeatCell,
@@ -302,5 +302,3 @@ export function CryptoCyclePage({ language, setLanguage, t }) {
     </main>
   );
 }
-
-export const cryptoMetadata = (t) => ({ title: t.docTitle, description: t.docDescription });

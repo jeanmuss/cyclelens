@@ -3,7 +3,6 @@ import { PRODUCT_CONFIG } from "../../product.config.mjs";
 import {
   ASSETS,
   HALVING_MONTHS,
-  appHashUrl,
   appUrl,
   buildCycleYears,
   buildRotationRows,
@@ -233,8 +232,6 @@ export function equityCopy(t) {
 
 export const MARKET_CLOCK_TEXT = {
   zh: {
-    docTitle: "全球市场开市轮动",
-    docDescription: "加密、美股、韩股与中国风险市场的开市状态、价格和市值轮动视图",
     eyebrow: "GLOBAL MARKET CLOCK",
     titleAccent: "全球市场",
     titleRest: "开市轮动",
@@ -299,8 +296,6 @@ export const MARKET_CLOCK_TEXT = {
     unavailableValue: "N/A",
   },
   en: {
-    docTitle: "Global Market Rotation Clock",
-    docDescription: "Session status, prices, and market caps for crypto, U.S., Korean, and China risk markets.",
     eyebrow: "GLOBAL MARKET CLOCK",
     titleAccent: "Global Market",
     titleRest: "Rotation",
@@ -465,8 +460,6 @@ export function marketClockCopy(t) {
 
 export const CHIP_CHAIN_TEXT = {
   zh: {
-    docTitle: "AI 芯片产业链热点",
-    docDescription: "按产业链细分类目追踪 AI 芯片相关美股和韩股的板块轮动热点",
     eyebrow: "AI CHIP CHAIN",
     titleAccent: "AI 芯片",
     titleRest: "产业链热点",
@@ -516,8 +509,6 @@ export const CHIP_CHAIN_TEXT = {
     },
   },
   en: {
-    docTitle: "AI Chip Chain Hotspots",
-    docDescription: "Track AI chip supply-chain rotation across U.S. and Korean equities by category.",
     eyebrow: "AI CHIP CHAIN",
     titleAccent: "AI Chip",
     titleRest: "Chain Hotspots",
@@ -574,8 +565,6 @@ export function chipChainCopy(t) {
 
 export const ROBOT_CHAIN_TEXT = {
   zh: {
-    docTitle: "机器人产业链观察池",
-    docDescription: "按机器人产业链板块追踪上市标的、业务定位、缓存价格和多周期涨跌幅。",
     eyebrow: "ROBOTICS CHAIN",
     titleAccent: "机器人产业链",
     titleRest: "观察池",
@@ -611,8 +600,6 @@ export const ROBOT_CHAIN_TEXT = {
     },
   },
   en: {
-    docTitle: "Robotics Chain Watchlist",
-    docDescription: "Track robotics value-chain listed names by segment, business role, cached price, and multi-window returns.",
     eyebrow: "ROBOTICS CHAIN",
     titleAccent: "Robotics Chain",
     titleRest: "Watchlist",
@@ -726,8 +713,6 @@ export function optionLabel(options, value) {
 export const TRANSLATIONS = {
   zh: {
     htmlLang: "zh-CN",
-    docTitle: "风险资产周期与轮动图",
-    docDescription: "BTC、ETH、SOL、HYPE、BNB 月度收益周期与轮动可视化",
     separator: " · ",
     language: {
       aria: "切换页面语言",
@@ -890,18 +875,7 @@ export const TRANSLATIONS = {
       unknown: "\u672a\u6807\u6ce8",
       staticCacheOnly: "\u524d\u7aef\u53ea\u8bfb\u53d6\u540e\u53f0\u6216 CI \u751f\u6210\u7684\u9759\u6001\u7f13\u5b58\uff1b\u884c\u60c5\u6e90\u5bc6\u94a5\u4e0d\u8fdb\u5165\u6d4f\u89c8\u5668\u3002",
     },
-    nav: {
-      crypto: "加密周期",
-      equity: "美股大盘",
-      macro: "\u5b8f\u89c2\u6d41\u52a8\u6027",
-      marketClock: "开市轮动",
-      chipChain: "芯片链热点",
-      robotChain: "机器人链",
-      admin: "后台",
-    },
     equity: {
-      docTitle: "美股大盘轮动图",
-      docDescription: "QQQ、SPY 周度收益与 FRED 宏观指标轮动可视化",
       eyebrow: "EQUITY MACRO MAP · WEEKLY",
       titleAccent: "美股大盘",
       titleRest: "轮动图",
@@ -947,8 +921,6 @@ export const TRANSLATIONS = {
       eventPlaceholder: "事件标注接口已预留，本版暂不自动抓取或人工编辑事件。",
     },
     macroCalendar: {
-      docTitle: "\u5b8f\u89c2\u6d41\u52a8\u6027\u65e5\u5386",
-      docDescription: "\u98ce\u9669\u8d44\u4ea7\u7684\u5b8f\u89c2\u3001\u5229\u7387\u3001\u7f8e\u5143\u3001\u6ce2\u52a8\u7387\u4e0e\u4fe1\u7528\u5229\u5dee\u89c2\u6d4b\u65e5\u5386",
       eyebrow: "EVENT & LIQUIDITY MAP",
       titleAccent: "\u5b8f\u89c2\u6d41\u52a8\u6027",
       titleRest: "\u65e5\u5386",
@@ -1128,8 +1100,6 @@ export const TRANSLATIONS = {
   },
   en: {
     htmlLang: "en",
-    docTitle: "Risk Asset Cycle & Rotation Map",
-    docDescription: "Monthly return cycle and rotation visualization for BTC, ETH, SOL, HYPE, and BNB",
     separator: " · ",
     language: {
       aria: "Switch page language",
@@ -1292,18 +1262,7 @@ export const TRANSLATIONS = {
       unknown: "Not stated",
       staticCacheOnly: "The frontend reads only backend or CI generated static caches; market-data credentials never enter the browser.",
     },
-    nav: {
-      crypto: "Crypto cycle",
-      equity: "US market",
-      macro: "Macro & liquidity",
-      marketClock: "Market clock",
-      chipChain: "Chip chain",
-      robotChain: "Robot chain",
-      admin: "Admin",
-    },
     equity: {
-      docTitle: "US Market Rotation Map",
-      docDescription: "Weekly QQQ, SPY, and FRED macro rotation visualization",
       eyebrow: "EQUITY MACRO MAP · WEEKLY",
       titleAccent: "US Market",
       titleRest: "Rotation Map",
@@ -1349,8 +1308,6 @@ export const TRANSLATIONS = {
       eventPlaceholder: "Event annotation fields are reserved; this MVP does not auto-fetch or edit events.",
     },
     macroCalendar: {
-      docTitle: "Macro & Liquidity Calendar",
-      docDescription: "Macro, rates, dollar, volatility, and credit observations for risk assets",
       eyebrow: "EVENT & LIQUIDITY MAP",
       titleAccent: "Macro & Liquidity",
       titleRest: "Calendar",
@@ -1677,21 +1634,6 @@ export function DataTrustFooter({
         </section>
       </div>
     </footer>
-  );
-}
-
-export function PageNav({ page, t }) {
-  return (
-    <nav className="page-nav" aria-label="Page">
-      <a className={page === "crypto" ? "is-active" : ""} aria-current={page === "crypto" ? "page" : undefined} href={appHashUrl()}>{t.nav.crypto}</a>
-      <a className={page === "cryptoLiquidity" ? "is-active" : ""} aria-current={page === "cryptoLiquidity" ? "page" : undefined} href={appHashUrl("crypto-liquidity")}>{t.htmlLang === "en" ? "Crypto liquidity" : "\u52a0\u5bc6\u6d41\u52a8\u6027"}</a>
-      <a className={page === "macro" ? "is-active" : ""} aria-current={page === "macro" ? "page" : undefined} href={appHashUrl("macro-calendar")}>{t.nav.macro}</a>
-      <a className={page === "equity" ? "is-active" : ""} aria-current={page === "equity" ? "page" : undefined} href={appHashUrl("equity-macro")}>{t.nav.equity}</a>
-      <a className={page === "marketClock" ? "is-active" : ""} aria-current={page === "marketClock" ? "page" : undefined} href={appHashUrl("market-clock")}>{t.nav.marketClock}</a>
-      <a className={page === "chipChain" ? "is-active" : ""} aria-current={page === "chipChain" ? "page" : undefined} href={appHashUrl("chip-chain")}>{t.nav.chipChain}</a>
-      <a className={page === "robotChain" ? "is-active" : ""} aria-current={page === "robotChain" ? "page" : undefined} href={appHashUrl("robot-chain")}>{t.nav.robotChain}</a>
-      {ADMIN_PAGE_ENABLED ? <a className={page === "macroAdmin" ? "is-active" : ""} aria-current={page === "macroAdmin" ? "page" : undefined} href={appHashUrl("admin/macro-events")}>{t.nav.admin || "Admin"}</a> : null}
-    </nav>
   );
 }
 

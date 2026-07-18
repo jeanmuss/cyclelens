@@ -17,6 +17,7 @@ import {
   returnClass,
 } from "../data.js";
 import { useLiveData } from "../useLiveData.js";
+import { PageNav } from "../shared/routing/PageNav.jsx";
 import {
   chipCategoryRows,
   chipPendingAssets,
@@ -78,7 +79,6 @@ import {
   DataFreshnessSummary,
   FreshnessAuditTable,
   DataTrustFooter,
-  PageNav,
   AssetSwitch,
   yearBackground,
   HeatCell,
@@ -136,7 +136,6 @@ export function utcDateFromKey(dateKey) {
   const [year, month, day] = String(dateKey).split("-").map(Number);
   return new Date(Date.UTC(year, month - 1, day));
 }
-
 export function dateKeyFromUtc(date) {
   return `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, "0")}-${String(date.getUTCDate()).padStart(2, "0")}`;
 }
@@ -1139,6 +1138,3 @@ export function MacroCalendarPage({ language, setLanguage, t }) {
     </main>
   );
 }
-
-
-export const macroMetadata = (t) => ({ title: t.macroCalendar.docTitle, description: t.macroCalendar.docDescription });

@@ -17,6 +17,7 @@ import {
   returnClass,
 } from "../data.js";
 import { useLiveData } from "../useLiveData.js";
+import { PageNav } from "../shared/routing/PageNav.jsx";
 import {
   chipCategoryRows,
   chipPendingAssets,
@@ -78,7 +79,6 @@ import {
   DataFreshnessSummary,
   FreshnessAuditTable,
   DataTrustFooter,
-  PageNav,
   AssetSwitch,
   yearBackground,
   HeatCell,
@@ -112,7 +112,6 @@ import { currentPage } from "../routeState.js";
 export function localizedField(item, field, language) {
   return item?.[`${field}${language === "en" ? "En" : "Zh"}`] || item?.[field] || "";
 }
-
 export function chipHeatClass(value) {
   if (!Number.isFinite(value)) return "chip-heat-na";
   if (value >= 8) return "chip-heat-up-4";
@@ -677,6 +676,3 @@ export function robotTopMovers(rows, range) {
     .filter((asset) => Number.isFinite(Number(asset.returns?.[range])))
     .sort((a, b) => Number(b.returns?.[range]) - Number(a.returns?.[range]));
 }
-
-
-export const chipChainMetadata = (t) => { const copy = chipChainCopy(t); return { title: copy.docTitle, description: copy.docDescription }; };

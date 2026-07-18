@@ -17,6 +17,7 @@ import {
   returnClass,
 } from "../data.js";
 import { useLiveData } from "../useLiveData.js";
+import { PageNav } from "../shared/routing/PageNav.jsx";
 import { assetSessionStatus } from "../marketClockStatus.js";
 import { readShowCryptoPreference, writeShowCryptoPreference } from "../localPreferences.js";
 import {
@@ -80,7 +81,6 @@ import {
   DataFreshnessSummary,
   FreshnessAuditTable,
   DataTrustFooter,
-  PageNav,
   AssetSwitch,
   yearBackground,
   HeatCell,
@@ -703,5 +703,3 @@ export function MarketClockPage({ language, setLanguage, t }) {
     </main>
   );
 }
-
-export const marketClockMetadata = (t) => { const copy = marketClockCopy(t); return { title: copy.docTitle, description: copy.docDescription }; };

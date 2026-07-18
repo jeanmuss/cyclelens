@@ -1,27 +1,18 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import { ADMIN_PAGE_ENABLED, currentPage } from "./routeState.js";
+import { DEFAULT_ROUTE_ID, PUBLIC_ROUTE_REGISTRY } from "./shared/routing/routeRegistry.js";
 
 // Each route owns a physical page module and a separate lazy chunk.
-const CryptoRoute = lazy(() => import("./routes/CryptoRoute.js"));
-const CryptoLiquidityRoute = lazy(() => import("./routes/CryptoLiquidityRoute.js"));
-const MacroRoute = lazy(() => import("./routes/MacroRoute.js"));
-const EquityRoute = lazy(() => import("./routes/EquityRoute.js"));
-const MarketClockRoute = lazy(() => import("./routes/MarketClockRoute.js"));
-const ChipChainRoute = lazy(() => import("./routes/ChipChainRoute.js"));
-const RobotChainRoute = lazy(() => import("./routes/RobotChainRoute.js"));
+const publicRouteComponents = Object.freeze(Object.fromEntries(
+  PUBLIC_ROUTE_REGISTRY.map((route) => [route.id, lazy(route.loadRoute)]),
+));
 const MacroAdminRoute = ADMIN_PAGE_ENABLED
   ? lazy(() => import("./routes/MacroAdminRoute.js"))
   : null;
 
 function routeComponent(page) {
   if (page === "macroAdmin" && MacroAdminRoute) return MacroAdminRoute;
-  if (page === "cryptoLiquidity") return CryptoLiquidityRoute;
-  if (page === "robotChain") return RobotChainRoute;
-  if (page === "chipChain") return ChipChainRoute;
-  if (page === "marketClock") return MarketClockRoute;
-  if (page === "macro") return MacroRoute;
-  if (page === "equity") return EquityRoute;
-  return CryptoRoute;
+  return publicRouteComponents[page] || publicRouteComponents[DEFAULT_ROUTE_ID];
 }
 
 export function App() {
