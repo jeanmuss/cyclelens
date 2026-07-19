@@ -1,6 +1,6 @@
 # CycleLens 开发与迁移计划
 
-更新日期：2026-07-18
+更新日期：2026-07-19
 
 目标仓库：`jeanmuss/cyclelens`
 
@@ -11,13 +11,15 @@
 1. 产品名使用 **CycleLens**，GitHub 仓库名使用 `cyclelens`。
 2. 在购买独立域名前，公共前端继续使用 GitHub Pages，不引入付费域名。
 3. 公共页面默认匿名可读，不强迫用户注册或登录。
-4. 首页布局和指标选择先保存在设备的 `localStorage`，新设备显示默认首页。
-5. 只有“跨设备同步”和“社交媒体指标预警”等服务端能力才要求用户登录。
+4. 首页布局和指标选择保存在设备的 `localStorage`，新设备显示默认首页；当前产品不建设跨设备同步。
+5. 当前产品不建设用户账号或用户自定义预警。通知能力收敛为运营方维护的一份固定 Telegram 早报，上海时间每日 07:00 推送，不改变公共页面匿名可读边界。
 6. 公共前端不直接连接市场数据源，也不持有任何数据源密钥。
 7. 数据采集在后端或 CI 完成，写入数据库并生成经过裁剪的公开快照；浏览器读取快照。
 8. 管理员后台与公共前端分开部署。无独立域名阶段，后台可使用受 Cloudflare Access 保护的 `*.pages.dev` 地址。
 9. 管理员入口不依赖“隐藏网址”或前端固定密码；访问控制必须在页面内容之前由 Cloudflare Access 执行。
 10. A 股页面作为独立功能模块加入，不能继续把新功能堆进共享巨型文件。
+11. 当前首页的 6 张卡片、13 个默认指标依赖是 Phase 4 的第一版范围，不是完整的跨市场首页终态；美股大盘等指标在仓库迁移后另设阶段扩展。
+12. 已完成的 Phase 0-4 与 Phase 6，加上明确暂停并保留架构边界的 Phase 5，已形成可迁移基线。先完成新仓库上线并停运旧 `cycle-map` 的 Pages/定时 Actions，再继续首页指标扩展和 Telegram 早报；暂停中的 A 股页面不阻塞迁移。
 
 ## 2. 当前代码审计结论
 
@@ -59,8 +61,8 @@ flowchart LR
   API --> DB
 
   U[匿名用户] --> W
-  L[可选登录用户] --> PREF[云端偏好与预警]
-  PREF --> DB
+  DB --> R[每日 07:00 固定早报任务]
+  R --> TG[Telegram 固定频道]
 ```
 
 首页的数据采用“数据库为事实来源、静态投影为公开读取层”的折中方案：
@@ -278,35 +280,56 @@ app/src/
 - 完成内容：复用并升级 CycleLens 前身的现有 Supabase 项目，应用 `phase6_admin_grants_and_legacy_catalog` migration，保留全部既有数据并显式收紧管理表/trigger 权限；为 Pages Functions 创建独立后端 key（Supabase 显示名 `cyclelens_admin_pages`）；创建 `cyclelens-admin` Direct Upload Pages 项目，部署生产与 `phase6-preview` 预览产物；为生产精确域和预览通配域分别启用 fail-closed Cloudflare Access 指定邮箱 OTP；生产和预览均配置六项 encrypted secrets。
 - 验证结果：migration 前后手动事件 1、审计 1、指标观测 13,714、修订 558，catalog 15 项/14 active 且无未编目观测；匿名生产根路径/API、预览 alias/hash 均返回 Access `302`，旧公开 GitHub Pages 返回 `200`；OTP 登录后生产后台和受保护 API 成功读取原有事件；真实保存唯一临时草稿后生成合规 `cf-access:<24 hex>` INSERT 审计，清理后事件数恢复为 1，INSERT/DELETE 审计各 1 条且 actor 合规；Security Advisor 0，Performance Advisor 仅 5 条 `unused_index` INFO；`npm run check` 通过（158/158 测试、市场日历校验、公开投影和生产构建），admin 与 Functions 构建及 Wrangler 4.112.0 部署成功，`git diff --check` 通过。
 - 剩余风险：整表替换仍由多次 PostgREST 请求组成，多管理员并发前需升级为带版本校验的事务 RPC；预览域只验证了匿名 fail closed，没有重复生产端完整 CRUD；速率限制与受限 workflow dispatch 仍按需求后补；5 个未使用索引需在真实流量后复核，当前不删除。
-- 下一步：Phase 6 已完成。Phase 7 只有在明确需要跨设备同步或指标预警后才启动；开始前需集中确认账号触发点、认证方式、告警规则、通知渠道、时区/静默期、保留删除策略和预期用户量。Phase 8 仍保持未执行，不推送、不切 remote，也不克隆到新目录。
+- 下一步：Phase 6 已完成。按 2026-07-19 的产品决定，下一批提前执行 Phase 8 新仓库迁移；Phase 7 收敛为固定 Telegram 早报，不再建设账号、跨设备同步或用户自定义告警。旧站退役只针对 `cycle-map` 的 GitHub Pages 与定时 Actions，不删除当前 CycleLens 继续复用的 Supabase 项目，也不影响 `cyclelens-admin` 或无关的 `alpha-watch` Cloudflare 项目。
 
-### Phase 7：可选账号、跨设备同步与社媒预警
+### Phase 7：固定 Telegram 每日早报
 
 - [ ] 保持匿名浏览和设备本地首页定制，不将登录变成公共阅读门槛。
-- [ ] 当用户启用“跨设备同步”或“指标预警”时，再引导登录。
-- [ ] 优先选择 magic link、passkey 或合适的 OAuth，避免先建设用户名/密码体系。
-- [ ] 增加 `user_dashboard_preferences`、`alert_rules`、`notification_channels`、`notification_deliveries` 等表。
-- [ ] 所有用户表启用 RLS，并以 `auth.uid() = user_id` 约束读写；更新策略同时配置 `USING` 和 `WITH CHECK`。
-- [ ] Telegram/WeChat 绑定必须有明确验证、解绑、删除和最小化保存策略。
-- [ ] 告警判定与发送在服务端定时任务/队列完成，避免浏览器在线状态影响提醒。
-- [ ] 对重复发送、重试、频率限制、静默时段和发送日志建立幂等规则。
+- [ ] 不建设用户账号、跨设备同步、用户自定义阈值、频道绑定或 WeChat 通知，不创建对应用户表。
+- [ ] 定义版本化早报 contract：指标清单由产品统一维护，每项带观测时间、新鲜度、质量和来源；缺失值明确显示 N/A，不补零、不拿旧值冒充当日值。
+- [ ] 上海时间每日 07:00 由服务端/CI 定时任务生成并发送一份 Telegram 卡片式早报，不依赖浏览器在线状态。
+- [ ] Telegram bot token 与目标 chat/channel 标识只保存于部署 Secret Store；不进入前端、仓库、构建产物、日志或对话。
+- [ ] 使用“上海日期 + contract 版本”作为幂等键，定义安全重试、超时、Telegram 频率限制和脱敏发送日志，避免同一早报重复推送。
+- [ ] 先提供 dry-run/渲染快照测试，再启用真实发送；真实启用前由用户在 Telegram 侧创建 bot、将其加入目标频道并通过安全配置路径录入 secret。
 
-验收：匿名体验不退化；只有主动启用云功能才产生账号数据；用户不能读取或修改他人的偏好、频道和告警。
+验收：匿名体验不退化；仓库和前端不存在 Telegram 凭据；07:00 调度、跨日边界、N/A、新鲜度、幂等与失败重试有确定性测试；真实频道仅收到一份经人工确认模板的早报。
 
 ### Phase 8：切换到新仓库并上线
 
-- [ ] 在当前 `C:\Users\hovyf\Documents\cycle-map` 中完成重构、全部检查和干净提交；切换前不得遗留未提交文件。
+- [ ] 在当前 `C:\Users\hovyf\Documents\cycle-map` 中确认已完成的 Phase 0-4/6、Phase 5 暂停边界、全部检查和干净提交；明确延期的 Phase 5/7/9 不阻塞本次切换，切换前不得遗留未提交文件。
 - [ ] 完整检查通过后，将 `cyclelens` 添加为新 remote，保留 Git 历史并推送主分支；在此之前不替换当前 `origin`。
+- [ ] 首次推送前先阻止未配置的新仓库工作流自动执行；待 Secrets、Variables、Environment 和最小 Actions 权限配置完成后再启用定时采集与 Pages 部署。
 - [ ] 迁移或重新生成 `data-cache` 分支，不把旧临时缓存和本地环境文件带入新仓库。
 - [ ] 在新仓库中逐项重新配置 Secrets、Variables、Pages Environment 和 Actions 权限。
 - [ ] 启用 GitHub Pages，验证 `https://jeanmuss.github.io/cyclelens/` 的 base path、刷新、hash 路由和 JSON 加载。
 - [ ] 对全部页面执行桌面和移动端 smoke test，并检查数据新鲜度、失败回退和可访问性。
 - [ ] 新远端推送并验证成功后，将 `jeanmuss/cyclelens` 克隆到 `C:\Users\hovyf\Documents\cyclelens`，再把 Codex 项目/后续开发窗口切换到该目录；不要直接在活动任务中重命名旧工作目录。
-- [ ] 保留旧 `cycle-map` Pages 作为短期回滚入口；稳定后将旧仓库归档并在 README 指向新项目。
+- [ ] 新站完成生产 smoke test 后，停止旧 `cycle-map` 的所有定时 Actions 并取消发布旧 GitHub Pages，避免继续消耗运行资源或形成双写；在旧 README/description 指向新项目后归档旧仓库。需要回滚时可临时解除归档并重新启用部署，而不是让两套定时任务长期并行。
 
 本机连接记录（2026-07-18）：GitHub App 已确认当前账号对新仓库拥有管理员与推送权限；公开仓库的只读 Git 连接可用。Windows Git 默认 `schannel` 出现 `SEC_E_NO_CREDENTIALS`，使用单次 `git -c http.sslBackend=openssl ...` 可连接；实际推送前仍需刷新本机 GitHub CLI/凭据管理器认证，不要把 token 写入命令、文件或对话。
 
-验收：新站数据和定时任务稳定运行；旧站仍可回滚；没有在迁移日志、构建产物或仓库中泄露密钥。
+验收：新站数据和定时任务稳定运行；旧站 Pages 不再公开、旧定时 Actions 不再触发且仓库已只读归档；当前复用的 Supabase 与 `cyclelens-admin` 保持正常；没有在迁移日志、构建产物或仓库中泄露密钥。
+
+### Phase 9：首页跨市场指标扩展
+
+- [ ] 将当前 6 张卡片/13 个默认依赖标记为首页第一版基线，而不是完整指标清单；保留现有设备本地布局 schema 的向前兼容迁移。
+- [ ] 先确定首页信息架构与默认密度，至少评估“美股大盘/市场广度、全球利率与美元流动性、加密市场与稳定币、企业财库”四个分组；A 股继续引用暂停文档，不在本阶段偷跑实现。
+- [ ] 为美股大盘建立候选指标清单和产品优先级，再逐项审核官方性、免费额度、公开展示/缓存/署名许可、刷新频率和 last-known-good 行为；未通过审核的指标不得进入公开投影。
+- [ ] 新指标继续进入统一 `metric_catalog`、历史事实表和按页面裁剪的 dashboard projection；浏览器只读取静态投影，不直连行情供应商。
+- [ ] widget registry 支持新增跨市场卡片、默认位置、显示/隐藏、排序和旧偏好迁移；缺失或休市数据保留 N/A、观测时间、新鲜度与质量说明。
+- [ ] 桌面与移动端验证首屏密度、延迟加载、键盘可达性和坏数据回退，避免首页扩展拖慢其他独立页面。
+- [ ] 首页指标稳定后，将其作为 Phase 7 早报候选池，由产品一次性选定固定推送清单；不开放最终用户自定义。
+
+验收：首页不再被误解为加密专页；至少有一组经审核的美股大盘指标进入默认首页，旧设备布局安全迁移，匿名浏览、静态投影和来源审查边界不退化。
+
+执行顺序调整记录（2026-07-19）：
+
+- 已确认：当前默认路由为 `dashboard`，只读取 `dashboardProjection`；6 张卡片的 13 个默认依赖确属首页第一版。原加密周期页位于 `#/crypto-cycle`，美股宏观仍位于独立 `#/equity-macro`，尚未进入首页。
+- 分支核验：工作树干净；`codex/cyclelens-refactor` 相对权威 `origin/main` 为 ahead 14 / behind 0。陈旧本地 `main` 独有的 `2718ab8` 在当前分支中为 patch-equivalent，无需为迁移重复合并。目标公开仓库只读 Git 检查仍无分支。
+- 新顺序：Phase 8 迁移与旧站退役 → Phase 9 首页跨市场指标扩展 → Phase 7 固定 Telegram 早报；Phase 5 继续暂停，等待 A 股信源与许可结论。
+- 验证结果：`npm run check` 通过（source lint、158/158 测试、美国/韩国/中国官方市场日历边界、dashboard/crypto-liquidity/us-equity 三份公开投影和生产构建）；`git diff --check` 通过；本批只修改计划文档，未写入凭据或执行远程变更。
+- 剩余风险：本机 GitHub CLI 已安装，但 keyring 中的 GitHub 凭据失效；新仓库的 Secrets/Variables/Environment/Actions/Pages 尚未迁移，旧站也尚未停运。首次远程写操作前需通过 `gh auth refresh -h github.com` 的本机安全流程刷新，不在命令、文件或对话中传递 token。
+- 下一步：进入 Phase 8 首个迁移批次；先安全恢复 GitHub 认证并阻止新仓库未配置工作流自动运行，再添加目标 remote、推送主分支和配置新仓库。只有新站完成 smoke test 后，才停用旧仓库定时 Actions、取消发布旧 Pages 并归档。
 
 ## 6. 建议的数据表增量
 
@@ -317,14 +340,7 @@ app/src/
 - `dashboard_snapshot_runs`：记录公开快照的版本、生成时间、状态和失败摘要；快照本体仍可作为静态 JSON。
 - 现有 `manual_macro_events` 与 audit：继续作为管理员编辑对象。
 
-只有账号与预警上线时再增加：
-
-- `user_dashboard_preferences(user_id, schema_version, layout, updated_at)`
-- `alert_rules(id, user_id, metric_id, comparator, threshold, cadence, enabled, ...)`
-- `notification_channels(id, user_id, provider, external_ref, verified_at, ...)`
-- `notification_deliveries(id, rule_id, observation_key, status, attempts, sent_at, ...)`
-
-不要为了首页本地定制提前创建用户表，也不要把匿名用户的设备偏好上传数据库。
+当前不增加 `user_dashboard_preferences`、`alert_rules`、`notification_channels` 或其他用户表。首页偏好只留在设备；固定早报优先用无个人数据的日期幂等键和脱敏运行日志完成可靠性控制，只有实际运行证明需要持久化投递记录时，才另行评审最小表结构、保留期与访问策略。
 
 ## 7. 每个开发窗口的执行规则
 
@@ -353,6 +369,7 @@ app/src/
 3. Phase 2：先拆共享文件，再开发首页，避免新功能继续扩大耦合。
 4. Phase 3：统一指标目录和公开投影。
 5. Phase 4：首页数据看板。
-6. Phase 5 与 Phase 6 可在前述契约稳定后分别推进。
-7. Phase 7 等真正开始做跨设备同步或社媒提醒时再启动。
-8. Phase 8 最后执行，避免半成品过早替换现有稳定站点。
+6. Phase 5 暂停；Phase 6 已完成并部署。
+7. Phase 8 立即执行：迁移到 `cyclelens`，新站验收后停用旧 `cycle-map` Pages/定时 Actions，再归档旧仓库。
+8. Phase 9 扩展首页跨市场指标，优先补齐经许可审核的美股大盘部分。
+9. Phase 7 最后基于稳定的首页指标候选池实现固定 Telegram 每日 07:00 早报；不建设账号、跨设备同步或用户自定义预警。
