@@ -296,8 +296,8 @@ app/src/
 
 ### Phase 8：切换到新仓库并上线
 
-- [ ] 在当前 `C:\Users\hovyf\Documents\cycle-map` 中确认已完成的 Phase 0-4/6、Phase 5 暂停边界、全部检查和干净提交；明确延期的 Phase 5/7/9 不阻塞本次切换，切换前不得遗留未提交文件。
-- [ ] 完整检查通过后，将 `cyclelens` 添加为新 remote，保留 Git 历史并推送主分支；在此之前不替换当前 `origin`。
+- [x] 在当前 `C:\Users\hovyf\Documents\cycle-map` 中确认已完成的 Phase 0-4/6、Phase 5 暂停边界、全部检查和干净提交；明确延期的 Phase 5/7/9 不阻塞本次切换，切换前不得遗留未提交文件。
+- [x] 完整检查通过后，将 `cyclelens` 添加为新 remote，保留 Git 历史并推送主分支；在此之前不替换当前 `origin`。
 - [ ] 首次推送前先阻止未配置的新仓库工作流自动执行；待 Secrets、Variables、Environment 和最小 Actions 权限配置完成后再启用定时采集与 Pages 部署。
 - [ ] 迁移或重新生成 `data-cache` 分支，不把旧临时缓存和本地环境文件带入新仓库。
 - [ ] 在新仓库中逐项重新配置 Secrets、Variables、Pages Environment 和 Actions 权限。
@@ -307,6 +307,13 @@ app/src/
 - [ ] 新站完成生产 smoke test 后，停止旧 `cycle-map` 的所有定时 Actions 并取消发布旧 GitHub Pages，避免继续消耗运行资源或形成双写；在旧 README/description 指向新项目后归档旧仓库。需要回滚时可临时解除归档并重新启用部署，而不是让两套定时任务长期并行。
 
 本机连接记录（2026-07-18）：GitHub App 已确认当前账号对新仓库拥有管理员与推送权限；公开仓库的只读 Git 连接可用。Windows Git 默认 `schannel` 出现 `SEC_E_NO_CREDENTIALS`，使用单次 `git -c http.sslBackend=openssl ...` 可连接；实际推送前仍需刷新本机 GitHub CLI/凭据管理器认证，不要把 token 写入命令、文件或对话。
+
+执行记录（2026-07-19，Phase 8 安全占位上传批次）：
+
+- 完成内容：GitHub CLI 通过系统 keyring 恢复认证；在首次推送前将目标公开仓库 Actions 临时关闭；保留旧 `origin = jeanmuss/cycle-map`，新增 `cyclelens = jeanmuss/cyclelens` remote；经用户在了解公开披露风险后明确授权，将当前完整历史与源码推送为目标仓库 `main`。本地仍停留在 `codex/cyclelens-refactor`，未切换或覆盖旧 remote。
+- 验证结果：推送前工作树干净，当前分支相对权威 `origin/main` 为 ahead 15 / behind 0；常见凭据文件名和凭据模式扫描仅命中 example/test 占位值，排除占位文件后的历史补丁扫描为 0 命中（本机未安装 Gitleaks，因此不宣称绝对无泄露风险）；远端 `main` 与本地 `323de33` 完整 SHA 一致，新仓库为公开、默认分支为 `main`、当前账号权限为 ADMIN，Actions 仍为 disabled，未触发任何工作流。
+- 剩余风险：新仓库尚无 Secrets、Variables、Environment、`data-cache` 或 Pages 部署；旧站仍在运行。审计还发现现有 reusable workflow 只有在 DefiLlama 获批时才运行 CMC/DefiLlama/SoSoValue 共用刷新步骤，并在步骤内把 DefiLlama 标记硬编码为开启，与“CMC 开启、DefiLlama 关闭”的产品决策不一致，修复前不得启用 Actions。
+- 下一步：修复并测试来源门控；为新仓库写入显式的最小安全 Variables，并由用户通过 GitHub Secret Store 安全补录仍在使用的 Secret；随后创建 `github-pages` Environment、恢复最小 Actions 权限、引导生成 `data-cache` 并部署新 Pages。新站完整验收前不停止旧站。
 
 验收：新站数据和定时任务稳定运行；旧站 Pages 不再公开、旧定时 Actions 不再触发且仓库已只读归档；当前复用的 Supabase 与 `cyclelens-admin` 保持正常；没有在迁移日志、构建产物或仓库中泄露密钥。
 
@@ -325,11 +332,11 @@ app/src/
 执行顺序调整记录（2026-07-19）：
 
 - 已确认：当前默认路由为 `dashboard`，只读取 `dashboardProjection`；6 张卡片的 13 个默认依赖确属首页第一版。原加密周期页位于 `#/crypto-cycle`，美股宏观仍位于独立 `#/equity-macro`，尚未进入首页。
-- 分支核验：工作树干净；`codex/cyclelens-refactor` 相对权威 `origin/main` 为 ahead 14 / behind 0。陈旧本地 `main` 独有的 `2718ab8` 在当前分支中为 patch-equivalent，无需为迁移重复合并。目标公开仓库只读 Git 检查仍无分支。
+- 分支核验：工作树干净；`codex/cyclelens-refactor` 相对权威 `origin/main` 为 ahead 15 / behind 0。陈旧本地 `main` 独有的 `2718ab8` 在当前分支中为 patch-equivalent，无需为迁移重复合并。目标公开仓库已通过 Phase 8 安全占位批次创建 `main`。
 - 新顺序：Phase 8 迁移与旧站退役 → Phase 9 首页跨市场指标扩展 → Phase 7 固定 Telegram 早报；Phase 5 继续暂停，等待 A 股信源与许可结论。
 - 验证结果：`npm run check` 通过（source lint、158/158 测试、美国/韩国/中国官方市场日历边界、dashboard/crypto-liquidity/us-equity 三份公开投影和生产构建）；`git diff --check` 通过；本批只修改计划文档，未写入凭据或执行远程变更。
-- 剩余风险：本机 GitHub CLI 已安装，但 keyring 中的 GitHub 凭据失效；新仓库的 Secrets/Variables/Environment/Actions/Pages 尚未迁移，旧站也尚未停运。首次远程写操作前需通过 `gh auth refresh -h github.com` 的本机安全流程刷新，不在命令、文件或对话中传递 token。
-- 下一步：进入 Phase 8 首个迁移批次；先安全恢复 GitHub 认证并阻止新仓库未配置工作流自动运行，再添加目标 remote、推送主分支和配置新仓库。只有新站完成 smoke test 后，才停用旧仓库定时 Actions、取消发布旧 Pages 并归档。
+- 剩余风险：GitHub 认证与安全占位上传已完成；新仓库的 Secrets/Variables/Environment/Actions/Pages 与 `data-cache` 仍待迁移，旧站也尚未停运。所有凭据继续只通过系统 keyring 或部署 Secret Store 处理，不在文件或对话中传递。
+- 下一步：继续 Phase 8 配置与部署批次。只有新站完成 smoke test 后，才停用旧仓库定时 Actions、取消发布旧 Pages 并归档。
 
 ## 6. 建议的数据表增量
 
