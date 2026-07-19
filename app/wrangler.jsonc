@@ -4,19 +4,5 @@
   "pages_build_output_dir": "./dist",
   "compatibility_date": "2026-07-18",
   "compatibility_flags": ["nodejs_compat"],
-  "send_metrics": false,
-  "observability": {
-    "enabled": true,
-    "head_sampling_rate": 1
-  },
-  "secrets": {
-    "required": [
-      "CF_ACCESS_TEAM_DOMAIN",
-      "CF_ACCESS_AUD",
-      "CYCLELENS_ADMIN_ORIGINS",
-      "CYCLELENS_ADMIN_HOST_SUFFIXES",
-      "SUPABASE_URL",
-      "SUPABASE_SECRET_KEY"
-    ]
-  }
+  "send_metrics": false
 }

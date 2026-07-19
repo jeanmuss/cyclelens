@@ -192,11 +192,12 @@ test("Pages API reads and writes through Supabase without exposing or forwarding
 });
 
 test("remote admin source and Cloudflare config keep explicit security boundaries", async () => {
-  const [page, model, config, wrangler] = await Promise.all([
+  const [page, model, config, wrangler, devVarsExample] = await Promise.all([
     readFile(resolve(root, "src/pages/MacroAdminPage.jsx"), "utf8"),
     readFile(resolve(root, "src/features/admin-macro-events/adminMacroModel.js"), "utf8"),
     readFile(resolve(root, "vite.config.mjs"), "utf8"),
     readFile(resolve(root, "wrangler.jsonc"), "utf8"),
+    readFile(resolve(root, ".dev.vars.example"), "utf8"),
   ]);
   assert.match(model, /ADMIN_MACRO_REMOTE \? "\/api" : "http:\/\/127\.0\.0\.1:5174"/);
   assert.match(model, /ADMIN_MACRO_REMOTE \? \{\} : \{ \[PRODUCT_CONFIG\.localAdmin\.requestHeader\]: "1" \}/);
@@ -205,6 +206,17 @@ test("remote admin source and Cloudflare config keep explicit security boundarie
   const parsed = JSON.parse(wrangler);
   assert.equal(parsed.compatibility_date, "2026-07-18");
   assert.deepEqual(parsed.compatibility_flags, ["nodejs_compat"]);
-  assert.equal(parsed.observability.enabled, true);
+  assert.equal("observability" in parsed, false);
+  assert.equal("secrets" in parsed, false);
   assert.equal(parsed.send_metrics, false);
+  for (const name of [
+    "CF_ACCESS_TEAM_DOMAIN",
+    "CF_ACCESS_AUD",
+    "CYCLELENS_ADMIN_ORIGINS",
+    "CYCLELENS_ADMIN_HOST_SUFFIXES",
+    "SUPABASE_URL",
+    "SUPABASE_SECRET_KEY",
+  ]) {
+    assert.match(devVarsExample, new RegExp(`^${name}=`, "m"));
+  }
 });

@@ -254,10 +254,10 @@ app/src/
 部署、安全变量、验证与回滚交接见 [`docs/deployment/ADMIN_CLOUDFLARE.md`](docs/deployment/ADMIN_CLOUDFLARE.md)。
 
 - [x] 使用独立管理员构建目标，公共 GitHub Pages 构建不包含管理员路由入口。
-- [ ] 将管理员静态界面部署到免费的 `cyclelens-admin.pages.dev`（最终名称以 Cloudflare 可用性为准）。
-- [ ] 在 `*.pages.dev` 生产域和预览域前启用 Cloudflare Access，只允许 Cloudflare 账号成员或指定邮箱。
-- [ ] 优先使用 Cloudflare 账号身份/MFA；备选是指定邮箱 OTP。不要实现共享静态密码。
-- [ ] 将本地 Node API 改为 Pages Function 或 Worker；Supabase secret 只保存为 Cloudflare secret。
+- [x] 将管理员静态界面部署到免费的 `cyclelens-admin.pages.dev`（最终名称以 Cloudflare 可用性为准）。
+- [x] 在 `*.pages.dev` 生产域和预览域前启用 Cloudflare Access，只允许 Cloudflare 账号成员或指定邮箱。
+- [x] 优先使用 Cloudflare 账号身份/MFA；备选是指定邮箱 OTP。不要实现共享静态密码。
+- [x] 将本地 Node API 改为 Pages Function 或 Worker；Supabase secret 只保存为 Cloudflare secret。
 - [x] API 校验 Access 身份、请求来源、方法、body 大小和字段 schema，并记录不含敏感信息的审计 actor。
 - [x] 删除对 `x-cyclelens-admin: 1` 的远程信任；该 header 不能作为认证依据。
 - [x] 远程后台只负责数据库 CRUD。当前调用 Python 子进程生成 JSON 的“发布”流程改为排队，交给 GitHub Actions/定时投影任务执行。
@@ -272,6 +272,13 @@ app/src/
 - 验证结果：`npm run check` 通过（source lint、158/158 单元测试、官方美/韩/中市场日历验证、公开 projection 生成与公开生产构建）；`npm run build:admin` 和 `npm run build:admin:functions` 通过，Wrangler 4.112.0 成功编译 Worker；公开产物边界扫描确认没有管理路由/API 标记、`_routes.json` 或 `noindex`，管理产物确认独立管理 chunk、`noindex`、`/*` 路由和远程代码边界；Worker 扫描未发现本地管理 header、回环地址、Python/子进程、即时发布命令或凭据值；新增依赖安装报告 0 vulnerabilities；`git diff --check` 通过。
 - 剩余风险：本批没有连接或修改远程 Cloudflare/Supabase。Pages 项目、生产/预览 Access policy、MFA/OTP、encrypted secrets 和真实 JWT 尚未验证；`manual_macro_events` 仍需一个通过 Supabase migration 历史创建并应用的最小 `service_role` grants migration 后才能远程 CRUD；整表替换当前由多次 PostgREST 请求组成，不是跨请求事务，多人并发前应升级为带版本校验的事务 RPC。
 - 下一步：部署批次先明确 Supabase 项目，使用已连接的 Supabase 工具或官方 CLI 创建/应用 grants migration 并运行 security/performance advisors；随后 Wrangler 登录、创建 Pages 项目、配置 Access 与 secrets、部署并按交接文档执行生产/预览 smoke test。上述账户配置可后补，本批无需用户提供或在对话中发送任何 secret。
+
+执行记录（2026-07-19，Phase 6 远程部署与验收批次）：
+
+- 完成内容：复用并升级 CycleLens 前身的现有 Supabase 项目，应用 `phase6_admin_grants_and_legacy_catalog` migration，保留全部既有数据并显式收紧管理表/trigger 权限；为 Pages Functions 创建独立后端 key（Supabase 显示名 `cyclelens_admin_pages`）；创建 `cyclelens-admin` Direct Upload Pages 项目，部署生产与 `phase6-preview` 预览产物；为生产精确域和预览通配域分别启用 fail-closed Cloudflare Access 指定邮箱 OTP；生产和预览均配置六项 encrypted secrets。
+- 验证结果：migration 前后手动事件 1、审计 1、指标观测 13,714、修订 558，catalog 15 项/14 active 且无未编目观测；匿名生产根路径/API、预览 alias/hash 均返回 Access `302`，旧公开 GitHub Pages 返回 `200`；OTP 登录后生产后台和受保护 API 成功读取原有事件；真实保存唯一临时草稿后生成合规 `cf-access:<24 hex>` INSERT 审计，清理后事件数恢复为 1，INSERT/DELETE 审计各 1 条且 actor 合规；Security Advisor 0，Performance Advisor 仅 5 条 `unused_index` INFO；`npm run check` 通过（158/158 测试、市场日历校验、公开投影和生产构建），admin 与 Functions 构建及 Wrangler 4.112.0 部署成功，`git diff --check` 通过。
+- 剩余风险：整表替换仍由多次 PostgREST 请求组成，多管理员并发前需升级为带版本校验的事务 RPC；预览域只验证了匿名 fail closed，没有重复生产端完整 CRUD；速率限制与受限 workflow dispatch 仍按需求后补；5 个未使用索引需在真实流量后复核，当前不删除。
+- 下一步：Phase 6 已完成。Phase 7 只有在明确需要跨设备同步或指标预警后才启动；开始前需集中确认账号触发点、认证方式、告警规则、通知渠道、时区/静默期、保留删除策略和预期用户量。Phase 8 仍保持未执行，不推送、不切 remote，也不克隆到新目录。
 
 ### Phase 7：可选账号、跨设备同步与社媒预警
 
