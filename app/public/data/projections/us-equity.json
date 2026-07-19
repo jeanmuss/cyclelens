@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "catalogVersion": 1,
   "projectionId": "us-equity",
-  "generatedAt": "2026-07-16T08:49:09.863Z",
+  "generatedAt": "2026-07-19T15:31:44.125Z",
   "freshness": {
     "observedAt": "2026-07-14T00:00:00.000Z",
     "firstFetchedAt": "2026-07-15T23:26:57.000Z",
     "lastCheckedAt": "2026-07-15T23:26:57.000Z",
-    "transformedAt": "2026-07-16T08:49:09.863Z"
+    "transformedAt": "2026-07-19T15:31:44.125Z"
   },
   "metrics": [
     {

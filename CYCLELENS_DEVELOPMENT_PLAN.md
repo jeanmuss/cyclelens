@@ -298,10 +298,10 @@ app/src/
 
 - [x] 在当前 `C:\Users\hovyf\Documents\cycle-map` 中确认已完成的 Phase 0-4/6、Phase 5 暂停边界、全部检查和干净提交；明确延期的 Phase 5/7/9 不阻塞本次切换，切换前不得遗留未提交文件。
 - [x] 完整检查通过后，将 `cyclelens` 添加为新 remote，保留 Git 历史并推送主分支；在此之前不替换当前 `origin`。
-- [ ] 首次推送前先阻止未配置的新仓库工作流自动执行；待 Secrets、Variables、Environment 和最小 Actions 权限配置完成后再启用定时采集与 Pages 部署。
-- [ ] 迁移或重新生成 `data-cache` 分支，不把旧临时缓存和本地环境文件带入新仓库。
-- [ ] 在新仓库中逐项重新配置 Secrets、Variables、Pages Environment 和 Actions 权限。
-- [ ] 启用 GitHub Pages，验证 `https://jeanmuss.github.io/cyclelens/` 的 base path、刷新、hash 路由和 JSON 加载。
+- [x] 首次推送前先阻止未配置的新仓库工作流自动执行；待 Secrets、Variables、Environment 和最小 Actions 权限配置完成后再启用定时采集与 Pages 部署。（首次推送前已禁用 Actions；2026-07-19 配置完成后才以 GitHub-owned-only 策略启用。）
+- [x] 迁移或重新生成 `data-cache` 分支，不把旧临时缓存和本地环境文件带入新仓库。（从已审计的 `26ba446` 基线新建，首次完整数据工作流成功验证持久快照发布路径。）
+- [x] 在新仓库中逐项重新配置 Secrets、Variables、Pages Environment 和 Actions 权限。（Secret 只核对名称；Variables 逐项核对值；`github-pages` 仅允许 `main`，默认 `GITHUB_TOKEN` 只读且不能批准 PR。）
+- [ ] 启用 GitHub Pages，验证 `https://jeanmuss.github.io/cyclelens/` 的 base path、刷新、hash 路由和 JSON 加载。（Pages 已启用；入口、`/cyclelens/` 静态资源 base、manifest 与 dashboard JSON 的 HTTP 200 已验证，刷新与 hash 路由留待下一批真实浏览器验收。）
 - [ ] 对全部页面执行桌面和移动端 smoke test，并检查数据新鲜度、失败回退和可访问性。
 - [ ] 新远端推送并验证成功后，将 `jeanmuss/cyclelens` 克隆到 `C:\Users\hovyf\Documents\cyclelens`，再把 Codex 项目/后续开发窗口切换到该目录；不要直接在活动任务中重命名旧工作目录。
 - [ ] 新站完成生产 smoke test 后，停止旧 `cycle-map` 的所有定时 Actions 并取消发布旧 GitHub Pages，避免继续消耗运行资源或形成双写；在旧 README/description 指向新项目后归档旧仓库。需要回滚时可临时解除归档并重新启用部署，而不是让两套定时任务长期并行。
@@ -321,6 +321,13 @@ app/src/
 - 验证结果：定向 workflow governance 测试 6/6 通过；`npm run check` 通过（source lint、159/159 测试、美国/韩国/中国官方市场日历、三份公开投影与生产构建）；新仓库 10 个 Variables 逐项读取为预期 0/1；`CMC_PRO_API_KEY`、`SUPABASE_URL`、`SUPABASE_SECRET_KEY` 三个 Secret 名称存在但未读取值，其中 Supabase 控制台显示名由用户确认为 `cyclelens_github_actions`；Actions 继续保持 disabled。
 - 剩余风险：GitHub Secret Store 不允许回读值，因此新 CMC/Supabase 凭据只能在首轮工作流中完成真实验证；`SEC_USER_AGENT` 尚未配置，BitMine SEC 持仓自动刷新会保留现有审核数据但不拉取新披露；`github-pages` Environment、`data-cache`、Pages 与 Actions 权限仍未完成，旧站继续运行。
 - 下一步：提交并同步本批修复；随后从当前已审计的主分支引导生成新仓库 `data-cache`，创建 `github-pages` Environment 与 Pages 配置，保持最小 workflow 权限，最后启用 Actions 并手动运行一次完整采集/投影/部署以验证真实 Secret。
+
+执行记录（2026-07-19，Phase 8 首次 CI 与 Pages 上线批次）：
+
+- 完成内容：从当前公开且已审计的 `26ba446` 初始化新仓库 `data-cache`，没有迁移旧缓存分支或本地环境文件；创建 workflow 模式 GitHub Pages 和 `github-pages` Environment，并将部署分支限制为 `main`；仓库 Actions 仅允许 GitHub 官方 `actions/*`，默认 `GITHUB_TOKEN` 为只读且不能批准 PR，各 workflow 继续按 job 显式申请最小写权限；保留此前只按名称录入的三个 Secret 和十个显式来源 Variables。旧 `cycle-map` Pages/Actions 本批未停用。
+- 验证结果：首次手动 `Update market caches` run `29692566692` 成功，完整通过加密流动性更新、Supabase 手工事件同步、必需市场历史持久化、公开投影合同和 `data-cache` 发布，真实验证了 CMC 与显示名为 `cyclelens_github_actions` 的独立 Supabase 后端 key；首次 `Deploy GitHub Pages` run `29692615554` 成功，通过同一采集/持久化边界、source lint、159/159 测试、官方市场日历、生产构建和 Pages deploy；`https://jeanmuss.github.io/cyclelens/`、data manifest、dashboard projection 以及带 `/cyclelens/` base 的 JS/CSS 均返回 HTTP 200。初始化后生成数据与已审计基线相同，因此 `data-cache` 保持同一 SHA，没有产生空变更提交。本地 `npm run check` 同样通过（159/159 测试、官方美/韩/中市场日历、三份公开投影与生产构建），`git diff --check` 通过。
+- 剩余风险：尚未在真实浏览器中验证全部 hash 路由、刷新、桌面/移动端布局、键盘可达性、失败回退与数据新鲜度；旧站仍在运行，不能提前停用。GitHub 运行器提示若干官方 Action 仍声明 Node 20 runtime 并被强制切换到 Node 24；当前执行成功，但应另批升级受影响的 Action major 并评估改为不可变 SHA。`SEC_USER_AGENT` 仍未配置，BitMine SEC 持仓自动刷新继续保留已审核数据而不拉取新披露。
+- 下一步：对新 Pages 的全部公开页面执行桌面和移动端真实浏览器 smoke test，覆盖 hash 切换/刷新、JSON 加载、数据状态、控制台、键盘与基础可访问性；通过后再克隆到 `C:\Users\hovyf\Documents\cyclelens`，最后停用旧仓库定时 Actions/Pages、更新指向并归档旧仓库。
 
 验收：新站数据和定时任务稳定运行；旧站 Pages 不再公开、旧定时 Actions 不再触发且仓库已只读归档；当前复用的 Supabase 与 `cyclelens-admin` 保持正常；没有在迁移日志、构建产物或仓库中泄露密钥。
 

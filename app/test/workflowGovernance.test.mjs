@@ -65,6 +65,11 @@ test("projection is contract-tested before the reviewed artifact is published", 
   assert.match(source, /node --test test\/metricPipeline\.test\.mjs test\/dataManifest\.test\.mjs/);
   assert.match(source, /CMC_REDISTRIBUTION_APPROVED/);
   assert.match(source, /DEFILLAMA_REDISTRIBUTION_APPROVED/);
+  assert.match(
+    source.slice(download, project),
+    /name: collected-market-data\s+path: app/,
+    "the artifact root is app/, so collected data must be restored into app/",
+  );
 });
 
 test("deployment builds only from the reviewed projection artifact", async () => {
@@ -75,6 +80,11 @@ test("deployment builds only from the reviewed projection artifact", async () =>
   assert.match(source, /uses: actions\/deploy-pages@v4/);
   assert.doesNotMatch(source, /scripts\/update-market-data\.mjs/);
   assert.match(source, /CMC_REDISTRIBUTION_APPROVED: \$\{\{ vars\.CMC_REDISTRIBUTION_APPROVED \|\| '1' \}\}/);
+  assert.match(
+    source,
+    /name: public-market-snapshot\s+path: app/,
+    "the reviewed snapshot must replace app/data and app/public/data before the build",
+  );
 });
 
 test("versioned snapshots remain isolated on data-cache", async () => {
@@ -83,6 +93,11 @@ test("versioned snapshots remain isolated on data-cache", async () => {
   assert.match(source, /refs\/remotes\/origin\/data-cache/);
   assert.match(source, /git commit-tree/);
   assert.match(source, /refs\/heads\/data-cache/);
+  assert.match(
+    source,
+    /name: public-market-snapshot\s+path: app/,
+    "the reviewed snapshot must be restored into the paths staged for data-cache",
+  );
   assert.doesNotMatch(source, /^\s+git commit -m /m);
   assert.doesNotMatch(source, /^\s+git push\s*$/m);
 });

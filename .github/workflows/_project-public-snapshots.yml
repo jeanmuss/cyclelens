@@ -34,7 +34,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: collected-market-data
-          path: .
+          path: app
       - name: Generate page-scoped public projections
         working-directory: app
         env:
