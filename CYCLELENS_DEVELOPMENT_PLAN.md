@@ -315,6 +315,13 @@ app/src/
 - 剩余风险：新仓库尚无 Secrets、Variables、Environment、`data-cache` 或 Pages 部署；旧站仍在运行。审计还发现现有 reusable workflow 只有在 DefiLlama 获批时才运行 CMC/DefiLlama/SoSoValue 共用刷新步骤，并在步骤内把 DefiLlama 标记硬编码为开启，与“CMC 开启、DefiLlama 关闭”的产品决策不一致，修复前不得启用 Actions。
 - 下一步：修复并测试来源门控；为新仓库写入显式的最小安全 Variables，并由用户通过 GitHub Secret Store 安全补录仍在使用的 Secret；随后创建 `github-pages` Environment、恢复最小 Actions 权限、引导生成 `data-cache` 并部署新 Pages。新站完整验收前不停止旧站。
 
+执行记录（2026-07-19，Phase 8 来源门控与仓库策略配置批次）：
+
+- 完成内容：完整刷新现在始终运行加密流动性聚合器，使官方 Strategy/SEC 路径不再依赖 DefiLlama 审批；CMC、DefiLlama、SoSoValue 与 BlockBeats 分别读取自己的 gate，移除 DefiLlama 硬编码开启；新增 workflow governance 回归测试。新仓库显式配置 10 个非敏感 Variables：CMC 与必需市场历史为 `1`，DefiLlama、SoSoValue、BlockBeats、公共加密端点、Alpaca、FRED 第三方序列和 ADP 均为 `0`。
+- 验证结果：定向 workflow governance 测试 6/6 通过；`npm run check` 通过（source lint、159/159 测试、美国/韩国/中国官方市场日历、三份公开投影与生产构建）；新仓库 10 个 Variables 逐项读取为预期 0/1；`CMC_PRO_API_KEY`、`SUPABASE_URL`、`SUPABASE_SECRET_KEY` 三个 Secret 名称存在但未读取值，其中 Supabase 控制台显示名由用户确认为 `cyclelens_github_actions`；Actions 继续保持 disabled。
+- 剩余风险：GitHub Secret Store 不允许回读值，因此新 CMC/Supabase 凭据只能在首轮工作流中完成真实验证；`SEC_USER_AGENT` 尚未配置，BitMine SEC 持仓自动刷新会保留现有审核数据但不拉取新披露；`github-pages` Environment、`data-cache`、Pages 与 Actions 权限仍未完成，旧站继续运行。
+- 下一步：提交并同步本批修复；随后从当前已审计的主分支引导生成新仓库 `data-cache`，创建 `github-pages` Environment 与 Pages 配置，保持最小 workflow 权限，最后启用 Actions 并手动运行一次完整采集/投影/部署以验证真实 Secret。
+
 验收：新站数据和定时任务稳定运行；旧站 Pages 不再公开、旧定时 Actions 不再触发且仓库已只读归档；当前复用的 Supabase 与 `cyclelens-admin` 保持正常；没有在迁移日志、构建产物或仓库中泄露密钥。
 
 ### Phase 9：首页跨市场指标扩展

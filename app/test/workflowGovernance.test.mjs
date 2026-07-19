@@ -39,6 +39,22 @@ test("collection restores LKG, gates reviewed sources, persists, then uploads pr
   assert.match(source, /retention-days: 1/);
 });
 
+test("full crypto refresh keeps every reviewed provider gate independent", async () => {
+  const source = await workflow("_collect-persist.yml");
+  const start = source.indexOf("- name: Refresh crypto liquidity data");
+  const end = source.indexOf("- name: Refresh market session data", start);
+  const refresh = source.slice(start, end);
+
+  assert.ok(start >= 0 && end > start);
+  assert.match(refresh, /if: inputs\.refresh_mode == 'full'/);
+  assert.doesNotMatch(refresh, /if:.*defillama_redistribution_approved/);
+  assert.match(refresh, /CMC_REDISTRIBUTION_APPROVED: \$\{\{ inputs\.cmc_redistribution_approved && '1' \|\| '0' \}\}/);
+  assert.match(refresh, /DEFILLAMA_REDISTRIBUTION_APPROVED: \$\{\{ inputs\.defillama_redistribution_approved && '1' \|\| '0' \}\}/);
+  assert.match(refresh, /SOSOVALUE_REDISTRIBUTION_APPROVED: \$\{\{ inputs\.sosovalue_redistribution_approved && '1' \|\| '0' \}\}/);
+  assert.match(refresh, /BLOCKBEATS_REDISTRIBUTION_APPROVED: \$\{\{ inputs\.blockbeats_redistribution_approved && '1' \|\| '0' \}\}/);
+  assert.doesNotMatch(refresh, /DEFILLAMA_REDISTRIBUTION_APPROVED: "1"/);
+});
+
 test("projection is contract-tested before the reviewed artifact is published", async () => {
   const source = await workflow("_project-public-snapshots.yml");
   const download = source.indexOf("Download collected build input");

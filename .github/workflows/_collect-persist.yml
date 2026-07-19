@@ -94,12 +94,12 @@ jobs:
         working-directory: app
         run: node scripts/update-market-data.mjs
       - name: Refresh crypto liquidity data
-        if: inputs.refresh_mode == 'full' && inputs.defillama_redistribution_approved
+        if: inputs.refresh_mode == 'full'
         working-directory: app
         env:
           CMC_PRO_API_KEY: ${{ inputs.cmc_redistribution_approved && secrets.CMC_PRO_API_KEY || '' }}
           CMC_REDISTRIBUTION_APPROVED: ${{ inputs.cmc_redistribution_approved && '1' || '0' }}
-          DEFILLAMA_REDISTRIBUTION_APPROVED: "1"
+          DEFILLAMA_REDISTRIBUTION_APPROVED: ${{ inputs.defillama_redistribution_approved && '1' || '0' }}
           SOSOVALUE_API_KEY: ${{ inputs.sosovalue_redistribution_approved && secrets.SOSOVALUE_API_KEY || '' }}
           SOSOVALUE_REDISTRIBUTION_APPROVED: ${{ inputs.sosovalue_redistribution_approved && '1' || '0' }}
           SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
