@@ -51,7 +51,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: public-market-snapshot
-          path: .
+          path: app
       - name: Publish the isolated data-cache snapshot
         shell: bash
         run: |
