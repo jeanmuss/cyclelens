@@ -2,6 +2,8 @@
 
 审计日期：2026-07-20
 
+当前缺失项的逐项来源、暂停原因和架构预留见 [`HOMEPAGE_SOURCE_GAPS_HOLD.md`](./HOMEPAGE_SOURCE_GAPS_HOLD.md)。这批补源工作已按产品决定暂停，不阻塞固定早报先行。
+
 对应实现：`app/src/features/dashboard/widgetDefinitions.js`
 
 来源策略：`app/src/domain/metrics/sourcePolicy.js`

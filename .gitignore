@@ -26,6 +26,7 @@ dist/
 __pycache__/
 *.pyc
 app/qa/
+app/.artifacts/
 app/public/data/data-manifest.json
 
 # Generated private data

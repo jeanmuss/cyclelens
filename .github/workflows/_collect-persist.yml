@@ -68,7 +68,7 @@ jobs:
   collect-persist:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Restore the durable last-known-good baseline
@@ -83,10 +83,10 @@ jobs:
           else
             echo "No durable snapshot exists yet; preserving the checked-in baseline"
           fi
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
       - name: Refresh normalized monthly crypto data
@@ -178,7 +178,7 @@ jobs:
           FRED_THIRD_PARTY_SERIES_APPROVED: ${{ inputs.fred_third_party_series_approved && '1' || '0' }}
         run: node scripts/persist-market-metric-history.mjs
       - name: Upload collected private build input
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: collected-market-data
           path: |
