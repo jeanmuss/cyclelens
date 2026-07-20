@@ -1,11 +1,11 @@
 {
   "version": 1,
   "page": "chart-series",
-  "generatedAt": "2026-07-19T15:31:38.329Z",
+  "generatedAt": "2026-07-20T23:28:30.686Z",
   "timestamps": {
     "observedAt": "2026-07-15T00:00:00Z",
     "fetchedAt": "2026-07-15T23:26:53.018Z",
-    "transformedAt": "2026-07-19T15:31:38.329Z"
+    "transformedAt": "2026-07-20T23:28:30.686Z"
   },
   "windows": [
     {

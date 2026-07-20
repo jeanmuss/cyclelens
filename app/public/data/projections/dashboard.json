@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "catalogVersion": 1,
+  "catalogVersion": 2,
   "projectionId": "dashboard",
-  "generatedAt": "2026-07-19T15:31:44.125Z",
+  "generatedAt": "2026-07-20T23:28:40.993Z",
   "freshness": {
-    "observedAt": "2026-07-19T00:00:00.000Z",
-    "firstFetchedAt": "2026-07-19T15:31:36.984Z",
-    "lastCheckedAt": "2026-07-19T15:31:36.984Z",
-    "transformedAt": "2026-07-19T15:31:44.125Z"
+    "observedAt": "2026-07-20T00:00:00.000Z",
+    "firstFetchedAt": "2026-07-20T23:28:29.000Z",
+    "lastCheckedAt": "2026-07-20T23:28:29.000Z",
+    "transformedAt": "2026-07-20T23:28:40.993Z"
   },
   "metrics": [
     {
@@ -36,16 +36,6 @@
         }
       ],
       "observations": [
-        {
-          "observedAt": "2026-03-22T00:00:00.000Z",
-          "value": 2367252863106.9,
-          "qualityStatus": "provider_reported",
-          "firstFetchedAt": "2026-07-16T09:34:43.817Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.621Z",
-          "sourcePolicyId": "coinmarketcap",
-          "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
-          "dimensions": {}
-        },
         {
           "observedAt": "2026-03-23T00:00:00.000Z",
           "value": 2337308374320.64,
@@ -1091,7 +1081,7 @@
           "value": 2184368324496.01,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.817Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.621Z",
+          "lastCheckedAt": "2026-07-20T00:30:31.818Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
           "dimensions": {}
@@ -1101,7 +1091,7 @@
           "value": 2195935631140.2,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.817Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.621Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.936Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
           "dimensions": {}
@@ -1111,7 +1101,7 @@
           "value": 2204416762718.81,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.817Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.621Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.936Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
           "dimensions": {}
@@ -1121,7 +1111,7 @@
           "value": 2179916907548.42,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.817Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.621Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.936Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
           "dimensions": {}
@@ -1131,7 +1121,7 @@
           "value": 2148328128617.33,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.817Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.621Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.936Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
           "dimensions": {}
@@ -1141,7 +1131,7 @@
           "value": 2168542296512.62,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-14T23:23:44.111Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.621Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.936Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
           "dimensions": {}
@@ -1151,7 +1141,7 @@
           "value": 2198784426682.84,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.817Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.621Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.936Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
           "dimensions": {}
@@ -1161,7 +1151,7 @@
           "value": 2187494805535.63,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.817Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.621Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.936Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
           "dimensions": {}
@@ -1171,7 +1161,7 @@
           "value": 2188905257109.58,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-14T23:23:44.111Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.621Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.936Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
           "dimensions": {}
@@ -1181,7 +1171,7 @@
           "value": 2145725536452.29,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-14T23:23:44.111Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.621Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.936Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
           "dimensions": {}
@@ -1191,7 +1181,7 @@
           "value": 2227221406425.37,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-15T13:23:44.715Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.621Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.936Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
           "dimensions": {}
@@ -1201,7 +1191,7 @@
           "value": 2224231971711.84,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T03:58:13.477Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.621Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.936Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
           "dimensions": {}
@@ -1211,7 +1201,7 @@
           "value": 2189890178869.41,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-17T02:12:14.526Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.621Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.936Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
           "dimensions": {}
@@ -1221,17 +1211,27 @@
           "value": 2190100017808.23,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-18T02:01:59.561Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.621Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.936Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
           "dimensions": {}
         },
         {
           "observedAt": "2026-07-19T00:00:00.000Z",
-          "value": 2205576981842.998,
-          "qualityStatus": "available",
+          "value": 2210993825835.68,
+          "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-19T02:12:52.489Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.380Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.936Z",
+          "sourcePolicyId": "coinmarketcap",
+          "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
+          "dimensions": {}
+        },
+        {
+          "observedAt": "2026-07-20T00:00:00.000Z",
+          "value": 2228427549449.9062,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-20T00:14:48.227Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.852Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/",
           "dimensions": {}
@@ -1264,16 +1264,6 @@
         }
       ],
       "observations": [
-        {
-          "observedAt": "2026-03-22T00:00:00.000Z",
-          "value": 1378274077904.3333,
-          "qualityStatus": "provider_reported",
-          "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
-          "sourcePolicyId": "coinmarketcap",
-          "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
-          "dimensions": {}
-        },
         {
           "observedAt": "2026-03-23T00:00:00.000Z",
           "value": 1357306240083.296,
@@ -2319,7 +2309,7 @@
           "value": 1265048220363.838,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T00:30:31.846Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -2329,7 +2319,7 @@
           "value": 1275145388544.856,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -2339,7 +2329,7 @@
           "value": 1283333452244.983,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -2349,7 +2339,7 @@
           "value": 1269750982976.2134,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -2359,7 +2349,7 @@
           "value": 1248018230722.8242,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -2369,7 +2359,7 @@
           "value": 1267122366128.0388,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-14T23:23:44.111Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -2379,7 +2369,7 @@
           "value": 1286020681771.2175,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -2389,7 +2379,7 @@
           "value": 1279061320055.875,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -2399,7 +2389,7 @@
           "value": 1278449844487.12,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-14T23:23:44.111Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -2409,7 +2399,7 @@
           "value": 1248667349112.5684,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-14T23:23:44.111Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -2419,7 +2409,7 @@
           "value": 1303164564522.0508,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-15T13:23:44.715Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -2429,7 +2419,7 @@
           "value": 1298089011713.3862,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T00:01:28.790Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -2439,7 +2429,7 @@
           "value": 1279424745046.1472,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-17T02:12:14.526Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -2449,17 +2439,27 @@
           "value": 1281448735328.0962,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-18T02:01:59.561Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
         },
         {
           "observedAt": "2026-07-19T00:00:00.000Z",
-          "value": 1293087881659.5862,
-          "qualityStatus": "available",
+          "value": 1299654423975.5706,
+          "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-19T02:12:52.489Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.380Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "sourcePolicyId": "coinmarketcap",
+          "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
+          "dimensions": {}
+        },
+        {
+          "observedAt": "2026-07-20T00:00:00.000Z",
+          "value": 1307218585483.1172,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-20T00:14:48.227Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.852Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/",
           "dimensions": {}
@@ -2492,16 +2492,6 @@
         }
       ],
       "observations": [
-        {
-          "observedAt": "2026-03-22T00:00:00.000Z",
-          "value": 184177216689.4193,
-          "qualityStatus": "provider_reported",
-          "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
-          "sourcePolicyId": "coinmarketcap",
-          "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
-          "dimensions": {}
-        },
         {
           "observedAt": "2026-03-23T00:00:00.000Z",
           "value": 184144857725.6835,
@@ -3547,7 +3537,7 @@
           "value": 184116650714.83478,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T00:30:31.846Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -3557,7 +3547,7 @@
           "value": 184163838510.30487,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -3567,7 +3557,7 @@
           "value": 184198637377.2337,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -3577,7 +3567,7 @@
           "value": 184273652721.27707,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -3587,7 +3577,7 @@
           "value": 184207989035.7435,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -3597,7 +3587,7 @@
           "value": 184147143962.5238,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-14T23:23:44.111Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -3607,7 +3597,7 @@
           "value": 184191087274.68124,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -3617,7 +3607,7 @@
           "value": 184176666691.0461,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -3627,7 +3617,7 @@
           "value": 184183514079.07877,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-14T23:23:44.111Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -3637,7 +3627,7 @@
           "value": 184081853982.38986,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-14T23:23:44.111Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -3647,7 +3637,7 @@
           "value": 184227456861.44806,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-15T13:23:44.715Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -3657,7 +3647,7 @@
           "value": 184245280955.1326,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T00:01:28.790Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -3667,7 +3657,7 @@
           "value": 184055293287.99362,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-17T02:12:14.526Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -3677,17 +3667,27 @@
           "value": 184067640637.42084,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-18T02:01:59.561Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
         },
         {
           "observedAt": "2026-07-19T00:00:00.000Z",
-          "value": 184082837752.77875,
-          "qualityStatus": "available",
+          "value": 184113440104.9872,
+          "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-19T02:12:52.489Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.380Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "sourcePolicyId": "coinmarketcap",
+          "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
+          "dimensions": {}
+        },
+        {
+          "observedAt": "2026-07-20T00:00:00.000Z",
+          "value": 184078985472.00815,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-20T00:14:48.227Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.852Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/",
           "dimensions": {}
@@ -3720,16 +3720,6 @@
         }
       ],
       "observations": [
-        {
-          "observedAt": "2026-03-22T00:00:00.000Z",
-          "value": 79029743569.81667,
-          "qualityStatus": "provider_reported",
-          "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
-          "sourcePolicyId": "coinmarketcap",
-          "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
-          "dimensions": {}
-        },
         {
           "observedAt": "2026-03-23T00:00:00.000Z",
           "value": 78981354482.84143,
@@ -4775,7 +4765,7 @@
           "value": 72944205365.73538,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T00:30:31.846Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -4785,7 +4775,7 @@
           "value": 72939425675.16049,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -4795,7 +4785,7 @@
           "value": 73134837098.24532,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -4805,7 +4795,7 @@
           "value": 73260928641.95067,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -4815,7 +4805,7 @@
           "value": 73191513394.62715,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -4825,7 +4815,7 @@
           "value": 73322859922.89442,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -4835,7 +4825,7 @@
           "value": 73270722789.54593,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -4845,7 +4835,7 @@
           "value": 73327405528.34514,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -4855,7 +4845,7 @@
           "value": 73403242582.17154,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-14T23:23:44.111Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -4865,7 +4855,7 @@
           "value": 73070054214.25691,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-14T23:23:44.111Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -4875,7 +4865,7 @@
           "value": 73091025612.5818,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-15T13:23:44.715Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -4885,7 +4875,7 @@
           "value": 73113565053.57695,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T00:01:28.790Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -4895,7 +4885,7 @@
           "value": 73222200419.19193,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-17T02:12:14.526Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -4905,17 +4895,27 @@
           "value": 73287574353.90227,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-18T02:01:59.561Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
         },
         {
           "observedAt": "2026-07-19T00:00:00.000Z",
-          "value": 73290904529.86418,
-          "qualityStatus": "available",
+          "value": 73313615831.91643,
+          "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-19T02:12:52.489Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.380Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "sourcePolicyId": "coinmarketcap",
+          "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
+          "dimensions": {}
+        },
+        {
+          "observedAt": "2026-07-20T00:00:00.000Z",
+          "value": 73220325040.99196,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-20T00:14:48.227Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.852Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/",
           "dimensions": {}
@@ -4948,16 +4948,6 @@
         }
       ],
       "observations": [
-        {
-          "observedAt": "2026-03-22T00:00:00.000Z",
-          "value": -0.27533270112178876,
-          "qualityStatus": "derived_from_provider_price",
-          "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
-          "sourcePolicyId": "coinmarketcap",
-          "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
-          "dimensions": {}
-        },
         {
           "observedAt": "2026-03-23T00:00:00.000Z",
           "value": -2.0322314842258216,
@@ -6003,7 +5993,7 @@
           "value": -9.047591384064857,
           "qualityStatus": "derived_from_provider_price",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T00:30:31.846Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -6013,7 +6003,7 @@
           "value": -9.257317165224377,
           "qualityStatus": "derived_from_provider_price",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -6023,7 +6013,7 @@
           "value": -7.36950613808518,
           "qualityStatus": "derived_from_provider_price",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -6033,7 +6023,7 @@
           "value": -4.9493930962196675,
           "qualityStatus": "derived_from_provider_price",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -6043,7 +6033,7 @@
           "value": -8.511008390927888,
           "qualityStatus": "derived_from_provider_price",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -6053,7 +6043,7 @@
           "value": -8.02566428672491,
           "qualityStatus": "derived_from_provider_price",
           "firstFetchedAt": "2026-07-14T23:23:44.111Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -6063,7 +6053,7 @@
           "value": -6.434535276630404,
           "qualityStatus": "derived_from_provider_price",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -6073,7 +6063,7 @@
           "value": -7.216945795688323,
           "qualityStatus": "derived_from_provider_price",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -6083,7 +6073,7 @@
           "value": -6.35743213254103,
           "qualityStatus": "derived_from_provider_price",
           "firstFetchedAt": "2026-07-14T23:23:44.111Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -6093,7 +6083,7 @@
           "value": -11.873423478473422,
           "qualityStatus": "derived_from_provider_price",
           "firstFetchedAt": "2026-07-14T23:23:44.111Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -6103,7 +6093,7 @@
           "value": -6.746547158449356,
           "qualityStatus": "derived_from_provider_price",
           "firstFetchedAt": "2026-07-15T13:23:44.715Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -6113,7 +6103,7 @@
           "value": -5.77969515499932,
           "qualityStatus": "derived_from_provider_price",
           "firstFetchedAt": "2026-07-16T00:01:28.790Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -6123,7 +6113,7 @@
           "value": -8.115857377876123,
           "qualityStatus": "derived_from_provider_price",
           "firstFetchedAt": "2026-07-17T02:12:14.526Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -6133,17 +6123,27 @@
           "value": -7.44555178638695,
           "qualityStatus": "derived_from_provider_price",
           "firstFetchedAt": "2026-07-18T02:01:59.561Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
         },
         {
           "observedAt": "2026-07-19T00:00:00.000Z",
-          "value": -7.629800129959063,
-          "qualityStatus": "available",
+          "value": -5.968645695819674,
+          "qualityStatus": "derived_from_provider_price",
           "firstFetchedAt": "2026-07-19T02:12:52.489Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.380Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "sourcePolicyId": "coinmarketcap",
+          "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
+          "dimensions": {}
+        },
+        {
+          "observedAt": "2026-07-20T00:00:00.000Z",
+          "value": -7.838909286179696,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-20T00:14:48.227Z",
+          "lastCheckedAt": "2026-07-20T23:28:28.852Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/",
           "dimensions": {}
@@ -6180,8 +6180,8 @@
           "observedAt": "2026-06-21T00:00:00.000Z",
           "value": 847363,
           "qualityStatus": "official_form_8k",
-          "firstFetchedAt": "2026-07-19T15:31:36.984Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.984Z",
+          "firstFetchedAt": "2026-07-20T23:28:29.000Z",
+          "lastCheckedAt": "2026-07-20T23:28:29.000Z",
           "sourcePolicyId": "strategy-disclosures",
           "sourceUrl": "https://www.strategy.com/press/strategy-increases-its-usd-reserve-to-1-4-billion-and-btc-reserve-to-847363_06-22-2026",
           "dimensions": {
@@ -6222,8 +6222,8 @@
           "observedAt": "2026-06-21T00:00:00.000Z",
           "value": 75651,
           "qualityStatus": "official_form_8k",
-          "firstFetchedAt": "2026-07-19T15:31:36.984Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.984Z",
+          "firstFetchedAt": "2026-07-20T23:28:29.000Z",
+          "lastCheckedAt": "2026-07-20T23:28:29.000Z",
           "sourcePolicyId": "strategy-disclosures",
           "sourceUrl": "https://www.strategy.com/press/strategy-increases-its-usd-reserve-to-1-4-billion-and-btc-reserve-to-847363_06-22-2026",
           "dimensions": {
@@ -6264,8 +6264,8 @@
           "observedAt": "2026-06-28T22:30:00.000Z",
           "value": 5742237,
           "qualityStatus": "mixed_disclosure_dates",
-          "firstFetchedAt": "2026-07-19T15:31:36.984Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.984Z",
+          "firstFetchedAt": "2026-07-20T23:28:29.000Z",
+          "lastCheckedAt": "2026-07-20T23:28:29.000Z",
           "sourcePolicyId": "sec-edgar",
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1829311/000149315226032090/ex99-1.htm",
           "dimensions": {
@@ -6306,14 +6306,2514 @@
           "observedAt": "2026-02-28T00:00:00.000Z",
           "value": 3794.2554072810326,
           "qualityStatus": "official_quarterly_filing_derived",
-          "firstFetchedAt": "2026-07-19T15:31:36.984Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.984Z",
+          "firstFetchedAt": "2026-07-20T23:28:29.000Z",
+          "lastCheckedAt": "2026-07-20T23:28:29.000Z",
           "sourcePolicyId": "sec-edgar",
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1829311/000149315226016560/form10-q.htm",
           "dimensions": {
             "company": "BitMine Immersion Technologies",
             "ticker": "BMNR",
             "asset": "ETH"
+          }
+        }
+      ]
+    },
+    {
+      "metricId": "macro.US10Y.value",
+      "title": {
+        "zh": "美国十年期国债收益率",
+        "en": "U.S. 10-year Treasury yield"
+      },
+      "unit": "percent",
+      "cadence": "daily",
+      "quality": {
+        "missing": "preserve_last_known_good",
+        "stale": "show_with_quality_flag",
+        "revisions": "retain"
+      },
+      "defaultDisplay": {
+        "format": "percent",
+        "precision": 2
+      },
+      "sources": [
+        {
+          "sourcePolicyId": "fred-government",
+          "label": "FRED government-owned series",
+          "attribution": "This product uses the FRED API but is not endorsed or certified by the Federal Reserve Bank of St. Louis.",
+          "termsUrl": "https://fred.stlouisfed.org/docs/api/terms_of_use.html"
+        }
+      ],
+      "observations": [
+        {
+          "observedAt": "2026-01-22T00:00:00.000Z",
+          "value": 4.26,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-01-23T00:00:00.000Z",
+          "value": 4.24,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-01-26T00:00:00.000Z",
+          "value": 4.22,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-01-27T00:00:00.000Z",
+          "value": 4.24,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-01-28T00:00:00.000Z",
+          "value": 4.26,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-01-29T00:00:00.000Z",
+          "value": 4.24,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-01-30T00:00:00.000Z",
+          "value": 4.26,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-02T00:00:00.000Z",
+          "value": 4.29,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-03T00:00:00.000Z",
+          "value": 4.28,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-04T00:00:00.000Z",
+          "value": 4.29,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-05T00:00:00.000Z",
+          "value": 4.21,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-06T00:00:00.000Z",
+          "value": 4.22,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-09T00:00:00.000Z",
+          "value": 4.22,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-10T00:00:00.000Z",
+          "value": 4.16,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-11T00:00:00.000Z",
+          "value": 4.18,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-12T00:00:00.000Z",
+          "value": 4.09,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-13T00:00:00.000Z",
+          "value": 4.04,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-17T00:00:00.000Z",
+          "value": 4.05,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-18T00:00:00.000Z",
+          "value": 4.09,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-19T00:00:00.000Z",
+          "value": 4.08,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-20T00:00:00.000Z",
+          "value": 4.08,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-23T00:00:00.000Z",
+          "value": 4.03,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-24T00:00:00.000Z",
+          "value": 4.04,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-25T00:00:00.000Z",
+          "value": 4.05,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-26T00:00:00.000Z",
+          "value": 4.02,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-27T00:00:00.000Z",
+          "value": 3.97,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-02T00:00:00.000Z",
+          "value": 4.05,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-03T00:00:00.000Z",
+          "value": 4.06,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-04T00:00:00.000Z",
+          "value": 4.09,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-05T00:00:00.000Z",
+          "value": 4.13,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-06T00:00:00.000Z",
+          "value": 4.15,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-09T00:00:00.000Z",
+          "value": 4.12,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-10T00:00:00.000Z",
+          "value": 4.15,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-11T00:00:00.000Z",
+          "value": 4.21,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-12T00:00:00.000Z",
+          "value": 4.27,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-13T00:00:00.000Z",
+          "value": 4.28,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-16T00:00:00.000Z",
+          "value": 4.23,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-17T00:00:00.000Z",
+          "value": 4.2,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-18T00:00:00.000Z",
+          "value": 4.26,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-19T00:00:00.000Z",
+          "value": 4.25,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-20T00:00:00.000Z",
+          "value": 4.39,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-23T00:00:00.000Z",
+          "value": 4.34,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-24T00:00:00.000Z",
+          "value": 4.39,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-25T00:00:00.000Z",
+          "value": 4.33,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-26T00:00:00.000Z",
+          "value": 4.42,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-27T00:00:00.000Z",
+          "value": 4.44,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-30T00:00:00.000Z",
+          "value": 4.35,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-31T00:00:00.000Z",
+          "value": 4.3,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-01T00:00:00.000Z",
+          "value": 4.33,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-02T00:00:00.000Z",
+          "value": 4.31,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-03T00:00:00.000Z",
+          "value": 4.35,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-06T00:00:00.000Z",
+          "value": 4.34,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-07T00:00:00.000Z",
+          "value": 4.33,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-08T00:00:00.000Z",
+          "value": 4.29,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-09T00:00:00.000Z",
+          "value": 4.29,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-10T00:00:00.000Z",
+          "value": 4.31,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-13T00:00:00.000Z",
+          "value": 4.3,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-14T00:00:00.000Z",
+          "value": 4.26,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-15T00:00:00.000Z",
+          "value": 4.29,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-16T00:00:00.000Z",
+          "value": 4.32,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-17T00:00:00.000Z",
+          "value": 4.26,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-20T00:00:00.000Z",
+          "value": 4.26,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-21T00:00:00.000Z",
+          "value": 4.3,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-22T00:00:00.000Z",
+          "value": 4.3,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-23T00:00:00.000Z",
+          "value": 4.34,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-24T00:00:00.000Z",
+          "value": 4.31,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-27T00:00:00.000Z",
+          "value": 4.35,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-28T00:00:00.000Z",
+          "value": 4.36,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-29T00:00:00.000Z",
+          "value": 4.42,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-30T00:00:00.000Z",
+          "value": 4.4,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-01T00:00:00.000Z",
+          "value": 4.39,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-04T00:00:00.000Z",
+          "value": 4.45,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-05T00:00:00.000Z",
+          "value": 4.43,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-06T00:00:00.000Z",
+          "value": 4.36,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-07T00:00:00.000Z",
+          "value": 4.41,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-08T00:00:00.000Z",
+          "value": 4.38,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-11T00:00:00.000Z",
+          "value": 4.42,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-12T00:00:00.000Z",
+          "value": 4.46,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-13T00:00:00.000Z",
+          "value": 4.46,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-14T00:00:00.000Z",
+          "value": 4.47,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-15T00:00:00.000Z",
+          "value": 4.59,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-18T00:00:00.000Z",
+          "value": 4.61,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-19T00:00:00.000Z",
+          "value": 4.67,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-20T00:00:00.000Z",
+          "value": 4.57,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-21T00:00:00.000Z",
+          "value": 4.57,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-22T00:00:00.000Z",
+          "value": 4.56,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-26T00:00:00.000Z",
+          "value": 4.5,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-27T00:00:00.000Z",
+          "value": 4.48,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-28T00:00:00.000Z",
+          "value": 4.45,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-29T00:00:00.000Z",
+          "value": 4.45,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-01T00:00:00.000Z",
+          "value": 4.47,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-02T00:00:00.000Z",
+          "value": 4.46,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-03T00:00:00.000Z",
+          "value": 4.49,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-04T00:00:00.000Z",
+          "value": 4.47,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-05T00:00:00.000Z",
+          "value": 4.55,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-08T00:00:00.000Z",
+          "value": 4.56,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-09T00:00:00.000Z",
+          "value": 4.53,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-10T00:00:00.000Z",
+          "value": 4.55,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-11T00:00:00.000Z",
+          "value": 4.45,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-12T00:00:00.000Z",
+          "value": 4.48,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-15T00:00:00.000Z",
+          "value": 4.47,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-16T00:00:00.000Z",
+          "value": 4.43,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-17T00:00:00.000Z",
+          "value": 4.49,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-18T00:00:00.000Z",
+          "value": 4.46,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-22T00:00:00.000Z",
+          "value": 4.51,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-23T00:00:00.000Z",
+          "value": 4.5,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-24T00:00:00.000Z",
+          "value": 4.41,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-25T00:00:00.000Z",
+          "value": 4.4,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-26T00:00:00.000Z",
+          "value": 4.38,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-29T00:00:00.000Z",
+          "value": 4.38,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-30T00:00:00.000Z",
+          "value": 4.44,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-07-01T00:00:00.000Z",
+          "value": 4.48,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-07-02T00:00:00.000Z",
+          "value": 4.49,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-07-06T00:00:00.000Z",
+          "value": 4.48,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-07-07T00:00:00.000Z",
+          "value": 4.55,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-07-08T00:00:00.000Z",
+          "value": 4.56,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-07-09T00:00:00.000Z",
+          "value": 4.54,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-07-10T00:00:00.000Z",
+          "value": 4.56,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-07-13T00:00:00.000Z",
+          "value": 4.62,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-07-14T00:00:00.000Z",
+          "value": 4.58,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        }
+      ]
+    },
+    {
+      "metricId": "macro.US10Y.realYield",
+      "title": {
+        "zh": "美国十年期实际利率",
+        "en": "U.S. 10-year real yield"
+      },
+      "unit": "percent",
+      "cadence": "daily",
+      "quality": {
+        "missing": "preserve_last_known_good",
+        "stale": "show_with_quality_flag",
+        "revisions": "retain"
+      },
+      "defaultDisplay": {
+        "format": "percent",
+        "precision": 2
+      },
+      "sources": [
+        {
+          "sourcePolicyId": "fred-government",
+          "label": "FRED government-owned series",
+          "attribution": "This product uses the FRED API but is not endorsed or certified by the Federal Reserve Bank of St. Louis.",
+          "termsUrl": "https://fred.stlouisfed.org/docs/api/terms_of_use.html"
+        }
+      ],
+      "observations": [
+        {
+          "observedAt": "2026-01-16T00:00:00.000Z",
+          "value": 1.91,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-01-23T00:00:00.000Z",
+          "value": 1.92,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-01-30T00:00:00.000Z",
+          "value": 1.9,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-06T00:00:00.000Z",
+          "value": 1.88,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-13T00:00:00.000Z",
+          "value": 1.77,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-20T00:00:00.000Z",
+          "value": 1.8,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-27T00:00:00.000Z",
+          "value": 1.72,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-06T00:00:00.000Z",
+          "value": 1.8,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-13T00:00:00.000Z",
+          "value": 1.92,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-20T00:00:00.000Z",
+          "value": 2.01,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-27T00:00:00.000Z",
+          "value": 2.13,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-03T00:00:00.000Z",
+          "value": 1.99,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-10T00:00:00.000Z",
+          "value": 1.95,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-17T00:00:00.000Z",
+          "value": 1.9,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-24T00:00:00.000Z",
+          "value": 1.89,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-01T00:00:00.000Z",
+          "value": 1.91,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-08T00:00:00.000Z",
+          "value": 1.93,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-15T00:00:00.000Z",
+          "value": 2.1,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-22T00:00:00.000Z",
+          "value": 2.16,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-29T00:00:00.000Z",
+          "value": 2.07,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-05T00:00:00.000Z",
+          "value": 2.19,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-12T00:00:00.000Z",
+          "value": 2.17,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-18T00:00:00.000Z",
+          "value": 2.21,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-26T00:00:00.000Z",
+          "value": 2.18,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-07-02T00:00:00.000Z",
+          "value": 2.26,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-07-10T00:00:00.000Z",
+          "value": 2.32,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-07-14T00:00:00.000Z",
+          "value": 2.33,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        }
+      ]
+    },
+    {
+      "metricId": "macro.DXY.value",
+      "title": {
+        "zh": "广义美元指数",
+        "en": "Broad U.S. dollar index"
+      },
+      "unit": "index",
+      "cadence": "daily",
+      "quality": {
+        "missing": "preserve_last_known_good",
+        "stale": "show_with_quality_flag",
+        "revisions": "retain"
+      },
+      "defaultDisplay": {
+        "format": "number",
+        "precision": 2
+      },
+      "sources": [
+        {
+          "sourcePolicyId": "fred-government",
+          "label": "FRED government-owned series",
+          "attribution": "This product uses the FRED API but is not endorsed or certified by the Federal Reserve Bank of St. Louis.",
+          "termsUrl": "https://fred.stlouisfed.org/docs/api/terms_of_use.html"
+        }
+      ],
+      "observations": [
+        {
+          "observedAt": "2026-01-16T00:00:00.000Z",
+          "value": 120.0838,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-01-23T00:00:00.000Z",
+          "value": 118.8976,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-01-30T00:00:00.000Z",
+          "value": 117.8996,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-06T00:00:00.000Z",
+          "value": 118.2407,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-13T00:00:00.000Z",
+          "value": 117.5258,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-20T00:00:00.000Z",
+          "value": 117.9917,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-27T00:00:00.000Z",
+          "value": 117.8223,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-06T00:00:00.000Z",
+          "value": 119.491,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-13T00:00:00.000Z",
+          "value": 120.5518,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-20T00:00:00.000Z",
+          "value": 120.2757,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-27T00:00:00.000Z",
+          "value": 120.8851,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-03T00:00:00.000Z",
+          "value": 120.6565,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-10T00:00:00.000Z",
+          "value": 118.8552,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-17T00:00:00.000Z",
+          "value": 118.0795,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-24T00:00:00.000Z",
+          "value": 118.7294,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-01T00:00:00.000Z",
+          "value": 118.3926,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-08T00:00:00.000Z",
+          "value": 118.0392,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-15T00:00:00.000Z",
+          "value": 119.2825,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-22T00:00:00.000Z",
+          "value": 119.2868,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-29T00:00:00.000Z",
+          "value": 118.8783,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-05T00:00:00.000Z",
+          "value": 120.0831,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-12T00:00:00.000Z",
+          "value": 119.5073,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-18T00:00:00.000Z",
+          "value": 120.3958,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-26T00:00:00.000Z",
+          "value": 120.8866,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-07-02T00:00:00.000Z",
+          "value": 120.6902,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-07-10T00:00:00.000Z",
+          "value": 120.5046,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        }
+      ]
+    },
+    {
+      "metricId": "macro.netLiquidity.usd",
+      "title": {
+        "zh": "美元净流动性",
+        "en": "U.S. dollar net liquidity"
+      },
+      "unit": "USD",
+      "cadence": "weekly",
+      "quality": {
+        "missing": "preserve_last_known_good",
+        "stale": "show_with_quality_flag",
+        "revisions": "retain"
+      },
+      "defaultDisplay": {
+        "format": "compact_currency",
+        "precision": 2
+      },
+      "sources": [
+        {
+          "sourcePolicyId": "fred-government",
+          "label": "FRED government-owned series",
+          "attribution": "This product uses the FRED API but is not endorsed or certified by the Federal Reserve Bank of St. Louis.",
+          "termsUrl": "https://fred.stlouisfed.org/docs/api/terms_of_use.html"
+        }
+      ],
+      "observations": [
+        {
+          "observedAt": "2026-01-14T00:00:00.000Z",
+          "value": 5801303000000,
+          "qualityStatus": "derived_last_known_good",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-01-21T00:00:00.000Z",
+          "value": 5714392000000,
+          "qualityStatus": "derived_official",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-01-28T00:00:00.000Z",
+          "value": 5654897000000,
+          "qualityStatus": "derived_official",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-04T00:00:00.000Z",
+          "value": 5694025000000,
+          "qualityStatus": "derived_official",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-11T00:00:00.000Z",
+          "value": 5706699000000,
+          "qualityStatus": "derived_official",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-18T00:00:00.000Z",
+          "value": 5700172000000,
+          "qualityStatus": "derived_official",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-25T00:00:00.000Z",
+          "value": 5709867000000,
+          "qualityStatus": "derived_official",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-04T00:00:00.000Z",
+          "value": 5795329000000,
+          "qualityStatus": "derived_official",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-11T00:00:00.000Z",
+          "value": 5807731000000,
+          "qualityStatus": "derived_official",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-18T00:00:00.000Z",
+          "value": 5802065000000,
+          "qualityStatus": "derived_official",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-25T00:00:00.000Z",
+          "value": 5782092000000,
+          "qualityStatus": "derived_official",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-01T00:00:00.000Z",
+          "value": 5827299000000,
+          "qualityStatus": "derived_official",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-08T00:00:00.000Z",
+          "value": 5944988000000,
+          "qualityStatus": "derived_official",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-15T00:00:00.000Z",
+          "value": 5954205000000,
+          "qualityStatus": "derived_official",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-22T00:00:00.000Z",
+          "value": 5701369000000,
+          "qualityStatus": "derived_official",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-29T00:00:00.000Z",
+          "value": 5717414000000,
+          "qualityStatus": "derived_official",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-06T00:00:00.000Z",
+          "value": 5830957000000,
+          "qualityStatus": "derived_official",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-13T00:00:00.000Z",
+          "value": 5889271000000,
+          "qualityStatus": "derived_official",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-20T00:00:00.000Z",
+          "value": 5931385000000,
+          "qualityStatus": "derived_official",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-27T00:00:00.000Z",
+          "value": 5862410000000,
+          "qualityStatus": "derived_official",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-03T00:00:00.000Z",
+          "value": 5835021000000,
+          "qualityStatus": "derived_official",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-10T00:00:00.000Z",
+          "value": 5896821000000,
+          "qualityStatus": "derived_official",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-17T00:00:00.000Z",
+          "value": 5855460000000,
+          "qualityStatus": "derived_official",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-24T00:00:00.000Z",
+          "value": 5810523000000,
+          "qualityStatus": "derived_official",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-07-01T00:00:00.000Z",
+          "value": 5842152000000,
+          "qualityStatus": "derived_official",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-07-08T00:00:00.000Z",
+          "value": 5961396000000,
+          "qualityStatus": "derived_last_known_good",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
           }
         }
       ]

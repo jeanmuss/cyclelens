@@ -77,7 +77,7 @@ test("deployment builds only from the reviewed projection artifact", async () =>
   assert.match(source, /build:\s*\n\s+needs: project-public-snapshots/);
   assert.match(source, /name: public-market-snapshot/);
   assert.match(source, /npm --prefix app run build:pages/);
-  assert.match(source, /uses: actions\/deploy-pages@v4/);
+  assert.match(source, /uses: actions\/deploy-pages@v5/);
   assert.doesNotMatch(source, /scripts\/update-market-data\.mjs/);
   assert.match(source, /CMC_REDISTRIBUTION_APPROVED: \$\{\{ vars\.CMC_REDISTRIBUTION_APPROVED \|\| '1' \}\}/);
   assert.match(
@@ -100,4 +100,37 @@ test("versioned snapshots remain isolated on data-cache", async () => {
   );
   assert.doesNotMatch(source, /^\s+git commit -m /m);
   assert.doesNotMatch(source, /^\s+git push\s*$/m);
+});
+
+test("official workflow actions target Node 24 compatible majors", async () => {
+  const names = [
+    "_collect-persist.yml",
+    "_project-public-snapshots.yml",
+    "deploy-pages.yml",
+    "update-market-data.yml",
+    "telegram-morning-brief.yml",
+  ];
+  const source = (await Promise.all(names.map(workflow))).join("\n");
+  assert.doesNotMatch(source, /actions\/checkout@v[1-6]\b/);
+  assert.doesNotMatch(source, /actions\/setup-node@v[1-6]\b/);
+  assert.doesNotMatch(source, /actions\/setup-python@v[1-6]\b/);
+  assert.doesNotMatch(source, /actions\/upload-artifact@v[1-6]\b/);
+  assert.doesNotMatch(source, /actions\/download-artifact@v[1-7]\b/);
+  assert.doesNotMatch(source, /actions\/configure-pages@v[1-5]\b/);
+  assert.doesNotMatch(source, /actions\/upload-pages-artifact@v[1-4]\b/);
+  assert.doesNotMatch(source, /actions\/deploy-pages@v[1-4]\b/);
+});
+
+test("Telegram morning brief is scheduled for Shanghai 07:00 and stays secret-backed", async () => {
+  const source = await workflow("telegram-morning-brief.yml");
+  assert.match(source, /cron: "0 23 \* \* \*"/);
+  assert.match(source, /TELEGRAM_MORNING_BRIEF_ENABLED/);
+  assert.match(source, /secrets\.TELEGRAM_BOT_TOKEN/);
+  assert.match(source, /secrets\.TELEGRAM_CHAT_ID/);
+  assert.match(source, /receipt_artifact: \$\{\{ steps\.render\.outputs\.receipt_artifact \}\}/);
+  assert.match(source, /name: \$\{\{ needs\.render\.outputs\.receipt_artifact \}\}/);
+  assert.match(source, /actions\/artifacts/);
+  assert.match(source, /already_sent/);
+  assert.match(source, /delivery_mode:\s*\n\s+description:[\s\S]*default: dry-run/);
+  assert.doesNotMatch(source, /api\.telegram\.org\/bot[^$\s]/);
 });

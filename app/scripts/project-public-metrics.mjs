@@ -5,7 +5,9 @@ import { fileURLToPath } from "node:url";
 import {
   dedupeMarketMetricRows,
   extractCryptoHistoryRows,
+  extractEquityDashboardRows,
   extractJapanRateRows,
+  extractMacroDashboardRows,
 } from "./market-metric-history-contract.mjs";
 import { validateObservationRows } from "./metric-observation-contract.mjs";
 import {
@@ -35,19 +37,27 @@ async function writeJsonAtomic(path, payload) {
   await rename(temporaryPath, path);
 }
 
-const [crypto, equity] = await Promise.all([
+const [crypto, equity, equityFast, macro] = await Promise.all([
   readJson(resolve(dataDirectory, "crypto-liquidity.json"), {}),
   readJson(resolve(dataDirectory, "equity-weekly.json"), {}),
+  readJson(resolve(dataDirectory, "equity-fast.json"), {}),
+  readJson(resolve(dataDirectory, "macro-calendar.json"), {}),
 ]);
 const generatedAt = [
   crypto?.timestamps?.transformedAt,
   crypto?.generatedAt,
   equity?.timestamps?.transformedAt,
   equity?.generatedAt,
+  equityFast?.timestamps?.transformedAt,
+  equityFast?.generatedAt,
+  macro?.timestamps?.transformedAt,
+  macro?.generatedAt,
 ].filter((value) => Number.isFinite(Date.parse(value))).sort().at(-1) || null;
 const rows = dedupeMarketMetricRows([
   ...extractCryptoHistoryRows(crypto),
   ...extractJapanRateRows(null, equity),
+  ...extractEquityDashboardRows(equity, equityFast),
+  ...extractMacroDashboardRows(macro),
 ]);
 const validation = validateObservationRows(rows);
 const results = [];

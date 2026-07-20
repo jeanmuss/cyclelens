@@ -44,6 +44,7 @@ jobs:
       sosovalue_redistribution_approved: ${{ vars.SOSOVALUE_REDISTRIBUTION_APPROVED == '1' }}
       blockbeats_aux_enabled: ${{ vars.BLOCKBEATS_AUX_ENABLED == '1' }}
       blockbeats_redistribution_approved: ${{ vars.BLOCKBEATS_REDISTRIBUTION_APPROVED == '1' }}
+      fred_third_party_series_approved: ${{ vars.FRED_THIRD_PARTY_SERIES_APPROVED == '1' }}
 
   build:
     needs: project-public-snapshots
@@ -55,13 +56,14 @@ jobs:
       SOSOVALUE_REDISTRIBUTION_APPROVED: ${{ vars.SOSOVALUE_REDISTRIBUTION_APPROVED || '0' }}
       BLOCKBEATS_AUX_ENABLED: ${{ vars.BLOCKBEATS_AUX_ENABLED || '0' }}
       BLOCKBEATS_REDISTRIBUTION_APPROVED: ${{ vars.BLOCKBEATS_REDISTRIBUTION_APPROVED || '0' }}
+      FRED_THIRD_PARTY_SERIES_APPROVED: ${{ vars.FRED_THIRD_PARTY_SERIES_APPROVED || '0' }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
         with:
           name: public-market-snapshot
           path: app
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
@@ -75,8 +77,8 @@ jobs:
           npm --prefix app run verify-market-calendar
       - name: Build static site for GitHub Pages
         run: npm --prefix app run build:pages
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/configure-pages@v6
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: app/dist
 
@@ -88,4 +90,4 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5

@@ -1,15 +1,1483 @@
 {
   "schemaVersion": 1,
-  "catalogVersion": 1,
+  "catalogVersion": 2,
   "projectionId": "us-equity",
-  "generatedAt": "2026-07-19T15:31:44.125Z",
+  "generatedAt": "2026-07-20T23:28:40.993Z",
   "freshness": {
     "observedAt": "2026-07-14T00:00:00.000Z",
-    "firstFetchedAt": "2026-07-15T23:26:57.000Z",
-    "lastCheckedAt": "2026-07-15T23:26:57.000Z",
-    "transformedAt": "2026-07-19T15:31:44.125Z"
+    "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+    "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+    "transformedAt": "2026-07-20T23:28:40.993Z"
   },
   "metrics": [
+    {
+      "metricId": "macro.US10Y.value",
+      "title": {
+        "zh": "美国十年期国债收益率",
+        "en": "U.S. 10-year Treasury yield"
+      },
+      "unit": "percent",
+      "cadence": "daily",
+      "quality": {
+        "missing": "preserve_last_known_good",
+        "stale": "show_with_quality_flag",
+        "revisions": "retain"
+      },
+      "defaultDisplay": {
+        "format": "percent",
+        "precision": 2
+      },
+      "sources": [
+        {
+          "sourcePolicyId": "fred-government",
+          "label": "FRED government-owned series",
+          "attribution": "This product uses the FRED API but is not endorsed or certified by the Federal Reserve Bank of St. Louis.",
+          "termsUrl": "https://fred.stlouisfed.org/docs/api/terms_of_use.html"
+        }
+      ],
+      "observations": [
+        {
+          "observedAt": "2026-01-22T00:00:00.000Z",
+          "value": 4.26,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-01-23T00:00:00.000Z",
+          "value": 4.24,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-01-26T00:00:00.000Z",
+          "value": 4.22,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-01-27T00:00:00.000Z",
+          "value": 4.24,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-01-28T00:00:00.000Z",
+          "value": 4.26,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-01-29T00:00:00.000Z",
+          "value": 4.24,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-01-30T00:00:00.000Z",
+          "value": 4.26,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-02T00:00:00.000Z",
+          "value": 4.29,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-03T00:00:00.000Z",
+          "value": 4.28,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-04T00:00:00.000Z",
+          "value": 4.29,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-05T00:00:00.000Z",
+          "value": 4.21,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-06T00:00:00.000Z",
+          "value": 4.22,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-09T00:00:00.000Z",
+          "value": 4.22,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-10T00:00:00.000Z",
+          "value": 4.16,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-11T00:00:00.000Z",
+          "value": 4.18,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-12T00:00:00.000Z",
+          "value": 4.09,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-13T00:00:00.000Z",
+          "value": 4.04,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-17T00:00:00.000Z",
+          "value": 4.05,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-18T00:00:00.000Z",
+          "value": 4.09,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-19T00:00:00.000Z",
+          "value": 4.08,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-20T00:00:00.000Z",
+          "value": 4.08,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-23T00:00:00.000Z",
+          "value": 4.03,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-24T00:00:00.000Z",
+          "value": 4.04,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-25T00:00:00.000Z",
+          "value": 4.05,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-26T00:00:00.000Z",
+          "value": 4.02,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-02-27T00:00:00.000Z",
+          "value": 3.97,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-02T00:00:00.000Z",
+          "value": 4.05,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-03T00:00:00.000Z",
+          "value": 4.06,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-04T00:00:00.000Z",
+          "value": 4.09,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-05T00:00:00.000Z",
+          "value": 4.13,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-06T00:00:00.000Z",
+          "value": 4.15,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-09T00:00:00.000Z",
+          "value": 4.12,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-10T00:00:00.000Z",
+          "value": 4.15,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-11T00:00:00.000Z",
+          "value": 4.21,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-12T00:00:00.000Z",
+          "value": 4.27,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-13T00:00:00.000Z",
+          "value": 4.28,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-16T00:00:00.000Z",
+          "value": 4.23,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-17T00:00:00.000Z",
+          "value": 4.2,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-18T00:00:00.000Z",
+          "value": 4.26,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-19T00:00:00.000Z",
+          "value": 4.25,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-20T00:00:00.000Z",
+          "value": 4.39,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-23T00:00:00.000Z",
+          "value": 4.34,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-24T00:00:00.000Z",
+          "value": 4.39,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-25T00:00:00.000Z",
+          "value": 4.33,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-26T00:00:00.000Z",
+          "value": 4.42,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-27T00:00:00.000Z",
+          "value": 4.44,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-30T00:00:00.000Z",
+          "value": 4.35,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-03-31T00:00:00.000Z",
+          "value": 4.3,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-01T00:00:00.000Z",
+          "value": 4.33,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-02T00:00:00.000Z",
+          "value": 4.31,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-03T00:00:00.000Z",
+          "value": 4.35,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-06T00:00:00.000Z",
+          "value": 4.34,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-07T00:00:00.000Z",
+          "value": 4.33,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-08T00:00:00.000Z",
+          "value": 4.29,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-09T00:00:00.000Z",
+          "value": 4.29,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-10T00:00:00.000Z",
+          "value": 4.31,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-13T00:00:00.000Z",
+          "value": 4.3,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-14T00:00:00.000Z",
+          "value": 4.26,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-15T00:00:00.000Z",
+          "value": 4.29,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-16T00:00:00.000Z",
+          "value": 4.32,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-17T00:00:00.000Z",
+          "value": 4.26,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-20T00:00:00.000Z",
+          "value": 4.26,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-21T00:00:00.000Z",
+          "value": 4.3,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-22T00:00:00.000Z",
+          "value": 4.3,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-23T00:00:00.000Z",
+          "value": 4.34,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-24T00:00:00.000Z",
+          "value": 4.31,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-27T00:00:00.000Z",
+          "value": 4.35,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-28T00:00:00.000Z",
+          "value": 4.36,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-29T00:00:00.000Z",
+          "value": 4.42,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-04-30T00:00:00.000Z",
+          "value": 4.4,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-01T00:00:00.000Z",
+          "value": 4.39,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-04T00:00:00.000Z",
+          "value": 4.45,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-05T00:00:00.000Z",
+          "value": 4.43,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-06T00:00:00.000Z",
+          "value": 4.36,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-07T00:00:00.000Z",
+          "value": 4.41,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-08T00:00:00.000Z",
+          "value": 4.38,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-11T00:00:00.000Z",
+          "value": 4.42,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-12T00:00:00.000Z",
+          "value": 4.46,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-13T00:00:00.000Z",
+          "value": 4.46,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-14T00:00:00.000Z",
+          "value": 4.47,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-15T00:00:00.000Z",
+          "value": 4.59,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-18T00:00:00.000Z",
+          "value": 4.61,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-19T00:00:00.000Z",
+          "value": 4.67,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-20T00:00:00.000Z",
+          "value": 4.57,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-21T00:00:00.000Z",
+          "value": 4.57,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-22T00:00:00.000Z",
+          "value": 4.56,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-26T00:00:00.000Z",
+          "value": 4.5,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-27T00:00:00.000Z",
+          "value": 4.48,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-28T00:00:00.000Z",
+          "value": 4.45,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-05-29T00:00:00.000Z",
+          "value": 4.45,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-01T00:00:00.000Z",
+          "value": 4.47,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-02T00:00:00.000Z",
+          "value": 4.46,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-03T00:00:00.000Z",
+          "value": 4.49,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-04T00:00:00.000Z",
+          "value": 4.47,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-05T00:00:00.000Z",
+          "value": 4.55,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-08T00:00:00.000Z",
+          "value": 4.56,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-09T00:00:00.000Z",
+          "value": 4.53,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-10T00:00:00.000Z",
+          "value": 4.55,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-11T00:00:00.000Z",
+          "value": 4.45,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-12T00:00:00.000Z",
+          "value": 4.48,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-15T00:00:00.000Z",
+          "value": 4.47,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-16T00:00:00.000Z",
+          "value": 4.43,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-17T00:00:00.000Z",
+          "value": 4.49,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-18T00:00:00.000Z",
+          "value": 4.46,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-22T00:00:00.000Z",
+          "value": 4.51,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-23T00:00:00.000Z",
+          "value": 4.5,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-24T00:00:00.000Z",
+          "value": 4.41,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-25T00:00:00.000Z",
+          "value": 4.4,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-26T00:00:00.000Z",
+          "value": 4.38,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-29T00:00:00.000Z",
+          "value": 4.38,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-06-30T00:00:00.000Z",
+          "value": 4.44,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-07-01T00:00:00.000Z",
+          "value": 4.48,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-07-02T00:00:00.000Z",
+          "value": 4.49,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-07-06T00:00:00.000Z",
+          "value": 4.48,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-07-07T00:00:00.000Z",
+          "value": 4.55,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-07-08T00:00:00.000Z",
+          "value": 4.56,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-07-09T00:00:00.000Z",
+          "value": 4.54,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-07-10T00:00:00.000Z",
+          "value": 4.56,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-07-13T00:00:00.000Z",
+          "value": 4.62,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:26:57.000Z",
+          "lastCheckedAt": "2026-07-15T23:26:57.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        },
+        {
+          "observedAt": "2026-07-14T00:00:00.000Z",
+          "value": 4.58,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-15T23:27:07.000Z",
+          "lastCheckedAt": "2026-07-15T23:27:07.000Z",
+          "sourcePolicyId": "fred-government",
+          "sourceUrl": "https://fred.stlouisfed.org/docs/api/fred/",
+          "dimensions": {
+            "country": "US"
+          }
+        }
+      ]
+    },
     {
       "metricId": "macro.JGB10Y.value",
       "title": {

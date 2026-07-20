@@ -30,6 +30,7 @@
     "persist-market-history": "node scripts/persist-market-metric-history.mjs",
     "project-public-data": "node scripts/project-public-metrics.mjs",
     "generate-data-manifest": "node scripts/generate-data-manifest.mjs",
+    "render:telegram-brief": "node scripts/render-telegram-morning-brief.mjs",
     "verify-market-calendar": "node scripts/verify-market-session-calendar.mjs"
   },
   "dependencies": {

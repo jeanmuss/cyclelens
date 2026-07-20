@@ -18,6 +18,9 @@ on:
       blockbeats_redistribution_approved:
         type: boolean
         default: false
+      fred_third_party_series_approved:
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -26,12 +29,12 @@ jobs:
   project-public-snapshots:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
       - name: Download collected build input
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: collected-market-data
           path: app
@@ -43,6 +46,7 @@ jobs:
           SOSOVALUE_REDISTRIBUTION_APPROVED: ${{ inputs.sosovalue_redistribution_approved && '1' || '0' }}
           BLOCKBEATS_AUX_ENABLED: ${{ inputs.blockbeats_aux_enabled && '1' || '0' }}
           BLOCKBEATS_REDISTRIBUTION_APPROVED: ${{ inputs.blockbeats_redistribution_approved && '1' || '0' }}
+          FRED_THIRD_PARTY_SERIES_APPROVED: ${{ inputs.fred_third_party_series_approved && '1' || '0' }}
         run: node scripts/project-public-metrics.mjs
       - name: Verify projection contracts and build the public manifest
         working-directory: app
@@ -50,7 +54,7 @@ jobs:
           node --test test/metricPipeline.test.mjs test/dataManifest.test.mjs
           node scripts/generate-data-manifest.mjs
       - name: Upload reviewed public snapshot
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: public-market-snapshot
           path: |

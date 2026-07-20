@@ -3,7 +3,9 @@ import { defineMetricAdapter } from "./metric-adapter-contract.mjs";
 import {
   dedupeMarketMetricRows,
   extractCryptoHistoryRows,
+  extractEquityDashboardRows,
   extractJapanRateRows,
+  extractMacroDashboardRows,
   hydrateCryptoDatasetFromRows,
   selectIncrementalObservationRows,
 } from "./market-metric-history-contract.mjs";
@@ -30,11 +32,20 @@ export function createMarketHistoryAdapter(dependencies) {
         input.latestJgb,
         { initialBackfillDays: 400, overlapDays: 14 },
       );
+      const equityDashboardRows = extractEquityDashboardRows(input.equity, input.equityFast);
+      const macroDashboardRows = extractMacroDashboardRows(input.macro);
       return {
         ...input,
         cryptoRows,
         japanRows,
-        rows: dedupeMarketMetricRows([...cryptoRows, ...japanRows]),
+        equityDashboardRows,
+        macroDashboardRows,
+        rows: dedupeMarketMetricRows([
+          ...cryptoRows,
+          ...japanRows,
+          ...equityDashboardRows,
+          ...macroDashboardRows,
+        ]),
       };
     },
     async validate(input) {
@@ -60,6 +71,8 @@ export function createMarketHistoryAdapter(dependencies) {
         persistedRows: input.rows.length,
         cryptoRows: input.cryptoRows.length,
         japanRows: input.japanRows.length,
+        equityDashboardRows: input.equityDashboardRows.length,
+        macroDashboardRows: input.macroDashboardRows.length,
         databaseRows: hydrationRows.length,
         rejectedRows: input.rejectedRows.length + input.databaseRejectedRows.length,
         metricIds: [...new Set(input.rows.map((item) => item.metric_id))]

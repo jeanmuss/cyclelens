@@ -1,0 +1,119 @@
+name: Telegram morning brief
+
+on:
+  schedule:
+    # GitHub cron is UTC. 23:00 UTC is 07:00 the next day in Asia/Shanghai.
+    - cron: "0 23 * * *"
+  workflow_dispatch:
+    inputs:
+      delivery_mode:
+        description: Render only, or send after the idempotency check
+        type: choice
+        required: true
+        default: dry-run
+        options:
+          - dry-run
+          - send
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: telegram-morning-brief
+  cancel-in-progress: false
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    outputs:
+      delivery_key: ${{ steps.render.outputs.delivery_key }}
+      receipt_artifact: ${{ steps.render.outputs.receipt_artifact }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Restore the reviewed data-cache baseline
+        shell: bash
+        run: |
+          git fetch --no-tags origin data-cache:refs/remotes/origin/data-cache
+          git restore --source=refs/remotes/origin/data-cache -- app/public/data app/data/manual-macro-events.json
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          package-manager-cache: false
+      - name: Project the same reviewed data used by the homepage
+        working-directory: app
+        env:
+          CMC_REDISTRIBUTION_APPROVED: ${{ vars.CMC_REDISTRIBUTION_APPROVED || '1' }}
+          DEFILLAMA_REDISTRIBUTION_APPROVED: ${{ vars.DEFILLAMA_REDISTRIBUTION_APPROVED || '0' }}
+          SOSOVALUE_REDISTRIBUTION_APPROVED: ${{ vars.SOSOVALUE_REDISTRIBUTION_APPROVED || '0' }}
+          BLOCKBEATS_AUX_ENABLED: ${{ vars.BLOCKBEATS_AUX_ENABLED || '0' }}
+          BLOCKBEATS_REDISTRIBUTION_APPROVED: ${{ vars.BLOCKBEATS_REDISTRIBUTION_APPROVED || '0' }}
+          FRED_THIRD_PARTY_SERIES_APPROVED: ${{ vars.FRED_THIRD_PARTY_SERIES_APPROVED || '0' }}
+        run: node scripts/project-public-metrics.mjs
+      - name: Verify and render the versioned report contract
+        id: render
+        working-directory: app
+        run: |
+          node --test test/telegramMorningBrief.test.mjs test/metricPipeline.test.mjs
+          node scripts/render-telegram-morning-brief.mjs
+      - name: Upload the dry-run snapshot
+        uses: actions/upload-artifact@v7
+        with:
+          name: telegram-morning-brief-preview-${{ github.run_id }}
+          path: app/.artifacts/telegram-morning-brief
+          if-no-files-found: error
+          retention-days: 7
+
+  send:
+    needs: render
+    if: >-
+      needs.render.result == 'success' &&
+      ((github.event_name == 'schedule' && vars.TELEGRAM_MORNING_BRIEF_ENABLED == '1') ||
+      (github.event_name == 'workflow_dispatch' && inputs.delivery_mode == 'send'))
+    runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ needs.render.outputs.delivery_key }}
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          package-manager-cache: false
+      - name: Download the reviewed report snapshot
+        uses: actions/download-artifact@v8
+        with:
+          name: telegram-morning-brief-preview-${{ github.run_id }}
+          path: app/.artifacts/telegram-morning-brief
+      - name: Check the durable delivery receipt
+        id: idempotency
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RECEIPT_ARTIFACT: ${{ needs.render.outputs.receipt_artifact }}
+        run: |
+          count="$(gh api --method GET "repos/$GITHUB_REPOSITORY/actions/artifacts" -f name="$RECEIPT_ARTIFACT" --jq '[.artifacts[] | select(.expired == false)] | length')"
+          if [ "$count" -gt 0 ]; then
+            echo "already_sent=true" >> "$GITHUB_OUTPUT"
+            echo "A redacted receipt already exists; skipping duplicate delivery."
+          else
+            echo "already_sent=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Send through the official Telegram Bot API
+        id: send
+        if: steps.idempotency.outputs.already_sent != 'true'
+        working-directory: app
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: node scripts/send-telegram-morning-brief.mjs
+      - name: Save the redacted idempotency receipt
+        if: steps.idempotency.outputs.already_sent != 'true' && steps.send.outcome == 'success'
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ needs.render.outputs.receipt_artifact }}
+          path: app/.artifacts/telegram-morning-brief/receipt.json
+          if-no-files-found: error
+          retention-days: 90

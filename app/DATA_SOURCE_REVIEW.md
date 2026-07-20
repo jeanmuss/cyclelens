@@ -34,6 +34,7 @@ Exchange price and volume can support a separate future stablecoin depeg/liquidi
 ## Operational rules
 
 - Provider credentials exist only in ignored local environment files or deployment secret stores. Approval variables are non-secret policy flags.
+- The Phase 9 homepage coverage and per-metric decisions are recorded in `docs/data/HOMEPAGE_PHASE9_METRICS.md`. Blocked legacy U.S. equity rows may be normalized for audit, but validation rejects them before persistence and public projection; their reserved homepage cells stay `N/A`.
 - A fetch failure cannot replace or empty the last-known-good files. Collection starts from `data-cache` (or the checked-in baseline), and publication occurs only after projection contract tests pass.
 - Public projections contain only catalog fields, allowlisted dimensions, bounded observations, provider attribution, source links without query strings, and separate observed/fetched/checked/transformed timestamps.
 - FRED-backed public features must display: “This product uses the FRED® API but is not endorsed or certified by the Federal Reserve Bank of St. Louis.” Third-party copyrighted series remain disabled until separately approved.

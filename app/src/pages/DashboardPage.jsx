@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { freshnessLabel } from "../data.js";
 import {
@@ -38,12 +38,16 @@ const COPY = Object.freeze({
     partial: "部分指标尚未发布",
     customize: "本设备布局",
     customizeHint: "显示状态与顺序只保存在此浏览器，不会上传。",
+    openCustomize: "打开本设备布局",
+    closeCustomize: "关闭本设备布局",
     show: "显示",
     moveUp: "上移",
     moveDown: "下移",
     reset: "恢复默认布局",
     empty: "所有卡片都已隐藏。可在右侧重新显示，或恢复默认布局。",
     metrics: "项指标",
+    dayChange: "日",
+    weekChange: "周",
     updated: "观测更新",
     quality: "质量",
     qualityAvailable: "官方或可用",
@@ -67,12 +71,16 @@ const COPY = Object.freeze({
     partial: "Some metrics are not published",
     customize: "Layout on this device",
     customizeHint: "Visibility and order stay in this browser and are never uploaded.",
+    openCustomize: "Open device layout",
+    closeCustomize: "Close device layout",
     show: "Show",
     moveUp: "Move up",
     moveDown: "Move down",
     reset: "Restore default layout",
     empty: "Every card is hidden. Show one from the controls or restore the default layout.",
     metrics: "metrics",
+    dayChange: "Day",
+    weekChange: "Week",
     updated: "Observed",
     quality: "Quality",
     qualityAvailable: "Official or available",
@@ -94,10 +102,15 @@ export function DashboardPage({ language, setLanguage, t }) {
   const copy = COPY[language];
   const { data, error, loading, freshness } = useLiveData(DASHBOARD_LIVE_DATA);
   const [layout, setLayout] = useState(readDashboardLayoutPreference);
+  const [customizerOpen, setCustomizerOpen] = useState(false);
+  const customizerOpenButtonRef = useRef(null);
+  const customizerCloseButtonRef = useRef(null);
   const projection = data.dashboardProjection;
   const metricMap = dashboardMetricMap(projection);
   const orderedWidgets = layout.order.map((id) => DASHBOARD_WIDGET_REGISTRY_BY_ID[id]).filter(Boolean);
   const visibleWidgets = orderedWidgets.filter((definition) => !layout.hidden.includes(definition.id));
+  const visibleMetricCount = visibleWidgets.reduce((count, definition) => count + definition.metricIds.length, 0);
+  const totalMetricCount = orderedWidgets.reduce((count, definition) => count + definition.metricIds.length, 0);
   const missingCount = projection ? missingDashboardMetricCount(projection, DASHBOARD_WIDGET_REGISTRY) : 0;
   const freshnessItems = projection ? [buildFreshnessItem(
     language === "en" ? "Dashboard projection" : "首页公开投影",
@@ -109,6 +122,19 @@ export function DashboardPage({ language, setLanguage, t }) {
     setLayout(nextLayout);
     writeDashboardLayoutPreference(nextLayout);
   };
+
+  useEffect(() => {
+    if (!customizerOpen) return undefined;
+    customizerCloseButtonRef.current?.focus();
+    const closeOnEscape = (event) => {
+      if (event.key === "Escape") {
+        setCustomizerOpen(false);
+        customizerOpenButtonRef.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [customizerOpen]);
 
   return (
     <main className="app-page dashboard-page">
@@ -125,15 +151,28 @@ export function DashboardPage({ language, setLanguage, t }) {
           {projection ? (
             <strong className={missingCount ? "macro-flat" : "macro-up"}>{missingCount ? copy.partial : copy.available}</strong>
           ) : null}
-          <small>{projection ? freshnessLabel(projection.freshness?.observedAt, language) : copy.loading}</small>
+          <small>{projection
+            ? freshnessLabel(projection.freshness?.observedAt, language)
+            : error ? copy.unavailable : copy.loading}</small>
         </div>
       </header>
 
       {freshnessItems.length ? <DataFreshnessSummary items={freshnessItems} language={language} t={t} /> : null}
 
+      <div className="dashboard-toolbar">
+        <span>{visibleMetricCount} / {totalMetricCount} {copy.metrics}</span>
+        <button
+          ref={customizerOpenButtonRef}
+          type="button"
+          aria-controls="dashboard-customizer"
+          aria-expanded={customizerOpen}
+          onClick={() => setCustomizerOpen(true)}
+        >{copy.openCustomize}</button>
+      </div>
+
       <div className="dashboard-layout">
         <section className="dashboard-board" aria-label={copy.title}>
-          {loading && !projection ? <DataState variant="loading"><p>{copy.loading}</p></DataState> : null}
+          {!error && loading && !projection ? <DataState variant="loading"><p>{copy.loading}</p></DataState> : null}
           {error && !projection ? <DataState variant="error"><p>{copy.unavailable}</p></DataState> : null}
           {projection && !visibleWidgets.length ? <DataState variant="empty"><p>{copy.empty}</p></DataState> : null}
           {projection ? visibleWidgets.map((definition) => {
@@ -142,10 +181,16 @@ export function DashboardPage({ language, setLanguage, t }) {
           }) : null}
         </section>
 
-        <aside className="dashboard-customizer" aria-label={copy.customize}>
+      </div>
+
+      {customizerOpen ? <button className="dashboard-customizer-backdrop" type="button" aria-label={copy.closeCustomize} onClick={() => { setCustomizerOpen(false); customizerOpenButtonRef.current?.focus(); }} /> : null}
+      <aside id="dashboard-customizer" className="dashboard-customizer" role="dialog" aria-label={copy.customize} hidden={!customizerOpen}>
           <header>
             <div><p>LOCAL PREFERENCE</p><h2>{copy.customize}</h2></div>
-            <button type="button" onClick={scrollToDataNotes}>{copy.dataNotes}</button>
+            <div className="dashboard-customizer-actions">
+              <button type="button" onClick={() => { setCustomizerOpen(false); scrollToDataNotes(); }}>{copy.dataNotes}</button>
+              <button ref={customizerCloseButtonRef} type="button" aria-label={copy.closeCustomize} onClick={() => { setCustomizerOpen(false); customizerOpenButtonRef.current?.focus(); }}>×</button>
+            </div>
           </header>
           <p>{copy.customizeHint}</p>
           <ol>
@@ -180,8 +225,7 @@ export function DashboardPage({ language, setLanguage, t }) {
             })}
           </ol>
           <button className="dashboard-reset" type="button" onClick={() => applyLayout(DEFAULT_DASHBOARD_LAYOUT)}>{copy.reset}</button>
-        </aside>
-      </div>
+      </aside>
 
       {projection ? (
         <div id="dashboard-data-notes">

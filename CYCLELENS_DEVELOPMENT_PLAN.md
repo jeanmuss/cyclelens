@@ -1,6 +1,6 @@
 # CycleLens 开发与迁移计划
 
-更新日期：2026-07-19
+更新日期：2026-07-20
 
 目标仓库：`jeanmuss/cyclelens`
 
@@ -284,13 +284,13 @@ app/src/
 
 ### Phase 7：固定 Telegram 每日早报
 
-- [ ] 保持匿名浏览和设备本地首页定制，不将登录变成公共阅读门槛。
-- [ ] 不建设用户账号、跨设备同步、用户自定义阈值、频道绑定或 WeChat 通知，不创建对应用户表。
-- [ ] 定义版本化早报 contract：指标清单由产品统一维护，每项带观测时间、新鲜度、质量和来源；缺失值明确显示 N/A，不补零、不拿旧值冒充当日值。
-- [ ] 上海时间每日 07:00 由服务端/CI 定时任务生成并发送一份 Telegram 卡片式早报，不依赖浏览器在线状态。
-- [ ] Telegram bot token 与目标 chat/channel 标识只保存于部署 Secret Store；不进入前端、仓库、构建产物、日志或对话。
-- [ ] 使用“上海日期 + contract 版本”作为幂等键，定义安全重试、超时、Telegram 频率限制和脱敏发送日志，避免同一早报重复推送。
-- [ ] 先提供 dry-run/渲染快照测试，再启用真实发送；真实启用前由用户在 Telegram 侧创建 bot、将其加入目标频道并通过安全配置路径录入 secret。
+- [x] 保持匿名浏览和设备本地首页定制，不将登录变成公共阅读门槛。（早报完全由 CI 消费静态 dashboard projection，未修改公共页面或本地偏好。）
+- [x] 不建设用户账号、跨设备同步、用户自定义阈值、频道绑定或 WeChat 通知，不创建对应用户表。
+- [x] 定义版本化早报 contract：指标清单由产品统一维护，每项带观测时间、新鲜度、质量和来源；缺失值明确显示 N/A，不补零、不拿旧值冒充当日值。（v1 固定为当前首页 8 组/25 项。）
+- [ ] 上海时间每日 07:00 由服务端/CI 定时任务生成并发送一份 Telegram 卡片式早报，不依赖浏览器在线状态。（`0 23 * * *` CI 调度与发送 job 已实现；真实发送保持关闭，等待 Telegram 侧配置和一次人工验收。）
+- [ ] Telegram bot token 与目标 chat/channel 标识只保存于部署 Secret Store；不进入前端、仓库、构建产物、日志或对话。（workflow 只引用 `TELEGRAM_BOT_TOKEN`/`TELEGRAM_CHAT_ID` Secret 名称，值尚未录入。）
+- [x] 使用“上海日期 + contract 版本”作为幂等键，定义安全重试、超时、Telegram 频率限制和脱敏发送日志，避免同一早报重复推送。（同键并发锁 + 90 天脱敏 receipt；仅对明确 429 安全重试一次，超时/5xx 不自动重试。）
+- [ ] 先提供 dry-run/渲染快照测试，再启用真实发送；真实启用前由用户在 Telegram 侧创建 bot、将其加入目标频道并通过安全配置路径录入 secret。（本地与 GitHub Actions dry-run 均通过，模板 artifact 已生成且发送 job 跳过；待 Telegram 侧配置、模板确认和真实单次发送。）
 
 验收：匿名体验不退化；仓库和前端不存在 Telegram 凭据；07:00 调度、跨日边界、N/A、新鲜度、幂等与失败重试有确定性测试；真实频道仅收到一份经人工确认模板的早报。
 
@@ -301,10 +301,10 @@ app/src/
 - [x] 首次推送前先阻止未配置的新仓库工作流自动执行；待 Secrets、Variables、Environment 和最小 Actions 权限配置完成后再启用定时采集与 Pages 部署。（首次推送前已禁用 Actions；2026-07-19 配置完成后才以 GitHub-owned-only 策略启用。）
 - [x] 迁移或重新生成 `data-cache` 分支，不把旧临时缓存和本地环境文件带入新仓库。（从已审计的 `26ba446` 基线新建，首次完整数据工作流成功验证持久快照发布路径。）
 - [x] 在新仓库中逐项重新配置 Secrets、Variables、Pages Environment 和 Actions 权限。（Secret 只核对名称；Variables 逐项核对值；`github-pages` 仅允许 `main`，默认 `GITHUB_TOKEN` 只读且不能批准 PR。）
-- [ ] 启用 GitHub Pages，验证 `https://jeanmuss.github.io/cyclelens/` 的 base path、刷新、hash 路由和 JSON 加载。（Pages 已启用；入口、`/cyclelens/` 静态资源 base、manifest 与 dashboard JSON 的 HTTP 200 已验证，刷新与 hash 路由留待下一批真实浏览器验收。）
-- [ ] 对全部页面执行桌面和移动端 smoke test，并检查数据新鲜度、失败回退和可访问性。
-- [ ] 新远端推送并验证成功后，将 `jeanmuss/cyclelens` 克隆到 `C:\Users\hovyf\Documents\cyclelens`，再把 Codex 项目/后续开发窗口切换到该目录；不要直接在活动任务中重命名旧工作目录。
-- [ ] 新站完成生产 smoke test 后，停止旧 `cycle-map` 的所有定时 Actions 并取消发布旧 GitHub Pages，避免继续消耗运行资源或形成双写；在旧 README/description 指向新项目后归档旧仓库。需要回滚时可临时解除归档并重新启用部署，而不是让两套定时任务长期并行。
+- [x] 启用 GitHub Pages，验证 `https://jeanmuss.github.io/cyclelens/` 的 base path、刷新、hash 路由和 JSON 加载。（2026-07-20 已在真实 Chrome 中验证入口、`/cyclelens/` 资源 base、全部 hash 路由刷新保持及各页必需 JSON 加载。）
+- [x] 对全部页面执行桌面和移动端 smoke test，并检查数据新鲜度、失败回退和可访问性。（8 个路由 × 2 个视口全部通过；烟测发现并修复首页错误态与加载态重叠，生产 503 模拟和恢复复测通过。）
+- [x] 新远端推送并验证成功后，将 `jeanmuss/cyclelens` 克隆到 `C:\Users\hovyf\Documents\cyclelens`，再把 Codex 项目/后续开发窗口切换到该目录；不要直接在活动任务中重命名旧工作目录。（目标目录已独立克隆并验证 `main`、`data-cache`、remote 与对象完整性；本任务只在旧目录完成最后记录，Phase 9 起使用新目录。）
+- [x] 新站完成生产 smoke test 后，停止旧 `cycle-map` 的所有定时 Actions 并取消发布旧 GitHub Pages，避免继续消耗运行资源或形成双写；在旧 README/description 指向新项目后归档旧仓库。需要回滚时可临时解除归档并重新启用部署，而不是让两套定时任务长期并行。（旧 README/description 已指向 CycleLens，Actions 已关闭，Pages 已删除并返回 404，仓库已归档只读。）
 
 本机连接记录（2026-07-18）：GitHub App 已确认当前账号对新仓库拥有管理员与推送权限；公开仓库的只读 Git 连接可用。Windows Git 默认 `schannel` 出现 `SEC_E_NO_CREDENTIALS`，使用单次 `git -c http.sslBackend=openssl ...` 可连接；实际推送前仍需刷新本机 GitHub CLI/凭据管理器认证，不要把 token 写入命令、文件或对话。
 
@@ -324,24 +324,47 @@ app/src/
 
 执行记录（2026-07-19，Phase 8 首次 CI 与 Pages 上线批次）：
 
-- 完成内容：从当前公开且已审计的 `26ba446` 初始化新仓库 `data-cache`，没有迁移旧缓存分支或本地环境文件；创建 workflow 模式 GitHub Pages 和 `github-pages` Environment，并将部署分支限制为 `main`；仓库 Actions 仅允许 GitHub 官方 `actions/*`，默认 `GITHUB_TOKEN` 为只读且不能批准 PR，各 workflow 继续按 job 显式申请最小写权限；保留此前只按名称录入的三个 Secret 和十个显式来源 Variables。旧 `cycle-map` Pages/Actions 本批未停用。
-- 验证结果：首次手动 `Update market caches` run `29692566692` 成功，完整通过加密流动性更新、Supabase 手工事件同步、必需市场历史持久化、公开投影合同和 `data-cache` 发布，真实验证了 CMC 与显示名为 `cyclelens_github_actions` 的独立 Supabase 后端 key；首次 `Deploy GitHub Pages` run `29692615554` 成功，通过同一采集/持久化边界、source lint、159/159 测试、官方市场日历、生产构建和 Pages deploy；`https://jeanmuss.github.io/cyclelens/`、data manifest、dashboard projection 以及带 `/cyclelens/` base 的 JS/CSS 均返回 HTTP 200。初始化后生成数据与已审计基线相同，因此 `data-cache` 保持同一 SHA，没有产生空变更提交。本地 `npm run check` 同样通过（159/159 测试、官方美/韩/中市场日历、三份公开投影与生产构建），`git diff --check` 通过。
+- 完成内容：从当前公开且已审计的 `26ba446` 初始化新仓库 `data-cache`，没有迁移旧缓存分支或本地环境文件；创建 workflow 模式 GitHub Pages 和 `github-pages` Environment，并将部署分支限制为 `main`；仓库 Actions 仅允许 GitHub 官方 `actions/*`，默认 `GITHUB_TOKEN` 为只读且不能批准 PR，各 workflow 继续按 job 显式申请最小写权限；保留此前只按名称录入的三个 Secret 和十个显式来源 Variables。首轮运行后继续审计 artifact，发现 upload-artifact 以 `app/` 为共同根、而三个 download 步骤错误解压到仓库根，导致生成的根级 `public/`/`data/` 未被后续 `app/*` 消费；提交 `a47022a` 将采集输入、公开投影构建输入和 `data-cache` 发布输入全部恢复到 `app/`，并增加三项路径回归断言。旧 `cycle-map` Pages/Actions 本批未停用。
+- 验证结果：首轮 `Update market caches` run `29692566692` 已真实通过 CMC 刷新、Supabase 手工事件同步和必需市场历史持久化（写入 1,839 行），但因上述 artifact 路径缺陷，不作为公开投影/`data-cache` 验收依据；首轮 `Deploy GitHub Pages` run `29692615554` 同理只证明旧基线可构建。修复后 push 触发的 Pages run `29692945866` 完整通过采集、持久化、投影合同、source lint、159/159 测试、官方市场日历、生产构建和部署；线上 `crypto-liquidity.json` 的转换时间更新为 `2026-07-19T15:29:48.424Z`（本地旧基线为 `2026-07-16T08:49:09.863Z`），manifest 生成时间为 `2026-07-19T15:30:17.301Z` 且含 12 个数据集，入口、dashboard projection 以及带 `/cyclelens/` base 的 JS/CSS 均返回 HTTP 200。修复后的 `Update market caches` run `29693011142` 成功并生成 `data-cache` 提交 `271137a`，分支内加密流动性转换时间为 `2026-07-19T15:31:44.125Z`，证明新快照已写入正确路径。本地 workflow 定向测试 6/6 与 `npm run check` 均通过（159/159 测试、官方美/韩/中市场日历、三份公开投影与生产构建），`git diff --check` 通过。
 - 剩余风险：尚未在真实浏览器中验证全部 hash 路由、刷新、桌面/移动端布局、键盘可达性、失败回退与数据新鲜度；旧站仍在运行，不能提前停用。GitHub 运行器提示若干官方 Action 仍声明 Node 20 runtime 并被强制切换到 Node 24；当前执行成功，但应另批升级受影响的 Action major 并评估改为不可变 SHA。`SEC_USER_AGENT` 仍未配置，BitMine SEC 持仓自动刷新继续保留已审核数据而不拉取新披露。
 - 下一步：对新 Pages 的全部公开页面执行桌面和移动端真实浏览器 smoke test，覆盖 hash 切换/刷新、JSON 加载、数据状态、控制台、键盘与基础可访问性；通过后再克隆到 `C:\Users\hovyf\Documents\cyclelens`，最后停用旧仓库定时 Actions/Pages、更新指向并归档旧仓库。
+
+执行记录（2026-07-20，Phase 8 生产验收与旧站退役批次）：
+
+- 完成内容：在 GitHub Pages 上用真实 Chrome 覆盖首页、加密周期、加密流动性、宏观日历、美股大盘、开市轮动、芯片链和机器人链的桌面/移动端；检查 hash 刷新、页面身份、必需 JSON、加载/错误状态、横向溢出、首个 Tab 焦点、控制台和网络错误。强制 `data-manifest.json` 与 `dashboard.json` 返回 503 时发现首页同时展示错误态与加载态，提交 `d7610ab` 使错误态优先并增加回归断言；生产重新部署后复测正常、503 和全新上下文恢复三种状态。将新仓库克隆到 `C:\Users\hovyf\Documents\cyclelens`。旧仓库通过提交 `f75f3a8` 在 README 顶部保留迁移告示，并更新 description/homepage；随后关闭仓库 Actions、删除 Pages、归档为只读。
+- 验证结果：生产正常路径 8 路由 × 2 视口全部具有唯一 `main`/`h1`/导航，必需 JSON 返回 200，桌面刷新保持对应 hash（允许页面附加默认查询参数），无未结束加载态、错误态、告警、横向溢出、控制台 warning/error、页面异常、失败请求或 4xx/5xx；首个 Tab 均落在有名称的“首页看板”链接。首页数据新鲜度链同时展示源观测、抓取/转换/部署和客户端检查时间。503 模拟结果为 1 个错误态、0 个加载态、0 个指标组件，且未伪造数值；新上下文恢复后 6 个组件可见，两份首页 JSON 均为 200。`d7610ab` 的 Pages run `29709212092` 首次在 `configure-pages` 步骤失败，期间 GitHub REST 多次返回瞬时 503；同一 run 的第 2 次尝试成功。生产切换前已有 15 次跨夜定时 Pages 运行连续成功；结束时新仓库 Actions 为 enabled + selected、Pages 为 workflow 模式且新站 HTTP 200。新克隆初始 HEAD 为 `d7610ab`，工作树干净，`origin/main`、`origin/data-cache` 和 `git fsck` 均通过。旧仓库 Actions 为 `enabled:false`、Pages API 与旧网址均返回 404、仓库 `isArchived:true`；Cloudflare 管理端仍返回 Access 302，Supabase 未做修改。
+- 剩余风险：GitHub API 在本批出现多次瞬时 503，但所有关键终态均已通过独立读取或 HTTP 请求复核。官方 Action 的 Node 20 runtime 提示和 `sha_pinning_required:false` 仍需后续依赖治理；`SEC_USER_AGENT` 未配置，BitMine SEC 自动刷新继续保留已审核数据。Phase 5 仍按产品决定暂停，Phase 7 固定早报与 Phase 9 首页扩展尚未开始，不影响 Phase 8 完成。
+- 下一步：从 `C:\Users\hovyf\Documents\cyclelens` 进入 Phase 9，先确定首页跨市场信息架构和经许可审核的美股大盘候选指标；指标池稳定后再进入 Phase 7 固定 Telegram 早报。A 股页面继续等待信源与许可结论。
 
 验收：新站数据和定时任务稳定运行；旧站 Pages 不再公开、旧定时 Actions 不再触发且仓库已只读归档；当前复用的 Supabase 与 `cyclelens-admin` 保持正常；没有在迁移日志、构建产物或仓库中泄露密钥。
 
 ### Phase 9：首页跨市场指标扩展
 
-- [ ] 将当前 6 张卡片/13 个默认依赖标记为首页第一版基线，而不是完整指标清单；保留现有设备本地布局 schema 的向前兼容迁移。
-- [ ] 先确定首页信息架构与默认密度，至少评估“美股大盘/市场广度、全球利率与美元流动性、加密市场与稳定币、企业财库”四个分组；A 股继续引用暂停文档，不在本阶段偷跑实现。
-- [ ] 为美股大盘建立候选指标清单和产品优先级，再逐项审核官方性、免费额度、公开展示/缓存/署名许可、刷新频率和 last-known-good 行为；未通过审核的指标不得进入公开投影。
-- [ ] 新指标继续进入统一 `metric_catalog`、历史事实表和按页面裁剪的 dashboard projection；浏览器只读取静态投影，不直连行情供应商。
-- [ ] widget registry 支持新增跨市场卡片、默认位置、显示/隐藏、排序和旧偏好迁移；缺失或休市数据保留 N/A、观测时间、新鲜度与质量说明。
-- [ ] 桌面与移动端验证首屏密度、延迟加载、键盘可达性和坏数据回退，避免首页扩展拖慢其他独立页面。
-- [ ] 首页指标稳定后，将其作为 Phase 7 早报候选池，由产品一次性选定固定推送清单；不开放最终用户自定义。
+- [x] 将当前 6 张卡片/13 个默认依赖标记为首页第一版基线，而不是完整指标清单；保留现有设备本地布局 schema 的向前兼容迁移。
+- [x] 先确定首页信息架构与默认密度，至少评估“美股大盘/市场广度、全球利率与美元流动性、加密市场与稳定币、企业财库”四个分组；A 股继续引用暂停文档，不在本阶段偷跑实现。
+- [x] 为美股大盘建立候选指标清单和产品优先级，再逐项审核官方性、免费额度、公开展示/缓存/署名许可、刷新频率和 last-known-good 行为；未通过审核的指标不得进入公开投影。（覆盖关系与逐项结论见 `docs/data/HOMEPAGE_PHASE9_METRICS.md`；当前宽基价格候选均未通过，保留 N/A。）
+- [x] 新指标继续进入统一 `metric_catalog`、历史事实表和按页面裁剪的 dashboard projection；浏览器只读取静态投影，不直连行情供应商。
+- [x] widget registry 支持新增跨市场卡片、默认位置、显示/隐藏、排序和旧偏好迁移；缺失或休市数据保留 N/A、观测时间、新鲜度与质量说明。
+- [x] 桌面与移动端验证首屏密度、延迟加载、键盘可达性和坏数据回退，避免首页扩展拖慢其他独立页面。
+- [x] 首页指标稳定后，将其作为 Phase 7 早报候选池，由产品一次性选定固定推送清单；不开放最终用户自定义。（2026-07-20 产品选定当前首页全部 8 组/25 个指标；缺失项保留 N/A。）
 
 验收：首页不再被误解为加密专页；至少有一组经审核的美股大盘指标进入默认首页，旧设备布局安全迁移，匿名浏览、静态投影和来源审查边界不退化。
+
+执行记录（2026-07-20，Phase 9 密集首页与来源边界批次）：
+
+- 完成内容：首页从 6 组/13 个默认依赖扩展为 8 组/25 个默认单元格，完整覆盖“宏观流动性”和“美股大盘”概况中出现的指标；每格只显示名称、最新值、日增减和周增减，同类指标留在同一组。原有首页指标全部保留并压缩，“本设备布局”改为默认隐藏、可由按钮/遮罩/Escape 开关的设备本地侧栏。统一 catalog 升级为 v2，新增 12 个目录项、事实行 adapter、dashboard/us-equity 静态 projection 与来源审批链；新增迁移 `20260720020013_phase9_dashboard_metrics.sql` 已应用到现有 Supabase。GitHub workflow 的持久化和投影阶段同步传递独立的 FRED 第三方序列审批开关。逐项来源结论记录在 `docs/data/HOMEPAGE_PHASE9_METRICS.md`。
+- 验证结果：仓库内离线 LKG 基线的 25 个单元格中 11 个可发布、14 个按来源边界显示 N/A；`Deploy GitHub Pages #20` 完整刷新后，已批准 CMC 又发布 USDT/USDC 流通市值，生产终态为 13 个可发布、12 个 N/A。线上 dashboard projection 为 catalog v2，含 14 个指标（其中 `stablecoin.usdt.depegBps` 是非默认依赖），明确不含被阻止的 QQQ 候选。`npm run check` 全部通过：source lint、162/162 测试、美国/韩国/中国官方市场日历、三份公开投影和生产构建。真实 Chromium 桌面与 390×844 移动端均检测到 8 个分组、25 个指标和 25 组日/周字段，页面宽度无横向溢出；侧栏默认隐藏、具备 dialog 语义，打开后焦点进入关闭按钮，Escape 关闭后焦点回到打开按钮；控制台 0 error/0 warning，最终 manifest/dashboard 请求为 HTTP 200。Supabase 迁移后目录共 27 行（26 个现行指标加 1 个保留旧目录项），12 个新项齐全，RLS 仍开启，anon/authenticated 无读取权，service role 可读，Security Advisor 为 0 条告警。提交 `48ec040` 的 Pages run `29712270671` 四个 job 全部成功，生产首页与 dashboard JSON 均为 HTTP 200。
+- Actions 诊断：新仓库 `Deploy GitHub Pages #19` 的首次尝试仅在 `actions/configure-pages@v5` 遇到 GitHub Pages API HTTP 503，其余采集、投影、162 项测试前的既有 159 项测试、日历与构建步骤均成功；同一 run 第 2 次尝试已经成功部署。旧仓库 `Deploy GitHub Pages #407` 也是相同的 GitHub 服务端 503，发生在迁移告示提交触发的最后一次运行；旧仓库随后已按 Phase 8 关闭 Actions、删除 Pages 并归档，不恢复、不重跑，也没有需要修复的项目代码。
+- 剩余风险：Phase 9 的“至少一个经审核美股宽基/市场广度指标”验收条件仍未满足，因此本阶段尚不能全部关闭。QQQ/SPY/DIA 的旧 AKShare/Sina 路径和 SOX 的 yfinance/Yahoo 路径被阻止；黄金、VIX、ICE BofA 高收益债利差及依赖它们的风险评分属于 FRED 底层第三方序列，审批开关保持关闭。宏观源缓存最后转换于 2026-07-15，当前以清晰新鲜度展示 LKG，不能为消除 N/A 或陈旧提示而绕过许可。Supabase Performance Advisor 仍只有既有低流量索引的 INFO 级“未使用”提示，本批不删除索引。
+- 下一步：先决定一个拥有明确公开展示/缓存/署名许可的美股宽基或市场广度来源（或批准付费套餐）；通过审核后填充至少一个预留单元格并关闭 Phase 9。随后由产品从这 25 个首页指标中一次性选定 Phase 7 每日 07:00 上海时间 Telegram 固定早报清单。
+
+执行记录（2026-07-20，Phase 7 固定早报 contract 与干跑批次）：
+
+- 完成内容：产品固定选择当前首页全部 8 组/25 项作为早报 v1，不开放用户定制；新增与 dashboard projection 共用数值/日周变化规则的版本化报告 contract、上海日期边界、新鲜度/质量/来源字段、HTML 卡片渲染和官方 Telegram Bot API 发送器。新增 `0 23 * * *` 定时 workflow，默认手动运行只 dry-run；真实发送还受 `TELEGRAM_MORNING_BRIEF_ENABLED=1`、两个 GitHub Secrets、上海日期幂等键、并发锁和脱敏 receipt 共同保护。缺失来源的逐项结论冻结在 `docs/data/HOMEPAGE_SOURCE_GAPS_HOLD.md`，补源暂停但所有代码/数据槽位保留。
+- 验证结果：`npm run check` 全部通过：source lint、170/170 测试、美国/韩国/中国官方市场日历、三份公开投影和生产构建；固定 contract、上海跨日、25 项 N/A 退化、HTML 转义/4096 字符上限、429 单次安全重试、5xx 不重试和 workflow governance 均有确定性测试。GitHub Actions dry-run `29741073069` 成功从 `data-cache` 生成 25 项、13 项可用、12 项 N/A、纯文本 2,613 字符的 artifact，`send` job 明确为 skipped。
+- 依赖治理：成功 Actions 日志确认 Node 20 提醒来自 GitHub 官方 action 的内部运行时；工作流升级到当前 Node 24 兼容 major 后，Pages run `29741056395` 的采集、投影、构建和部署四个 job 全部成功且不再出现 Node 20 runtime 告警；业务脚本仍显式使用 Node 22。GitHub 托管 runner 不需要用户安装或配置 Node。
+- 剩余风险：Telegram bot 与目标频道尚未创建/授权，`TELEGRAM_BOT_TOKEN`、`TELEGRAM_CHAT_ID` 尚未安全写入，发送开关保持关闭；GitHub cron 是尽力调度，07:00 可能因平台拥堵延后；发送成功但 receipt 上传前 runner 中断仍有极小重复风险，遇到网络/5xx 不确定结果时必须先人工查频道再手动重跑。
+- 下一步：由用户只在 Telegram 和 GitHub Secret Store 完成一次性配置；随后执行单次真实发送验收，确认频道只收到一条且模板正确，最后开启每日定时发送并关闭 Phase 7 剩余 checklist。
 
 执行顺序调整记录（2026-07-19）：
 
