@@ -238,6 +238,170 @@ export function extractJapanRateRows(cache, equityDataset) {
   })).filter(Boolean);
 }
 
+const MACRO_DASHBOARD_SERIES = Object.freeze({
+  DGS10: { metricId: "macro.US10Y.value", unit: "percent" },
+  DFII10: { metricId: "macro.US10Y.realYield", unit: "percent" },
+  DTWEXBGS: { metricId: "macro.DXY.value", unit: "index" },
+  VIXCLS: { metricId: "macro.VIX.value", unit: "index" },
+  BAMLH0A0HYM2: { metricId: "macro.HYOAS.value", unit: "percent" },
+});
+
+function macroPressureSignal(item, mode = "change") {
+  if (!item || item.carriedForward) return 0;
+  const value = mode === "pct" && finiteNumber(item.pctChange) != null
+    ? finiteNumber(item.pctChange)
+    : finiteNumber(item.changeBp) ?? finiteNumber(item.change);
+  if (value == null || Math.abs(value) < 0.01) return 0;
+  return value > 0 ? 1 : -1;
+}
+
+function oldestObservationDate(items) {
+  return items.map((item) => item?.observationEnd).filter(Boolean).sort().at(0) || null;
+}
+
+export function extractMacroDashboardRows(dataset) {
+  const fetchedAt = dataset?.timestamps?.fetchedAt;
+  const transformedAt = dataset?.timestamps?.transformedAt || dataset?.generatedAt;
+  const sourceUrl = dataset?.sources?.FRED || "https://fred.stlouisfed.org/docs/api/fred/";
+  const rows = [];
+
+  for (const week of dataset?.weeklyState || []) {
+    const values = week?.values || {};
+    for (const [seriesId, config] of Object.entries(MACRO_DASHBOARD_SERIES)) {
+      const item = values[seriesId];
+      rows.push(row({
+        metricId: config.metricId,
+        observedAt: item?.observationEnd,
+        value: item?.end,
+        unit: config.unit,
+        cadence: "daily",
+        source: item?.source,
+        sourceUrl,
+        sourceKey: `fred-${seriesId.toLowerCase()}`,
+        qualityStatus: item?.carriedForward ? "last_known_good" : "available",
+        fetchedAt,
+        transformedAt,
+        dimensions: { country: "US" },
+        metadata: { seriesId, weekKey: week.weekKey },
+      }));
+    }
+
+    const netComponents = [values.WALCL, values.WTREGEN, values.RRPONTSYD];
+    const fedAssets = finiteNumber(values.WALCL?.end);
+    const treasuryCash = finiteNumber(values.WTREGEN?.end);
+    const reverseRepo = finiteNumber(values.RRPONTSYD?.end);
+    const netLiquidityUsd = [fedAssets, treasuryCash, reverseRepo].every((value) => value != null)
+      ? ((fedAssets - treasuryCash) * 1_000_000) - (reverseRepo * 1_000_000_000)
+      : null;
+    rows.push(row({
+      metricId: "macro.netLiquidity.usd",
+      observedAt: oldestObservationDate(netComponents),
+      value: netLiquidityUsd,
+      unit: "USD",
+      cadence: "weekly",
+      source: "FRED / Federal Reserve and U.S. Treasury",
+      sourceUrl,
+      sourceKey: "fred-net-liquidity",
+      qualityStatus: netComponents.some((item) => item?.carriedForward) ? "derived_last_known_good" : "derived_official",
+      fetchedAt,
+      transformedAt,
+      dimensions: { country: "US" },
+      metadata: { formula: "WALCL-WTREGEN-RRPONTSYD", weekKey: week.weekKey },
+    }));
+
+    const postureComponents = [values.DGS10, values.DTWEXBGS, values.VIXCLS, values.BAMLH0A0HYM2];
+    const pressureScore = macroPressureSignal(values.DGS10)
+      + macroPressureSignal(values.DTWEXBGS, "pct")
+      + macroPressureSignal(values.VIXCLS)
+      + macroPressureSignal(values.BAMLH0A0HYM2);
+    rows.push(row({
+      metricId: "macro.riskPosture.score",
+      observedAt: oldestObservationDate(postureComponents),
+      value: pressureScore,
+      unit: "score",
+      cadence: "weekly",
+      source: "FRED / CBOE and ICE BofA",
+      sourceUrl,
+      sourceKey: "fred-risk-posture",
+      qualityStatus: "derived",
+      fetchedAt,
+      transformedAt,
+      dimensions: { country: "US" },
+      metadata: { formula: "DGS10+DTWEXBGS+VIXCLS+BAMLH0A0HYM2", weekKey: week.weekKey },
+    }));
+  }
+
+  return rows.filter(Boolean);
+}
+
+const EQUITY_DASHBOARD_ASSETS = Object.freeze({
+  QQQ: { metricId: "equity.us.qqq.price", unit: "USD" },
+  SPY: { metricId: "equity.us.spy.price", unit: "USD" },
+  DIA: { metricId: "equity.us.dia.price", unit: "USD" },
+  SOX: { metricId: "equity.us.sox.value", unit: "index" },
+});
+
+export function extractEquityDashboardRows(dataset, fastDataset) {
+  const fetchedAt = dataset?.timestamps?.fetchedAt;
+  const transformedAt = dataset?.timestamps?.transformedAt || dataset?.generatedAt;
+  const rows = [];
+  for (const day of dataset?.days || []) {
+    for (const [symbol, config] of Object.entries(EQUITY_DASHBOARD_ASSETS)) {
+      const item = day?.assets?.[symbol];
+      const source = dataset?.assets?.[symbol]?.sourceLabel;
+      rows.push(row({
+        metricId: config.metricId,
+        observedAt: item?.date || day?.date,
+        value: item?.price ?? item?.close,
+        unit: config.unit,
+        cadence: "daily",
+        source,
+        sourceKey: `equity-${symbol.toLowerCase()}-${source || "unknown"}`,
+        qualityStatus: dataset?.assets?.[symbol]?.cacheStatus || "last_known_good",
+        fetchedAt,
+        transformedAt,
+        dimensions: { country: "US", ticker: symbol },
+      }));
+    }
+
+    for (const [seriesId, metricId] of [["DGS10", "macro.US10Y.value"], ["VIXCLS", "macro.VIX.value"]]) {
+      const item = day?.macro?.[seriesId];
+      rows.push(row({
+        metricId,
+        observedAt: item?.date || day?.date,
+        value: item?.value,
+        unit: seriesId === "DGS10" ? "percent" : "index",
+        cadence: "daily",
+        source: seriesId === "DGS10" ? "FRED / U.S. Treasury" : "FRED / CBOE",
+        sourceUrl: dataset?.sources?.FRED,
+        sourceKey: `fred-${seriesId.toLowerCase()}`,
+        qualityStatus: item?.carriedForward ? "last_known_good" : "available",
+        fetchedAt,
+        transformedAt,
+        dimensions: { country: "US" },
+      }));
+    }
+  }
+
+  const gold = (fastDataset?.metrics || []).find((item) => item.id === "GOLD_PRICE_PROXY");
+  rows.push(row({
+    metricId: "commodity.gold.proxy",
+    observedAt: gold?.asOf,
+    value: gold?.value,
+    unit: "index",
+    cadence: "daily",
+    source: gold?.sourceLabel,
+    sourceUrl: gold?.sourceUrl,
+    sourceKey: "fred-gold-price-proxy",
+    qualityStatus: gold?.quality || "last_known_good",
+    fetchedAt: gold?.fetchedAt || fastDataset?.timestamps?.fetchedAt,
+    transformedAt: fastDataset?.timestamps?.transformedAt || fastDataset?.generatedAt,
+    dimensions: { country: "US" },
+  }));
+
+  return rows.filter(Boolean);
+}
+
 export function selectIncrementalObservationRows(rows, latestObservedAt, options = {}) {
   const initialBackfillDays = Number.isFinite(options.initialBackfillDays) ? options.initialBackfillDays : 400;
   const overlapDays = Number.isFinite(options.overlapDays) ? options.overlapDays : 14;

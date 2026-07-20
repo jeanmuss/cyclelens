@@ -178,12 +178,14 @@ if (!url || !key) {
 try {
   const adapter = createMarketHistoryAdapter({
     async readInputs() {
-      const [crypto, equity, jgbCache] = await Promise.all([
+      const [crypto, equity, equityFast, macro, jgbCache] = await Promise.all([
         readJson(resolve(appRoot, "public/data/crypto-liquidity.json"), {}),
         readJson(resolve(appRoot, "public/data/equity-weekly.json"), {}),
+        readJson(resolve(appRoot, "public/data/equity-fast.json"), {}),
+        readJson(resolve(appRoot, "public/data/macro-calendar.json"), {}),
         readJson(resolve(workspaceRoot, "tmp/equity-cache/mof-JGB10Y.json"), null),
       ]);
-      return { crypto, equity, jgbCache };
+      return { crypto, equity, equityFast, macro, jgbCache };
     },
     latestJapanObservation,
     readCryptoHistoryRows,
@@ -199,6 +201,8 @@ try {
     rows: summary.persistedRows,
     cryptoRows: summary.cryptoRows,
     japanRows: summary.japanRows,
+    equityDashboardRows: summary.equityDashboardRows,
+    macroDashboardRows: summary.macroDashboardRows,
     databaseCryptoRows: summary.databaseRows,
     rejectedRows: summary.rejectedRows,
     metricIds: summary.metricIds,

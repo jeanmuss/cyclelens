@@ -40,6 +40,7 @@ jobs:
       sosovalue_redistribution_approved: ${{ vars.SOSOVALUE_REDISTRIBUTION_APPROVED == '1' }}
       blockbeats_aux_enabled: ${{ vars.BLOCKBEATS_AUX_ENABLED == '1' }}
       blockbeats_redistribution_approved: ${{ vars.BLOCKBEATS_REDISTRIBUTION_APPROVED == '1' }}
+      fred_third_party_series_approved: ${{ vars.FRED_THIRD_PARTY_SERIES_APPROVED == '1' }}
 
   publish-versioned-snapshot:
     needs: project-public-snapshots

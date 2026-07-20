@@ -10,6 +10,7 @@ import {
 } from "../src/domain/metrics/metricCatalog.js";
 import {
   SOURCE_POLICIES,
+  sourcePolicyForObservation,
   validateSourcePolicies,
 } from "../src/domain/metrics/sourcePolicy.js";
 import {
@@ -97,6 +98,28 @@ test("reviewed source policy defaults CMC on after operator approval and permits
   assert.equal(approved.accepted[0].source_policy_id, "coinmarketcap");
 });
 
+test("FRED government series remain eligible while third-party FRED series require a separate gate", () => {
+  const official = observation({
+    metric_id: "macro.US10Y.value",
+    unit: "percent",
+    source: "FRED / U.S. Treasury",
+    source_url: "https://fred.stlouisfed.org/series/DGS10",
+    source_key: "fred-dgs10",
+  });
+  const thirdParty = observation({
+    metric_id: "macro.VIX.value",
+    unit: "index",
+    source: "FRED / CBOE",
+    source_url: "https://fred.stlouisfed.org/series/VIXCLS",
+    source_key: "fred-vixcls",
+  });
+  assert.equal(sourcePolicyForObservation(official)?.id, "fred-government");
+  assert.equal(sourcePolicyForObservation(thirdParty)?.id, "fred-third-party");
+  assert.equal(validateObservationRows([official], { environment: {} }).accepted.length, 1);
+  assert.equal(validateObservationRows([thirdParty], { environment: {} }).accepted.length, 0);
+  assert.equal(validateObservationRows([thirdParty], { environment: { FRED_THIRD_PARTY_SERIES_APPROVED: "1" } }).accepted.length, 1);
+});
+
 test("public projections are page-scoped, provenance-rich, and private-field free", () => {
   const { accepted } = validateObservationRows([observation({
     source_url: "https://coinmarketcap.com/example?api_key=never-project-this",
@@ -117,15 +140,20 @@ test("checked-in page projections satisfy the public contract", async () => {
   }
 });
 
-test("Phase 3 migration seeds the catalog and keeps database tables server-only", async () => {
-  const migration = await readFile(resolve(workspaceRoot, "supabase/migrations/20260718203236_phase3_metric_catalog.sql"), "utf8");
-  for (const entry of METRIC_CATALOG) assert.match(migration, new RegExp(`'${entry.metricId.replaceAll(".", "\\.")}'`));
-  assert.match(migration, /foreign key \(metric_id\) references public\.metric_catalog\(metric_id\) not valid/);
-  assert.match(migration, /greatest\(old\.last_checked_at, new\.last_checked_at\)/);
-  assert.match(migration, /enable row level security/g);
-  assert.match(migration, /revoke all on table public\.metric_catalog from public, anon, authenticated/);
-  assert.match(migration, /revoke all on table public\.dashboard_snapshot_runs from public, anon, authenticated/);
-  assert.doesNotMatch(migration, /grant .* to anon/);
+test("catalog migrations cover every current metric and keep database tables server-only", async () => {
+  const [phase3, phase9] = await Promise.all([
+    readFile(resolve(workspaceRoot, "supabase/migrations/20260718203236_phase3_metric_catalog.sql"), "utf8"),
+    readFile(resolve(workspaceRoot, "supabase/migrations/20260720020013_phase9_dashboard_metrics.sql"), "utf8"),
+  ]);
+  const catalogMigrations = `${phase3}\n${phase9}`;
+  for (const entry of METRIC_CATALOG) assert.match(catalogMigrations, new RegExp(`'${entry.metricId.replaceAll(".", "\\.")}'`));
+  assert.match(phase3, /foreign key \(metric_id\) references public\.metric_catalog\(metric_id\) not valid/);
+  assert.match(phase3, /greatest\(old\.last_checked_at, new\.last_checked_at\)/);
+  assert.match(phase3, /enable row level security/g);
+  assert.match(phase3, /revoke all on table public\.metric_catalog from public, anon, authenticated/);
+  assert.match(phase3, /revoke all on table public\.dashboard_snapshot_runs from public, anon, authenticated/);
+  assert.doesNotMatch(catalogMigrations, /grant .* to anon/);
+  assert.match(phase9, /catalog_version = 2/);
 });
 
 test("Strategy holdings catalog migration removes the disabled provider source", async () => {

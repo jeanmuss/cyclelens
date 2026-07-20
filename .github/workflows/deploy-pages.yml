@@ -44,6 +44,7 @@ jobs:
       sosovalue_redistribution_approved: ${{ vars.SOSOVALUE_REDISTRIBUTION_APPROVED == '1' }}
       blockbeats_aux_enabled: ${{ vars.BLOCKBEATS_AUX_ENABLED == '1' }}
       blockbeats_redistribution_approved: ${{ vars.BLOCKBEATS_REDISTRIBUTION_APPROVED == '1' }}
+      fred_third_party_series_approved: ${{ vars.FRED_THIRD_PARTY_SERIES_APPROVED == '1' }}
 
   build:
     needs: project-public-snapshots
@@ -55,6 +56,7 @@ jobs:
       SOSOVALUE_REDISTRIBUTION_APPROVED: ${{ vars.SOSOVALUE_REDISTRIBUTION_APPROVED || '0' }}
       BLOCKBEATS_AUX_ENABLED: ${{ vars.BLOCKBEATS_AUX_ENABLED || '0' }}
       BLOCKBEATS_REDISTRIBUTION_APPROVED: ${{ vars.BLOCKBEATS_REDISTRIBUTION_APPROVED || '0' }}
+      FRED_THIRD_PARTY_SERIES_APPROVED: ${{ vars.FRED_THIRD_PARTY_SERIES_APPROVED || '0' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4

@@ -175,6 +175,7 @@ jobs:
           SOSOVALUE_REDISTRIBUTION_APPROVED: ${{ inputs.sosovalue_redistribution_approved && '1' || '0' }}
           BLOCKBEATS_AUX_ENABLED: ${{ inputs.blockbeats_aux_enabled && inputs.blockbeats_redistribution_approved && '1' || '0' }}
           BLOCKBEATS_REDISTRIBUTION_APPROVED: ${{ inputs.blockbeats_redistribution_approved && '1' || '0' }}
+          FRED_THIRD_PARTY_SERIES_APPROVED: ${{ inputs.fred_third_party_series_approved && '1' || '0' }}
         run: node scripts/persist-market-metric-history.mjs
       - name: Upload collected private build input
         uses: actions/upload-artifact@v4

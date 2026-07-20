@@ -18,6 +18,9 @@ on:
       blockbeats_redistribution_approved:
         type: boolean
         default: false
+      fred_third_party_series_approved:
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -43,6 +46,7 @@ jobs:
           SOSOVALUE_REDISTRIBUTION_APPROVED: ${{ inputs.sosovalue_redistribution_approved && '1' || '0' }}
           BLOCKBEATS_AUX_ENABLED: ${{ inputs.blockbeats_aux_enabled && '1' || '0' }}
           BLOCKBEATS_REDISTRIBUTION_APPROVED: ${{ inputs.blockbeats_redistribution_approved && '1' || '0' }}
+          FRED_THIRD_PARTY_SERIES_APPROVED: ${{ inputs.fred_third_party_series_approved && '1' || '0' }}
         run: node scripts/project-public-metrics.mjs
       - name: Verify projection contracts and build the public manifest
         working-directory: app

@@ -1,12 +1,18 @@
-import { freshnessLabel } from "../../data.js";
 import { METRIC_CATALOG_BY_ID } from "../../domain/metrics/metricCatalog.js";
-import { formatDashboardValue, metricSnapshot } from "./dashboardModel.js";
+import { formatDashboardChange, formatDashboardValue, metricSnapshot } from "./dashboardModel.js";
 
-function qualityLabel(status, copy) {
-  if (!status) return copy.qualityUnknown;
-  if (/stale|fallback|last_known_good/i.test(status)) return copy.qualityStale;
-  if (/official|available|verified/i.test(status)) return copy.qualityAvailable;
-  return copy.qualityDerived;
+function changeClass(change) {
+  if (!change || !Number.isFinite(Number(change.value)) || Number(change.value) === 0) return "is-flat";
+  return Number(change.value) > 0 ? "is-up" : "is-down";
+}
+
+function MetricChanges({ metric, snapshot, language, copy }) {
+  return (
+    <dl className="dashboard-metric-changes">
+      <div><dt>{copy.dayChange}</dt><dd className={changeClass(snapshot.dayChange)}>{formatDashboardChange(metric, snapshot.dayChange, language)}</dd></div>
+      <div><dt>{copy.weekChange}</dt><dd className={changeClass(snapshot.weekChange)}>{formatDashboardChange(metric, snapshot.weekChange, language)}</dd></div>
+    </dl>
+  );
 }
 
 export function MetricListWidget({ definition, language, metricMap, copy }) {
@@ -19,7 +25,6 @@ export function MetricListWidget({ definition, language, metricMap, copy }) {
         </div>
         <span>{definition.metricIds.length} {copy.metrics}</span>
       </header>
-      <p className="dashboard-widget-description">{definition.description[language]}</p>
       <div className="dashboard-metric-list">
         {definition.metricIds.map((metricId) => {
           const snapshot = metricSnapshot(metricMap.get(metricId));
@@ -30,7 +35,7 @@ export function MetricListWidget({ definition, language, metricMap, copy }) {
             return (
               <div className="dashboard-metric is-unavailable" key={metricId}>
                 <div><small>{title}</small><strong>N/A</strong></div>
-                <p><span>{copy.notPublished}</span><span>{copy.qualityUnknown}</span></p>
+                <MetricChanges metric={METRIC_CATALOG_BY_ID[metricId]} snapshot={snapshot} language={language} copy={copy} />
               </div>
             );
           }
@@ -40,10 +45,7 @@ export function MetricListWidget({ definition, language, metricMap, copy }) {
                 <small>{title}</small>
                 <strong>{formatDashboardValue(snapshot.metric, snapshot.latestValue, language)}</strong>
               </div>
-              <p>
-                <span>{copy.updated}: {freshnessLabel(snapshot.latest.observedAt, language)}</span>
-                <span>{copy.quality}: {qualityLabel(snapshot.latest.qualityStatus, copy)}</span>
-              </p>
+              <MetricChanges metric={snapshot.metric} snapshot={snapshot} language={language} copy={copy} />
             </div>
           );
         })}

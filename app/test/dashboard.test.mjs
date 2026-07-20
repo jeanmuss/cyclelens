@@ -16,6 +16,7 @@ import {
 } from "../src/features/dashboard/dashboardPreferences.js";
 import {
   dashboardMetricMap,
+  formatDashboardChange,
   formatDashboardValue,
   metricSnapshot,
 } from "../src/features/dashboard/dashboardModel.js";
@@ -40,8 +41,14 @@ test("widget definitions declare immutable catalog dependencies and deterministi
     DASHBOARD_WIDGET_DEFINITIONS.map((item) => item.defaultPosition),
     DASHBOARD_WIDGET_DEFINITIONS.map((_, index) => index),
   );
+  assert.equal(DASHBOARD_WIDGET_DEFINITIONS.length, 8);
+  assert.equal(DASHBOARD_WIDGET_DEFINITIONS.flatMap((item) => item.metricIds).length, 25);
+  assert.deepEqual(DASHBOARD_WIDGET_DEFINITIONS.slice(0, 2).map((item) => item.id), [
+    "us-equity-overview",
+    "macro-liquidity-overview",
+  ]);
   for (const definition of DASHBOARD_WIDGET_DEFINITIONS) {
-    assert.ok(["standard", "wide"].includes(definition.size));
+    assert.ok(["standard", "wide", "full"].includes(definition.size));
     assert.ok(definition.markets.length > 0);
     assert.ok(definition.metricIds.length > 0);
     assert.equal(definition.componentId, "metric-list");
@@ -87,8 +94,11 @@ test("legacy layouts migrate and corrupt or unsupported data falls back safely",
 test("dashboard model selects the latest observation without confusing transform and observation time", () => {
   const metric = {
     metricId: "macro.JGB10Y.value",
+    unit: "percent",
+    cadence: "daily",
     defaultDisplay: { format: "percent", precision: 3 },
     observations: [
+      { observedAt: "2026-07-10T00:00:00Z", value: 2.0 },
       { observedAt: "2026-07-17T00:00:00Z", value: 2.1 },
       { observedAt: "2026-07-18T00:00:00Z", value: 2.25 },
     ],
@@ -97,6 +107,8 @@ test("dashboard model selects the latest observation without confusing transform
   const snapshot = metricSnapshot(dashboardMetricMap(projection).get(metric.metricId));
   assert.equal(snapshot.latest.observedAt, "2026-07-18T00:00:00Z");
   assert.equal(snapshot.change, 0.1499999999999999);
+  assert.equal(formatDashboardChange(metric, snapshot.dayChange, "en"), "+15.00 bp");
+  assert.equal(formatDashboardChange(metric, snapshot.weekChange, "en"), "+25.00 bp");
   assert.equal(formatDashboardValue(metric, snapshot.latestValue, "en"), "2.250%");
 });
 
@@ -109,5 +121,7 @@ test("homepage consumes only the dashboard projection and the registry resolves 
   assert.doesNotMatch(pageSource, /fetch\(|CMC|DefiLlama|SoSoValue|Supabase/i);
   assert.match(pageSource, /!error && loading && !projection/);
   assert.match(pageSource, /error \? copy\.unavailable : copy\.loading/);
+  assert.match(pageSource, /hidden=\{!customizerOpen\}/);
+  assert.match(pageSource, /aria-expanded=\{customizerOpen\}/);
   assert.match(registrySource, /component:\s*componentById\[definition\.componentId\]/);
 });

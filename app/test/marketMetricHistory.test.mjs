@@ -7,7 +7,9 @@ import test from "node:test";
 import {
   dedupeMarketMetricRows,
   extractCryptoHistoryRows,
+  extractEquityDashboardRows,
   extractJapanRateRows,
+  extractMacroDashboardRows,
   hydrateCryptoDatasetFromRows,
   selectIncrementalObservationRows,
 } from "../scripts/market-metric-history-contract.mjs";
@@ -16,6 +18,44 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const workspaceRoot = resolve(__dirname, "..", "..");
 const persistScriptPath = resolve(workspaceRoot, "app/scripts/persist-market-metric-history.mjs");
 const adapterScriptPath = resolve(workspaceRoot, "app/scripts/market-history-adapter.mjs");
+
+test("homepage macro rows preserve official and gated third-party provenance", () => {
+  const values = {
+    DGS10: { end: 4.4, changeBp: 2, observationEnd: "2026-07-17", source: "FRED / U.S. Treasury" },
+    DFII10: { end: 2.0, changeBp: 1, observationEnd: "2026-07-17", source: "FRED / U.S. Treasury" },
+    DTWEXBGS: { end: 120, pctChange: -0.2, observationEnd: "2026-07-16", source: "FRED / Federal Reserve" },
+    VIXCLS: { end: 17, change: 0.5, observationEnd: "2026-07-17", source: "FRED / CBOE" },
+    BAMLH0A0HYM2: { end: 3, changeBp: 3, observationEnd: "2026-07-17", source: "FRED / ICE BofA" },
+    WALCL: { end: 7_000_000, observationEnd: "2026-07-15", source: "FRED / Federal Reserve" },
+    WTREGEN: { end: 800_000, observationEnd: "2026-07-15", source: "FRED / U.S. Treasury" },
+    RRPONTSYD: { end: 2, observationEnd: "2026-07-17", source: "FRED / Federal Reserve" },
+  };
+  const rows = extractMacroDashboardRows({
+    timestamps: { fetchedAt: "2026-07-18T00:00:00Z", transformedAt: "2026-07-18T00:01:00Z" },
+    sources: { FRED: "https://fred.stlouisfed.org/docs/api/fred/" },
+    weeklyState: [{ weekKey: "2026-07-17", values }],
+  });
+  const byMetric = Object.fromEntries(rows.map((item) => [item.metric_id, item]));
+  assert.equal(byMetric["macro.US10Y.value"].source, "FRED / U.S. Treasury");
+  assert.equal(byMetric["macro.netLiquidity.usd"].value, 6_198_000_000_000);
+  assert.equal(byMetric["macro.riskPosture.score"].value, 2);
+  assert.equal(byMetric["macro.riskPosture.score"].source, "FRED / CBOE and ICE BofA");
+});
+
+test("homepage equity rows retain blocked legacy source labels for policy rejection", () => {
+  const rows = extractEquityDashboardRows({
+    timestamps: { fetchedAt: "2026-07-18T00:00:00Z", transformedAt: "2026-07-18T00:01:00Z" },
+    sources: { FRED: "https://fred.stlouisfed.org/" },
+    assets: {
+      QQQ: { sourceLabel: "AKShare / Sina US stock daily (unadjusted)", cacheStatus: "fresh" },
+      SOX: { sourceLabel: "yfinance daily (unadjusted close)", cacheStatus: "fresh" },
+    },
+    days: [{ date: "2026-07-17", assets: { QQQ: { price: 600 }, SOX: { price: 5_800 } }, macro: {} }],
+  }, { metrics: [] });
+  const byMetric = Object.fromEntries(rows.map((item) => [item.metric_id, item]));
+  assert.match(byMetric["equity.us.qqq.price"].source, /AKShare/);
+  assert.match(byMetric["equity.us.sox.value"].source, /yfinance/);
+});
 
 test("ETF and corporate treasury observations retain source and independent cost dates", () => {
   const rows = extractCryptoHistoryRows({
