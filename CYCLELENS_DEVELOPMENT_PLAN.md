@@ -290,7 +290,7 @@ app/src/
 - [ ] 上海时间每日 07:00 由服务端/CI 定时任务生成并发送一份 Telegram 卡片式早报，不依赖浏览器在线状态。（`0 23 * * *` CI 调度与发送 job 已实现；真实发送保持关闭，等待 Telegram 侧配置和一次人工验收。）
 - [ ] Telegram bot token 与目标 chat/channel 标识只保存于部署 Secret Store；不进入前端、仓库、构建产物、日志或对话。（workflow 只引用 `TELEGRAM_BOT_TOKEN`/`TELEGRAM_CHAT_ID` Secret 名称，值尚未录入。）
 - [x] 使用“上海日期 + contract 版本”作为幂等键，定义安全重试、超时、Telegram 频率限制和脱敏发送日志，避免同一早报重复推送。（同键并发锁 + 90 天脱敏 receipt；仅对明确 429 安全重试一次，超时/5xx 不自动重试。）
-- [ ] 先提供 dry-run/渲染快照测试，再启用真实发送；真实启用前由用户在 Telegram 侧创建 bot、将其加入目标频道并通过安全配置路径录入 secret。（本地 dry-run 与确定性测试已通过；待推送后的 Actions dry-run、模板确认和真实单次发送。）
+- [ ] 先提供 dry-run/渲染快照测试，再启用真实发送；真实启用前由用户在 Telegram 侧创建 bot、将其加入目标频道并通过安全配置路径录入 secret。（本地与 GitHub Actions dry-run 均通过，模板 artifact 已生成且发送 job 跳过；待 Telegram 侧配置、模板确认和真实单次发送。）
 
 验收：匿名体验不退化；仓库和前端不存在 Telegram 凭据；07:00 调度、跨日边界、N/A、新鲜度、幂等与失败重试有确定性测试；真实频道仅收到一份经人工确认模板的早报。
 
@@ -361,10 +361,10 @@ app/src/
 执行记录（2026-07-20，Phase 7 固定早报 contract 与干跑批次）：
 
 - 完成内容：产品固定选择当前首页全部 8 组/25 项作为早报 v1，不开放用户定制；新增与 dashboard projection 共用数值/日周变化规则的版本化报告 contract、上海日期边界、新鲜度/质量/来源字段、HTML 卡片渲染和官方 Telegram Bot API 发送器。新增 `0 23 * * *` 定时 workflow，默认手动运行只 dry-run；真实发送还受 `TELEGRAM_MORNING_BRIEF_ENABLED=1`、两个 GitHub Secrets、上海日期幂等键、并发锁和脱敏 receipt 共同保护。缺失来源的逐项结论冻结在 `docs/data/HOMEPAGE_SOURCE_GAPS_HOLD.md`，补源暂停但所有代码/数据槽位保留。
-- 验证结果：本地固定 contract、上海跨日、25 项 N/A 退化、HTML 转义/4096 字符上限、429 单次安全重试、5xx 不重试和 workflow governance 定向测试已通过；离线基线成功渲染 25 项、14 项 N/A、纯文本长度约 2,600 字符。完整 `npm run check`、GitHub Actions dry-run 和真实频道投递将在本批提交前/后依次执行并补记终态。
-- 依赖治理：成功 Actions 日志确认 Node 20 提醒来自 GitHub 官方 action 的内部运行时；工作流已升级到当前 Node 24 兼容 major，业务脚本仍显式使用 Node 22。GitHub 托管 runner 不需要用户安装或配置 Node。
+- 验证结果：`npm run check` 全部通过：source lint、170/170 测试、美国/韩国/中国官方市场日历、三份公开投影和生产构建；固定 contract、上海跨日、25 项 N/A 退化、HTML 转义/4096 字符上限、429 单次安全重试、5xx 不重试和 workflow governance 均有确定性测试。GitHub Actions dry-run `29741073069` 成功从 `data-cache` 生成 25 项、13 项可用、12 项 N/A、纯文本 2,613 字符的 artifact，`send` job 明确为 skipped。
+- 依赖治理：成功 Actions 日志确认 Node 20 提醒来自 GitHub 官方 action 的内部运行时；工作流升级到当前 Node 24 兼容 major 后，Pages run `29741056395` 的采集、投影、构建和部署四个 job 全部成功且不再出现 Node 20 runtime 告警；业务脚本仍显式使用 Node 22。GitHub 托管 runner 不需要用户安装或配置 Node。
 - 剩余风险：Telegram bot 与目标频道尚未创建/授权，`TELEGRAM_BOT_TOKEN`、`TELEGRAM_CHAT_ID` 尚未安全写入，发送开关保持关闭；GitHub cron 是尽力调度，07:00 可能因平台拥堵延后；发送成功但 receipt 上传前 runner 中断仍有极小重复风险，遇到网络/5xx 不确定结果时必须先人工查频道再手动重跑。
-- 下一步：提交并推送本批，先运行 Actions dry-run 并审核 artifact；随后由用户只在 Telegram 和 GitHub Secret Store 完成一次性配置，再执行单次真实发送验收，最后开启每日定时发送。
+- 下一步：由用户只在 Telegram 和 GitHub Secret Store 完成一次性配置；随后执行单次真实发送验收，确认频道只收到一条且模板正确，最后开启每日定时发送并关闭 Phase 7 剩余 checklist。
 
 执行顺序调整记录（2026-07-19）：
 
