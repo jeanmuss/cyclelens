@@ -1,6 +1,6 @@
 # CycleLens 开发与迁移计划
 
-更新日期：2026-07-19
+更新日期：2026-07-20
 
 目标仓库：`jeanmuss/cyclelens`
 
@@ -301,10 +301,10 @@ app/src/
 - [x] 首次推送前先阻止未配置的新仓库工作流自动执行；待 Secrets、Variables、Environment 和最小 Actions 权限配置完成后再启用定时采集与 Pages 部署。（首次推送前已禁用 Actions；2026-07-19 配置完成后才以 GitHub-owned-only 策略启用。）
 - [x] 迁移或重新生成 `data-cache` 分支，不把旧临时缓存和本地环境文件带入新仓库。（从已审计的 `26ba446` 基线新建，首次完整数据工作流成功验证持久快照发布路径。）
 - [x] 在新仓库中逐项重新配置 Secrets、Variables、Pages Environment 和 Actions 权限。（Secret 只核对名称；Variables 逐项核对值；`github-pages` 仅允许 `main`，默认 `GITHUB_TOKEN` 只读且不能批准 PR。）
-- [ ] 启用 GitHub Pages，验证 `https://jeanmuss.github.io/cyclelens/` 的 base path、刷新、hash 路由和 JSON 加载。（Pages 已启用；入口、`/cyclelens/` 静态资源 base、manifest 与 dashboard JSON 的 HTTP 200 已验证，刷新与 hash 路由留待下一批真实浏览器验收。）
-- [ ] 对全部页面执行桌面和移动端 smoke test，并检查数据新鲜度、失败回退和可访问性。
-- [ ] 新远端推送并验证成功后，将 `jeanmuss/cyclelens` 克隆到 `C:\Users\hovyf\Documents\cyclelens`，再把 Codex 项目/后续开发窗口切换到该目录；不要直接在活动任务中重命名旧工作目录。
-- [ ] 新站完成生产 smoke test 后，停止旧 `cycle-map` 的所有定时 Actions 并取消发布旧 GitHub Pages，避免继续消耗运行资源或形成双写；在旧 README/description 指向新项目后归档旧仓库。需要回滚时可临时解除归档并重新启用部署，而不是让两套定时任务长期并行。
+- [x] 启用 GitHub Pages，验证 `https://jeanmuss.github.io/cyclelens/` 的 base path、刷新、hash 路由和 JSON 加载。（2026-07-20 已在真实 Chrome 中验证入口、`/cyclelens/` 资源 base、全部 hash 路由刷新保持及各页必需 JSON 加载。）
+- [x] 对全部页面执行桌面和移动端 smoke test，并检查数据新鲜度、失败回退和可访问性。（8 个路由 × 2 个视口全部通过；烟测发现并修复首页错误态与加载态重叠，生产 503 模拟和恢复复测通过。）
+- [x] 新远端推送并验证成功后，将 `jeanmuss/cyclelens` 克隆到 `C:\Users\hovyf\Documents\cyclelens`，再把 Codex 项目/后续开发窗口切换到该目录；不要直接在活动任务中重命名旧工作目录。（目标目录已独立克隆并验证 `main`、`data-cache`、remote 与对象完整性；本任务只在旧目录完成最后记录，Phase 9 起使用新目录。）
+- [x] 新站完成生产 smoke test 后，停止旧 `cycle-map` 的所有定时 Actions 并取消发布旧 GitHub Pages，避免继续消耗运行资源或形成双写；在旧 README/description 指向新项目后归档旧仓库。需要回滚时可临时解除归档并重新启用部署，而不是让两套定时任务长期并行。（旧 README/description 已指向 CycleLens，Actions 已关闭，Pages 已删除并返回 404，仓库已归档只读。）
 
 本机连接记录（2026-07-18）：GitHub App 已确认当前账号对新仓库拥有管理员与推送权限；公开仓库的只读 Git 连接可用。Windows Git 默认 `schannel` 出现 `SEC_E_NO_CREDENTIALS`，使用单次 `git -c http.sslBackend=openssl ...` 可连接；实际推送前仍需刷新本机 GitHub CLI/凭据管理器认证，不要把 token 写入命令、文件或对话。
 
@@ -328,6 +328,13 @@ app/src/
 - 验证结果：首轮 `Update market caches` run `29692566692` 已真实通过 CMC 刷新、Supabase 手工事件同步和必需市场历史持久化（写入 1,839 行），但因上述 artifact 路径缺陷，不作为公开投影/`data-cache` 验收依据；首轮 `Deploy GitHub Pages` run `29692615554` 同理只证明旧基线可构建。修复后 push 触发的 Pages run `29692945866` 完整通过采集、持久化、投影合同、source lint、159/159 测试、官方市场日历、生产构建和部署；线上 `crypto-liquidity.json` 的转换时间更新为 `2026-07-19T15:29:48.424Z`（本地旧基线为 `2026-07-16T08:49:09.863Z`），manifest 生成时间为 `2026-07-19T15:30:17.301Z` 且含 12 个数据集，入口、dashboard projection 以及带 `/cyclelens/` base 的 JS/CSS 均返回 HTTP 200。修复后的 `Update market caches` run `29693011142` 成功并生成 `data-cache` 提交 `271137a`，分支内加密流动性转换时间为 `2026-07-19T15:31:44.125Z`，证明新快照已写入正确路径。本地 workflow 定向测试 6/6 与 `npm run check` 均通过（159/159 测试、官方美/韩/中市场日历、三份公开投影与生产构建），`git diff --check` 通过。
 - 剩余风险：尚未在真实浏览器中验证全部 hash 路由、刷新、桌面/移动端布局、键盘可达性、失败回退与数据新鲜度；旧站仍在运行，不能提前停用。GitHub 运行器提示若干官方 Action 仍声明 Node 20 runtime 并被强制切换到 Node 24；当前执行成功，但应另批升级受影响的 Action major 并评估改为不可变 SHA。`SEC_USER_AGENT` 仍未配置，BitMine SEC 持仓自动刷新继续保留已审核数据而不拉取新披露。
 - 下一步：对新 Pages 的全部公开页面执行桌面和移动端真实浏览器 smoke test，覆盖 hash 切换/刷新、JSON 加载、数据状态、控制台、键盘与基础可访问性；通过后再克隆到 `C:\Users\hovyf\Documents\cyclelens`，最后停用旧仓库定时 Actions/Pages、更新指向并归档旧仓库。
+
+执行记录（2026-07-20，Phase 8 生产验收与旧站退役批次）：
+
+- 完成内容：在 GitHub Pages 上用真实 Chrome 覆盖首页、加密周期、加密流动性、宏观日历、美股大盘、开市轮动、芯片链和机器人链的桌面/移动端；检查 hash 刷新、页面身份、必需 JSON、加载/错误状态、横向溢出、首个 Tab 焦点、控制台和网络错误。强制 `data-manifest.json` 与 `dashboard.json` 返回 503 时发现首页同时展示错误态与加载态，提交 `d7610ab` 使错误态优先并增加回归断言；生产重新部署后复测正常、503 和全新上下文恢复三种状态。将新仓库克隆到 `C:\Users\hovyf\Documents\cyclelens`。旧仓库通过提交 `f75f3a8` 在 README 顶部保留迁移告示，并更新 description/homepage；随后关闭仓库 Actions、删除 Pages、归档为只读。
+- 验证结果：生产正常路径 8 路由 × 2 视口全部具有唯一 `main`/`h1`/导航，必需 JSON 返回 200，桌面刷新保持对应 hash（允许页面附加默认查询参数），无未结束加载态、错误态、告警、横向溢出、控制台 warning/error、页面异常、失败请求或 4xx/5xx；首个 Tab 均落在有名称的“首页看板”链接。首页数据新鲜度链同时展示源观测、抓取/转换/部署和客户端检查时间。503 模拟结果为 1 个错误态、0 个加载态、0 个指标组件，且未伪造数值；新上下文恢复后 6 个组件可见，两份首页 JSON 均为 200。`d7610ab` 的 Pages run `29709212092` 首次在 `configure-pages` 步骤失败，期间 GitHub REST 多次返回瞬时 503；同一 run 的第 2 次尝试成功。生产切换前已有 15 次跨夜定时 Pages 运行连续成功；结束时新仓库 Actions 为 enabled + selected、Pages 为 workflow 模式且新站 HTTP 200。新克隆初始 HEAD 为 `d7610ab`，工作树干净，`origin/main`、`origin/data-cache` 和 `git fsck` 均通过。旧仓库 Actions 为 `enabled:false`、Pages API 与旧网址均返回 404、仓库 `isArchived:true`；Cloudflare 管理端仍返回 Access 302，Supabase 未做修改。
+- 剩余风险：GitHub API 在本批出现多次瞬时 503，但所有关键终态均已通过独立读取或 HTTP 请求复核。官方 Action 的 Node 20 runtime 提示和 `sha_pinning_required:false` 仍需后续依赖治理；`SEC_USER_AGENT` 未配置，BitMine SEC 自动刷新继续保留已审核数据。Phase 5 仍按产品决定暂停，Phase 7 固定早报与 Phase 9 首页扩展尚未开始，不影响 Phase 8 完成。
+- 下一步：从 `C:\Users\hovyf\Documents\cyclelens` 进入 Phase 9，先确定首页跨市场信息架构和经许可审核的美股大盘候选指标；指标池稳定后再进入 Phase 7 固定 Telegram 早报。A 股页面继续等待信源与许可结论。
 
 验收：新站数据和定时任务稳定运行；旧站 Pages 不再公开、旧定时 Actions 不再触发且仓库已只读归档；当前复用的 Supabase 与 `cyclelens-admin` 保持正常；没有在迁移日志、构建产物或仓库中泄露密钥。
 
