@@ -125,7 +125,9 @@ export function DashboardPage({ language, setLanguage, t }) {
           {projection ? (
             <strong className={missingCount ? "macro-flat" : "macro-up"}>{missingCount ? copy.partial : copy.available}</strong>
           ) : null}
-          <small>{projection ? freshnessLabel(projection.freshness?.observedAt, language) : copy.loading}</small>
+          <small>{projection
+            ? freshnessLabel(projection.freshness?.observedAt, language)
+            : error ? copy.unavailable : copy.loading}</small>
         </div>
       </header>
 
@@ -133,7 +135,7 @@ export function DashboardPage({ language, setLanguage, t }) {
 
       <div className="dashboard-layout">
         <section className="dashboard-board" aria-label={copy.title}>
-          {loading && !projection ? <DataState variant="loading"><p>{copy.loading}</p></DataState> : null}
+          {!error && loading && !projection ? <DataState variant="loading"><p>{copy.loading}</p></DataState> : null}
           {error && !projection ? <DataState variant="error"><p>{copy.unavailable}</p></DataState> : null}
           {projection && !visibleWidgets.length ? <DataState variant="empty"><p>{copy.empty}</p></DataState> : null}
           {projection ? visibleWidgets.map((definition) => {

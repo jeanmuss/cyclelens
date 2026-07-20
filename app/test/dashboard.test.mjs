@@ -107,5 +107,7 @@ test("homepage consumes only the dashboard projection and the registry resolves 
   ]);
   assert.match(pageSource, /useLiveData\(DASHBOARD_LIVE_DATA\)/);
   assert.doesNotMatch(pageSource, /fetch\(|CMC|DefiLlama|SoSoValue|Supabase/i);
+  assert.match(pageSource, /!error && loading && !projection/);
+  assert.match(pageSource, /error \? copy\.unavailable : copy\.loading/);
   assert.match(registrySource, /component:\s*componentById\[definition\.componentId\]/);
 });
