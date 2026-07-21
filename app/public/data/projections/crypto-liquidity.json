@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "catalogVersion": 2,
   "projectionId": "crypto-liquidity",
-  "generatedAt": "2026-07-20T23:28:40.993Z",
+  "generatedAt": "2026-07-21T23:26:51.969Z",
   "freshness": {
-    "observedAt": "2026-07-20T00:00:00.000Z",
-    "firstFetchedAt": "2026-07-20T23:28:29.000Z",
-    "lastCheckedAt": "2026-07-20T23:28:29.000Z",
-    "transformedAt": "2026-07-20T23:28:40.993Z"
+    "observedAt": "2026-07-21T00:00:00.000Z",
+    "firstFetchedAt": "2026-07-21T23:26:43.402Z",
+    "lastCheckedAt": "2026-07-21T23:26:43.402Z",
+    "transformedAt": "2026-07-21T23:26:51.969Z"
   },
   "metrics": [
     {
@@ -36,16 +36,6 @@
         }
       ],
       "observations": [
-        {
-          "observedAt": "2026-03-23T00:00:00.000Z",
-          "value": 2337308374320.64,
-          "qualityStatus": "provider_reported",
-          "firstFetchedAt": "2026-07-16T09:34:43.817Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.621Z",
-          "sourcePolicyId": "coinmarketcap",
-          "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
-          "dimensions": {}
-        },
         {
           "observedAt": "2026-03-24T00:00:00.000Z",
           "value": 2426522821630.58,
@@ -1101,7 +1091,7 @@
           "value": 2204416762718.81,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.817Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.936Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.310Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
           "dimensions": {}
@@ -1111,7 +1101,7 @@
           "value": 2179916907548.42,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.817Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.936Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.310Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
           "dimensions": {}
@@ -1121,7 +1111,7 @@
           "value": 2148328128617.33,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.817Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.936Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.310Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
           "dimensions": {}
@@ -1131,7 +1121,7 @@
           "value": 2168542296512.62,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-14T23:23:44.111Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.936Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.310Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
           "dimensions": {}
@@ -1141,7 +1131,7 @@
           "value": 2198784426682.84,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.817Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.936Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.310Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
           "dimensions": {}
@@ -1151,7 +1141,7 @@
           "value": 2187494805535.63,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.817Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.936Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.310Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
           "dimensions": {}
@@ -1161,7 +1151,7 @@
           "value": 2188905257109.58,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-14T23:23:44.111Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.936Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.310Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
           "dimensions": {}
@@ -1171,7 +1161,7 @@
           "value": 2145725536452.29,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-14T23:23:44.111Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.936Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.310Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
           "dimensions": {}
@@ -1181,7 +1171,7 @@
           "value": 2227221406425.37,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-15T13:23:44.715Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.936Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.310Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
           "dimensions": {}
@@ -1191,7 +1181,7 @@
           "value": 2224231971711.84,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T03:58:13.477Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.936Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.310Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
           "dimensions": {}
@@ -1201,7 +1191,7 @@
           "value": 2189890178869.41,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-17T02:12:14.526Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.936Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.310Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
           "dimensions": {}
@@ -1211,7 +1201,7 @@
           "value": 2190100017808.23,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-18T02:01:59.561Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.936Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.310Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
           "dimensions": {}
@@ -1221,17 +1211,27 @@
           "value": 2210993825835.68,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-19T02:12:52.489Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.936Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.310Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
           "dimensions": {}
         },
         {
           "observedAt": "2026-07-20T00:00:00.000Z",
-          "value": 2228427549449.9062,
-          "qualityStatus": "available",
+          "value": 2210330338918.87,
+          "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-20T00:14:48.227Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.852Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.310Z",
+          "sourcePolicyId": "coinmarketcap",
+          "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
+          "dimensions": {}
+        },
+        {
+          "observedAt": "2026-07-21T00:00:00.000Z",
+          "value": 2252801783365.187,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-21T02:40:43.311Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.055Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/",
           "dimensions": {}
@@ -1264,16 +1264,6 @@
         }
       ],
       "observations": [
-        {
-          "observedAt": "2026-03-23T00:00:00.000Z",
-          "value": 1357306240083.296,
-          "qualityStatus": "provider_reported",
-          "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
-          "sourcePolicyId": "coinmarketcap",
-          "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
-          "dimensions": {}
-        },
         {
           "observedAt": "2026-03-24T00:00:00.000Z",
           "value": 1418189040215.7783,
@@ -2329,7 +2319,7 @@
           "value": 1283333452244.983,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -2339,7 +2329,7 @@
           "value": 1269750982976.2134,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -2349,7 +2339,7 @@
           "value": 1248018230722.8242,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -2359,7 +2349,7 @@
           "value": 1267122366128.0388,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-14T23:23:44.111Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -2369,7 +2359,7 @@
           "value": 1286020681771.2175,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -2379,7 +2369,7 @@
           "value": 1279061320055.875,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -2389,7 +2379,7 @@
           "value": 1278449844487.12,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-14T23:23:44.111Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -2399,7 +2389,7 @@
           "value": 1248667349112.5684,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-14T23:23:44.111Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -2409,7 +2399,7 @@
           "value": 1303164564522.0508,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-15T13:23:44.715Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -2419,7 +2409,7 @@
           "value": 1298089011713.3862,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T00:01:28.790Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -2429,7 +2419,7 @@
           "value": 1279424745046.1472,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-17T02:12:14.526Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -2439,7 +2429,7 @@
           "value": 1281448735328.0962,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-18T02:01:59.561Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -2449,17 +2439,27 @@
           "value": 1299654423975.5706,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-19T02:12:52.489Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
         },
         {
           "observedAt": "2026-07-20T00:00:00.000Z",
-          "value": 1307218585483.1172,
-          "qualityStatus": "available",
+          "value": 1297402076832.3481,
+          "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-20T00:14:48.227Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.852Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
+          "sourcePolicyId": "coinmarketcap",
+          "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
+          "dimensions": {}
+        },
+        {
+          "observedAt": "2026-07-21T00:00:00.000Z",
+          "value": 1329653278286.8037,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-21T02:40:43.311Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.055Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/",
           "dimensions": {}
@@ -2492,16 +2492,6 @@
         }
       ],
       "observations": [
-        {
-          "observedAt": "2026-03-23T00:00:00.000Z",
-          "value": 184144857725.6835,
-          "qualityStatus": "provider_reported",
-          "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
-          "sourcePolicyId": "coinmarketcap",
-          "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
-          "dimensions": {}
-        },
         {
           "observedAt": "2026-03-24T00:00:00.000Z",
           "value": 184154901291.79153,
@@ -3557,7 +3547,7 @@
           "value": 184198637377.2337,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -3567,7 +3557,7 @@
           "value": 184273652721.27707,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -3577,7 +3567,7 @@
           "value": 184207989035.7435,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -3587,7 +3577,7 @@
           "value": 184147143962.5238,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-14T23:23:44.111Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -3597,7 +3587,7 @@
           "value": 184191087274.68124,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -3607,7 +3597,7 @@
           "value": 184176666691.0461,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -3617,7 +3607,7 @@
           "value": 184183514079.07877,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-14T23:23:44.111Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -3627,7 +3617,7 @@
           "value": 184081853982.38986,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-14T23:23:44.111Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -3637,7 +3627,7 @@
           "value": 184227456861.44806,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-15T13:23:44.715Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -3647,7 +3637,7 @@
           "value": 184245280955.1326,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T00:01:28.790Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -3657,7 +3647,7 @@
           "value": 184055293287.99362,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-17T02:12:14.526Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -3667,7 +3657,7 @@
           "value": 184067640637.42084,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-18T02:01:59.561Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -3677,17 +3667,27 @@
           "value": 184113440104.9872,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-19T02:12:52.489Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
         },
         {
           "observedAt": "2026-07-20T00:00:00.000Z",
-          "value": 184078985472.00815,
-          "qualityStatus": "available",
+          "value": 184085105905.3642,
+          "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-20T00:14:48.227Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.852Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
+          "sourcePolicyId": "coinmarketcap",
+          "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
+          "dimensions": {}
+        },
+        {
+          "observedAt": "2026-07-21T00:00:00.000Z",
+          "value": 184103346972.7236,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-21T02:40:43.311Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.055Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/",
           "dimensions": {}
@@ -3720,16 +3720,6 @@
         }
       ],
       "observations": [
-        {
-          "observedAt": "2026-03-23T00:00:00.000Z",
-          "value": 78981354482.84143,
-          "qualityStatus": "provider_reported",
-          "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
-          "sourcePolicyId": "coinmarketcap",
-          "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
-          "dimensions": {}
-        },
         {
           "observedAt": "2026-03-24T00:00:00.000Z",
           "value": 78658974020.91084,
@@ -4785,7 +4775,7 @@
           "value": 73134837098.24532,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -4795,7 +4785,7 @@
           "value": 73260928641.95067,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -4805,7 +4795,7 @@
           "value": 73191513394.62715,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -4815,7 +4805,7 @@
           "value": 73322859922.89442,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -4825,7 +4815,7 @@
           "value": 73270722789.54593,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -4835,7 +4825,7 @@
           "value": 73327405528.34514,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -4845,7 +4835,7 @@
           "value": 73403242582.17154,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-14T23:23:44.111Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -4855,7 +4845,7 @@
           "value": 73070054214.25691,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-14T23:23:44.111Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -4865,7 +4855,7 @@
           "value": 73091025612.5818,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-15T13:23:44.715Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -4875,7 +4865,7 @@
           "value": 73113565053.57695,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-16T00:01:28.790Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -4885,7 +4875,7 @@
           "value": 73222200419.19193,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-17T02:12:14.526Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -4895,7 +4885,7 @@
           "value": 73287574353.90227,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-18T02:01:59.561Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -4905,17 +4895,27 @@
           "value": 73313615831.91643,
           "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-19T02:12:52.489Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
         },
         {
           "observedAt": "2026-07-20T00:00:00.000Z",
-          "value": 73220325040.99196,
-          "qualityStatus": "available",
+          "value": 73277927939.04164,
+          "qualityStatus": "provider_reported",
           "firstFetchedAt": "2026-07-20T00:14:48.227Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.852Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
+          "sourcePolicyId": "coinmarketcap",
+          "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
+          "dimensions": {}
+        },
+        {
+          "observedAt": "2026-07-21T00:00:00.000Z",
+          "value": 73258588555.15807,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-21T02:40:43.311Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.055Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/",
           "dimensions": {}
@@ -4948,16 +4948,6 @@
         }
       ],
       "observations": [
-        {
-          "observedAt": "2026-03-23T00:00:00.000Z",
-          "value": -2.0322314842258216,
-          "qualityStatus": "derived_from_provider_price",
-          "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-19T15:31:36.761Z",
-          "sourcePolicyId": "coinmarketcap",
-          "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
-          "dimensions": {}
-        },
         {
           "observedAt": "2026-03-24T00:00:00.000Z",
           "value": -1.543858616319671,
@@ -6013,7 +6003,7 @@
           "value": -7.36950613808518,
           "qualityStatus": "derived_from_provider_price",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -6023,7 +6013,7 @@
           "value": -4.9493930962196675,
           "qualityStatus": "derived_from_provider_price",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -6033,7 +6023,7 @@
           "value": -8.511008390927888,
           "qualityStatus": "derived_from_provider_price",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -6043,7 +6033,7 @@
           "value": -8.02566428672491,
           "qualityStatus": "derived_from_provider_price",
           "firstFetchedAt": "2026-07-14T23:23:44.111Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -6053,7 +6043,7 @@
           "value": -6.434535276630404,
           "qualityStatus": "derived_from_provider_price",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -6063,7 +6053,7 @@
           "value": -7.216945795688323,
           "qualityStatus": "derived_from_provider_price",
           "firstFetchedAt": "2026-07-16T09:34:43.911Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -6073,7 +6063,7 @@
           "value": -6.35743213254103,
           "qualityStatus": "derived_from_provider_price",
           "firstFetchedAt": "2026-07-14T23:23:44.111Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -6083,7 +6073,7 @@
           "value": -11.873423478473422,
           "qualityStatus": "derived_from_provider_price",
           "firstFetchedAt": "2026-07-14T23:23:44.111Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -6093,7 +6083,7 @@
           "value": -6.746547158449356,
           "qualityStatus": "derived_from_provider_price",
           "firstFetchedAt": "2026-07-15T13:23:44.715Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -6103,7 +6093,7 @@
           "value": -5.77969515499932,
           "qualityStatus": "derived_from_provider_price",
           "firstFetchedAt": "2026-07-16T00:01:28.790Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -6113,7 +6103,7 @@
           "value": -8.115857377876123,
           "qualityStatus": "derived_from_provider_price",
           "firstFetchedAt": "2026-07-17T02:12:14.526Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -6123,7 +6113,7 @@
           "value": -7.44555178638695,
           "qualityStatus": "derived_from_provider_price",
           "firstFetchedAt": "2026-07-18T02:01:59.561Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
@@ -6133,17 +6123,27 @@
           "value": -5.968645695819674,
           "qualityStatus": "derived_from_provider_price",
           "firstFetchedAt": "2026-07-19T02:12:52.489Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
           "dimensions": {}
         },
         {
           "observedAt": "2026-07-20T00:00:00.000Z",
-          "value": -7.838909286179696,
-          "qualityStatus": "available",
+          "value": -7.5066804486534355,
+          "qualityStatus": "derived_from_provider_price",
           "firstFetchedAt": "2026-07-20T00:14:48.227Z",
-          "lastCheckedAt": "2026-07-20T23:28:28.852Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.344Z",
+          "sourcePolicyId": "coinmarketcap",
+          "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
+          "dimensions": {}
+        },
+        {
+          "observedAt": "2026-07-21T00:00:00.000Z",
+          "value": -6.302076407747048,
+          "qualityStatus": "available",
+          "firstFetchedAt": "2026-07-21T02:40:43.311Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.055Z",
           "sourcePolicyId": "coinmarketcap",
           "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/",
           "dimensions": {}
@@ -6180,8 +6180,8 @@
           "observedAt": "2026-06-21T00:00:00.000Z",
           "value": 847363,
           "qualityStatus": "official_form_8k",
-          "firstFetchedAt": "2026-07-20T23:28:29.000Z",
-          "lastCheckedAt": "2026-07-20T23:28:29.000Z",
+          "firstFetchedAt": "2026-07-21T23:26:43.402Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.402Z",
           "sourcePolicyId": "strategy-disclosures",
           "sourceUrl": "https://www.strategy.com/press/strategy-increases-its-usd-reserve-to-1-4-billion-and-btc-reserve-to-847363_06-22-2026",
           "dimensions": {
@@ -6222,8 +6222,8 @@
           "observedAt": "2026-06-21T00:00:00.000Z",
           "value": 75651,
           "qualityStatus": "official_form_8k",
-          "firstFetchedAt": "2026-07-20T23:28:29.000Z",
-          "lastCheckedAt": "2026-07-20T23:28:29.000Z",
+          "firstFetchedAt": "2026-07-21T23:26:43.402Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.402Z",
           "sourcePolicyId": "strategy-disclosures",
           "sourceUrl": "https://www.strategy.com/press/strategy-increases-its-usd-reserve-to-1-4-billion-and-btc-reserve-to-847363_06-22-2026",
           "dimensions": {
@@ -6264,8 +6264,8 @@
           "observedAt": "2026-06-28T22:30:00.000Z",
           "value": 5742237,
           "qualityStatus": "mixed_disclosure_dates",
-          "firstFetchedAt": "2026-07-20T23:28:29.000Z",
-          "lastCheckedAt": "2026-07-20T23:28:29.000Z",
+          "firstFetchedAt": "2026-07-21T23:26:43.402Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.402Z",
           "sourcePolicyId": "sec-edgar",
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1829311/000149315226032090/ex99-1.htm",
           "dimensions": {
@@ -6306,8 +6306,8 @@
           "observedAt": "2026-02-28T00:00:00.000Z",
           "value": 3794.2554072810326,
           "qualityStatus": "official_quarterly_filing_derived",
-          "firstFetchedAt": "2026-07-20T23:28:29.000Z",
-          "lastCheckedAt": "2026-07-20T23:28:29.000Z",
+          "firstFetchedAt": "2026-07-21T23:26:43.402Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.402Z",
           "sourcePolicyId": "sec-edgar",
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1829311/000149315226016560/form10-q.htm",
           "dimensions": {

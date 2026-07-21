@@ -1,14 +1,14 @@
 {
   "version": 4,
   "page": "crypto-liquidity",
-  "generatedAt": "2026-07-20T23:28:40.993Z",
+  "generatedAt": "2026-07-21T23:26:51.969Z",
   "timestamps": {
     "observedAt": "2026-07-15",
-    "fetchedAt": "2026-07-20T23:28:29.000Z",
-    "transformedAt": "2026-07-20T23:28:40.993Z"
+    "fetchedAt": "2026-07-21T23:26:43.402Z",
+    "transformedAt": "2026-07-21T23:26:51.969Z"
   },
   "sectionObservedAt": {
-    "levels": "2026-07-20T23:26:59.999Z",
+    "levels": "2026-07-21T23:24:59.999Z",
     "etf": "2026-07-15",
     "corporateTreasuries": "2026-06-21"
   },
@@ -18,112 +18,112 @@
       "id": "crypto.totalMarketCap",
       "label": "Total crypto market cap",
       "labelZh": "加密市场总市值",
-      "value": 2228427549449.9062,
+      "value": 2252801783365.187,
       "unit": "USD",
-      "observedAt": "2026-07-20T23:26:59.999Z",
+      "observedAt": "2026-07-21T23:24:59.999Z",
       "source": "cmc",
-      "changePct24h": 0.85023099,
+      "changePct24h": 1.08706927,
       "semantics": "market_cap_change_not_net_flow",
-      "fetchedAt": "2026-07-20T23:28:28.852Z",
-      "change1d": 17433723614.226074,
-      "change7d": 39522292340.32617,
+      "fetchedAt": "2026-07-21T23:26:43.055Z",
+      "change1d": 42471444446.316895,
+      "change7d": 107076246912.89697,
       "change1dSource": "cmc",
       "change7dSource": "cmc",
-      "change1dObservedAt": "2026-07-20T23:26:59.999Z",
-      "change7dObservedAt": "2026-07-20T23:26:59.999Z"
+      "change1dObservedAt": "2026-07-21T23:24:59.999Z",
+      "change7dObservedAt": "2026-07-21T23:24:59.999Z"
     },
     {
       "id": "btc.marketCap",
       "label": "Bitcoin market cap",
       "labelZh": "BTC 总市值",
-      "value": 1307218585483.1172,
+      "value": 1329653278286.8037,
       "unit": "USD",
-      "observedAt": "2026-07-20T23:27:05.000Z",
+      "observedAt": "2026-07-21T23:25:05.000Z",
       "source": "cmc",
-      "changePct24h": 0.83749536,
+      "changePct24h": 1.69525367,
       "semantics": "market_cap_change_not_net_flow",
-      "fetchedAt": "2026-07-20T23:28:28.852Z",
-      "change1d": 7564161507.546631,
-      "change7d": 28768740995.99707,
+      "fetchedAt": "2026-07-21T23:26:43.055Z",
+      "change1d": 32251201454.455566,
+      "change7d": 80985929174.23535,
       "change1dSource": "cmc",
       "change7dSource": "cmc",
-      "change1dObservedAt": "2026-07-20T23:27:05.000Z",
-      "change7dObservedAt": "2026-07-20T23:27:05.000Z"
+      "change1dObservedAt": "2026-07-21T23:25:05.000Z",
+      "change7dObservedAt": "2026-07-21T23:25:05.000Z"
     },
     {
       "id": "stablecoin.usdt.marketCap",
       "label": "USDT circulating market cap",
       "labelZh": "USDT 流通市值",
-      "value": 184078985472.00815,
+      "value": 184103346972.7236,
       "unit": "USD",
-      "observedAt": "2026-07-20T23:27:05.000Z",
+      "observedAt": "2026-07-21T23:25:05.000Z",
       "source": "cmc",
-      "changePct24h": -0.03579397,
+      "changePct24h": 0.00918229,
       "semantics": "circulating_supply_proxy",
-      "fetchedAt": "2026-07-20T23:28:28.852Z",
-      "change1d": -34454632.97906494,
-      "change7d": -104528607.07061768,
+      "fetchedAt": "2026-07-21T23:26:43.055Z",
+      "change1d": 18241067.359405518,
+      "change7d": 21492990.333740234,
       "change1dSource": "cmc",
       "change7dSource": "cmc",
-      "change1dObservedAt": "2026-07-20T23:27:05.000Z",
-      "change7dObservedAt": "2026-07-20T23:27:05.000Z"
+      "change1dObservedAt": "2026-07-21T23:25:05.000Z",
+      "change7dObservedAt": "2026-07-21T23:25:05.000Z"
     },
     {
       "id": "stablecoin.usdc.marketCap",
       "label": "USDC circulating market cap",
       "labelZh": "USDC 流通市值",
-      "value": 73220325040.99196,
+      "value": 73258588555.15807,
       "unit": "USD",
-      "observedAt": "2026-07-20T23:27:05.000Z",
+      "observedAt": "2026-07-21T23:25:05.000Z",
       "source": "cmc",
-      "changePct24h": -0.01204028,
+      "changePct24h": -0.00715674,
       "semantics": "circulating_supply_proxy",
-      "fetchedAt": "2026-07-20T23:28:28.852Z",
-      "change1d": -93290790.924469,
-      "change7d": -182917541.1795807,
+      "fetchedAt": "2026-07-21T23:26:43.055Z",
+      "change1d": -19339383.88357544,
+      "change7d": 188534340.90115356,
       "change1dSource": "cmc",
       "change7dSource": "cmc",
-      "change1dObservedAt": "2026-07-20T23:27:05.000Z",
-      "change7dObservedAt": "2026-07-20T23:27:05.000Z"
+      "change1dObservedAt": "2026-07-21T23:25:05.000Z",
+      "change7dObservedAt": "2026-07-21T23:25:05.000Z"
     },
     {
       "id": "stablecoin.major.marketCap",
       "label": "USDT + USDC market cap",
       "labelZh": "主流稳定币市值",
-      "value": 257299310513.00012,
+      "value": 257361935527.88165,
       "unit": "USD",
-      "observedAt": "2026-07-20T23:27:05.000Z",
+      "observedAt": "2026-07-21T23:25:05.000Z",
       "source": "cmc",
       "coverage": [
         "USDT",
         "USDC"
       ],
       "semantics": "tracked_stablecoin_supply_not_total_market",
-      "fetchedAt": "2026-07-20T23:28:28.852Z",
-      "change1d": -127745423.90350342,
-      "change7d": -287446148.2501831,
+      "fetchedAt": "2026-07-21T23:26:43.055Z",
+      "change1d": -1098316.5241699219,
+      "change7d": 210027331.23486328,
       "change1dSource": "cmc",
       "change7dSource": "cmc",
-      "change1dObservedAt": "2026-07-20T23:27:05.000Z",
-      "change7dObservedAt": "2026-07-20T23:27:05.000Z"
+      "change1dObservedAt": "2026-07-21T23:25:05.000Z",
+      "change7dObservedAt": "2026-07-21T23:25:05.000Z"
     },
     {
       "id": "stablecoin.usdt.depegBps",
       "label": "USDT peg deviation",
       "labelZh": "USDT 脱锚幅度",
-      "value": -7.838909286179696,
+      "value": -6.302076407747048,
       "unit": "bps",
-      "observedAt": "2026-07-20T23:27:05.000Z",
+      "observedAt": "2026-07-21T23:25:05.000Z",
       "source": "cmc",
-      "price": 0.999216109071382,
+      "price": 0.9993697923592253,
       "semantics": "price_deviation_not_flow",
-      "fetchedAt": "2026-07-20T23:28:28.852Z",
-      "change1d": -1.8702635903600218,
-      "change7d": -1.4814771536386662,
+      "fetchedAt": "2026-07-21T23:26:43.055Z",
+      "change1d": 1.2046040409063874,
+      "change7d": 5.5713470707263735,
       "change1dSource": "cmc",
       "change7dSource": "cmc",
-      "change1dObservedAt": "2026-07-20T23:27:05.000Z",
-      "change7dObservedAt": "2026-07-20T23:27:05.000Z"
+      "change1dObservedAt": "2026-07-21T23:25:05.000Z",
+      "change7dObservedAt": "2026-07-21T23:25:05.000Z"
     }
   ],
   "history": {
@@ -5461,7 +5461,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-16T09:34:43.817Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.936Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.310Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "market_cap_change_not_net_flow",
@@ -5476,7 +5476,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-16T09:34:43.817Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.936Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.310Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "market_cap_change_not_net_flow",
@@ -5491,7 +5491,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-16T09:34:43.817Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.936Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.310Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "market_cap_change_not_net_flow",
@@ -5506,7 +5506,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-14T23:23:44.111Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.936Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.310Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "market_cap_change_not_net_flow",
@@ -5521,7 +5521,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-16T09:34:43.817Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.936Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.310Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "market_cap_change_not_net_flow",
@@ -5536,7 +5536,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-16T09:34:43.817Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.936Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.310Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "market_cap_change_not_net_flow",
@@ -5551,7 +5551,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-14T23:23:44.111Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.936Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.310Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "market_cap_change_not_net_flow",
@@ -5566,7 +5566,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-14T23:23:44.111Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.936Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.310Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "market_cap_change_not_net_flow",
@@ -5581,7 +5581,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-15T13:23:44.715Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.936Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.310Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "market_cap_change_not_net_flow",
@@ -5596,7 +5596,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-16T03:58:13.477Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.936Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.310Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "market_cap_change_not_net_flow",
@@ -5611,7 +5611,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-17T02:12:14.526Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.936Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.310Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "market_cap_change_not_net_flow",
@@ -5626,7 +5626,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-18T02:01:59.561Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.936Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.310Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "market_cap_change_not_net_flow",
@@ -5641,7 +5641,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-19T02:12:52.489Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.936Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.310Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "market_cap_change_not_net_flow",
@@ -5650,17 +5650,32 @@
       },
       {
         "date": "2026-07-20",
-        "value": 2228427549449.9062,
-        "observedAt": "2026-07-20T23:26:59.999Z",
+        "value": 2210330338918.87,
+        "observedAt": "2026-07-20T00:00:00.000Z",
+        "source": "cmc",
+        "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/global-metrics",
+        "sourceKey": "cmc",
+        "fetchedAt": "2026-07-20T00:14:48.227Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.310Z",
+        "qualityStatus": "provider_reported",
+        "metadata": {
+          "semantics": "market_cap_change_not_net_flow",
+          "sourceObservedAt": "2026-07-20T00:00:00.000Z"
+        }
+      },
+      {
+        "date": "2026-07-21",
+        "value": 2252801783365.187,
+        "observedAt": "2026-07-21T23:24:59.999Z",
         "source": "cmc",
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/",
         "sourceKey": "cmc",
-        "fetchedAt": "2026-07-20T00:14:48.227Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.852Z",
+        "fetchedAt": "2026-07-21T02:40:43.311Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.055Z",
         "qualityStatus": "available",
         "metadata": {
           "semantics": "market_cap_change_not_net_flow",
-          "sourceObservedAt": "2026-07-20T23:26:59.999Z"
+          "sourceObservedAt": "2026-07-21T23:24:59.999Z"
         }
       }
     ],
@@ -10998,7 +11013,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-16T09:34:43.911Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "market_cap_change_not_net_flow",
@@ -11013,7 +11028,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-16T09:34:43.911Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "market_cap_change_not_net_flow",
@@ -11028,7 +11043,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-16T09:34:43.911Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "market_cap_change_not_net_flow",
@@ -11043,7 +11058,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-14T23:23:44.111Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "market_cap_change_not_net_flow",
@@ -11058,7 +11073,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-16T09:34:43.911Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "market_cap_change_not_net_flow",
@@ -11073,7 +11088,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-16T09:34:43.911Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "market_cap_change_not_net_flow",
@@ -11088,7 +11103,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-14T23:23:44.111Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "market_cap_change_not_net_flow",
@@ -11103,7 +11118,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-14T23:23:44.111Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "market_cap_change_not_net_flow",
@@ -11118,7 +11133,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-15T13:23:44.715Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "market_cap_change_not_net_flow",
@@ -11133,7 +11148,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-16T00:01:28.790Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "market_cap_change_not_net_flow",
@@ -11148,7 +11163,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-17T02:12:14.526Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "market_cap_change_not_net_flow",
@@ -11163,7 +11178,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-18T02:01:59.561Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "market_cap_change_not_net_flow",
@@ -11178,7 +11193,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-19T02:12:52.489Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "market_cap_change_not_net_flow",
@@ -11187,17 +11202,32 @@
       },
       {
         "date": "2026-07-20",
-        "value": 1307218585483.1172,
-        "observedAt": "2026-07-20T23:27:05.000Z",
+        "value": 1297402076832.3481,
+        "observedAt": "2026-07-20T00:00:00.000Z",
+        "source": "cmc",
+        "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
+        "sourceKey": "cmc",
+        "fetchedAt": "2026-07-20T00:14:48.227Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
+        "qualityStatus": "provider_reported",
+        "metadata": {
+          "semantics": "market_cap_change_not_net_flow",
+          "sourceObservedAt": "2026-07-20T00:00:00.000Z"
+        }
+      },
+      {
+        "date": "2026-07-21",
+        "value": 1329653278286.8037,
+        "observedAt": "2026-07-21T23:25:05.000Z",
         "source": "cmc",
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/",
         "sourceKey": "cmc",
-        "fetchedAt": "2026-07-20T00:14:48.227Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.852Z",
+        "fetchedAt": "2026-07-21T02:40:43.311Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.055Z",
         "qualityStatus": "available",
         "metadata": {
           "semantics": "market_cap_change_not_net_flow",
-          "sourceObservedAt": "2026-07-20T23:27:05.000Z"
+          "sourceObservedAt": "2026-07-21T23:25:05.000Z"
         }
       }
     ],
@@ -16535,7 +16565,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-16T09:34:43.911Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "circulating_supply_proxy",
@@ -16550,7 +16580,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-16T09:34:43.911Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "circulating_supply_proxy",
@@ -16565,7 +16595,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-16T09:34:43.911Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "circulating_supply_proxy",
@@ -16580,7 +16610,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-14T23:23:44.111Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "circulating_supply_proxy",
@@ -16595,7 +16625,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-16T09:34:43.911Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "circulating_supply_proxy",
@@ -16610,7 +16640,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-16T09:34:43.911Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "circulating_supply_proxy",
@@ -16625,7 +16655,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-14T23:23:44.111Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "circulating_supply_proxy",
@@ -16640,7 +16670,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-14T23:23:44.111Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "circulating_supply_proxy",
@@ -16655,7 +16685,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-15T13:23:44.715Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "circulating_supply_proxy",
@@ -16670,7 +16700,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-16T00:01:28.790Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "circulating_supply_proxy",
@@ -16685,7 +16715,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-17T02:12:14.526Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "circulating_supply_proxy",
@@ -16700,7 +16730,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-18T02:01:59.561Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "circulating_supply_proxy",
@@ -16715,7 +16745,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-19T02:12:52.489Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "circulating_supply_proxy",
@@ -16724,17 +16754,32 @@
       },
       {
         "date": "2026-07-20",
-        "value": 184078985472.00815,
-        "observedAt": "2026-07-20T23:27:05.000Z",
+        "value": 184085105905.3642,
+        "observedAt": "2026-07-20T00:00:00.000Z",
+        "source": "cmc",
+        "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
+        "sourceKey": "cmc",
+        "fetchedAt": "2026-07-20T00:14:48.227Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
+        "qualityStatus": "provider_reported",
+        "metadata": {
+          "semantics": "circulating_supply_proxy",
+          "sourceObservedAt": "2026-07-20T00:00:00.000Z"
+        }
+      },
+      {
+        "date": "2026-07-21",
+        "value": 184103346972.7236,
+        "observedAt": "2026-07-21T23:25:05.000Z",
         "source": "cmc",
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/",
         "sourceKey": "cmc",
-        "fetchedAt": "2026-07-20T00:14:48.227Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.852Z",
+        "fetchedAt": "2026-07-21T02:40:43.311Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.055Z",
         "qualityStatus": "available",
         "metadata": {
           "semantics": "circulating_supply_proxy",
-          "sourceObservedAt": "2026-07-20T23:27:05.000Z"
+          "sourceObservedAt": "2026-07-21T23:25:05.000Z"
         }
       }
     ],
@@ -22072,7 +22117,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-16T09:34:43.911Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "derived_from_provider_price",
         "metadata": {
           "semantics": "price_deviation_not_flow",
@@ -22087,7 +22132,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-16T09:34:43.911Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "derived_from_provider_price",
         "metadata": {
           "semantics": "price_deviation_not_flow",
@@ -22102,7 +22147,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-16T09:34:43.911Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "derived_from_provider_price",
         "metadata": {
           "semantics": "price_deviation_not_flow",
@@ -22117,7 +22162,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-14T23:23:44.111Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "derived_from_provider_price",
         "metadata": {
           "semantics": "price_deviation_not_flow",
@@ -22132,7 +22177,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-16T09:34:43.911Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "derived_from_provider_price",
         "metadata": {
           "semantics": "price_deviation_not_flow",
@@ -22147,7 +22192,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-16T09:34:43.911Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "derived_from_provider_price",
         "metadata": {
           "semantics": "price_deviation_not_flow",
@@ -22162,7 +22207,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-14T23:23:44.111Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "derived_from_provider_price",
         "metadata": {
           "semantics": "price_deviation_not_flow",
@@ -22177,7 +22222,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-14T23:23:44.111Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "derived_from_provider_price",
         "metadata": {
           "semantics": "price_deviation_not_flow",
@@ -22192,7 +22237,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-15T13:23:44.715Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "derived_from_provider_price",
         "metadata": {
           "semantics": "price_deviation_not_flow",
@@ -22207,7 +22252,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-16T00:01:28.790Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "derived_from_provider_price",
         "metadata": {
           "semantics": "price_deviation_not_flow",
@@ -22222,7 +22267,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-17T02:12:14.526Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "derived_from_provider_price",
         "metadata": {
           "semantics": "price_deviation_not_flow",
@@ -22237,7 +22282,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-18T02:01:59.561Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "derived_from_provider_price",
         "metadata": {
           "semantics": "price_deviation_not_flow",
@@ -22252,7 +22297,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-19T02:12:52.489Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "derived_from_provider_price",
         "metadata": {
           "semantics": "price_deviation_not_flow",
@@ -22261,17 +22306,32 @@
       },
       {
         "date": "2026-07-20",
-        "value": -7.838909286179696,
-        "observedAt": "2026-07-20T23:27:05.000Z",
+        "value": -7.5066804486534355,
+        "observedAt": "2026-07-20T00:00:00.000Z",
+        "source": "cmc",
+        "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
+        "sourceKey": "cmc",
+        "fetchedAt": "2026-07-20T00:14:48.227Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
+        "qualityStatus": "derived_from_provider_price",
+        "metadata": {
+          "semantics": "price_deviation_not_flow",
+          "sourceObservedAt": "2026-07-20T00:00:00.000Z"
+        }
+      },
+      {
+        "date": "2026-07-21",
+        "value": -6.302076407747048,
+        "observedAt": "2026-07-21T23:25:05.000Z",
         "source": "cmc",
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/",
         "sourceKey": "cmc",
-        "fetchedAt": "2026-07-20T00:14:48.227Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.852Z",
+        "fetchedAt": "2026-07-21T02:40:43.311Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.055Z",
         "qualityStatus": "available",
         "metadata": {
           "semantics": "price_deviation_not_flow",
-          "sourceObservedAt": "2026-07-20T23:27:05.000Z"
+          "sourceObservedAt": "2026-07-21T23:25:05.000Z"
         }
       }
     ],
@@ -27609,7 +27669,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-16T09:34:43.911Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "circulating_supply_proxy",
@@ -27624,7 +27684,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-16T09:34:43.911Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "circulating_supply_proxy",
@@ -27639,7 +27699,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-16T09:34:43.911Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "circulating_supply_proxy",
@@ -27654,7 +27714,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-16T09:34:43.911Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "circulating_supply_proxy",
@@ -27669,7 +27729,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-16T09:34:43.911Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "circulating_supply_proxy",
@@ -27684,7 +27744,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-16T09:34:43.911Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "circulating_supply_proxy",
@@ -27699,7 +27759,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-14T23:23:44.111Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "circulating_supply_proxy",
@@ -27714,7 +27774,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-14T23:23:44.111Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "circulating_supply_proxy",
@@ -27729,7 +27789,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-15T13:23:44.715Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "circulating_supply_proxy",
@@ -27744,7 +27804,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-16T00:01:28.790Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "circulating_supply_proxy",
@@ -27759,7 +27819,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-17T02:12:14.526Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "circulating_supply_proxy",
@@ -27774,7 +27834,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-18T02:01:59.561Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "circulating_supply_proxy",
@@ -27789,7 +27849,7 @@
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
         "sourceKey": "cmc",
         "fetchedAt": "2026-07-19T02:12:52.489Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.981Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "provider_reported",
         "metadata": {
           "semantics": "circulating_supply_proxy",
@@ -27798,39 +27858,36 @@
       },
       {
         "date": "2026-07-20",
-        "value": 73220325040.99196,
-        "observedAt": "2026-07-20T23:27:05.000Z",
+        "value": 73277927939.04164,
+        "observedAt": "2026-07-20T00:00:00.000Z",
+        "source": "cmc",
+        "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
+        "sourceKey": "cmc",
+        "fetchedAt": "2026-07-20T00:14:48.227Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.344Z",
+        "qualityStatus": "provider_reported",
+        "metadata": {
+          "semantics": "circulating_supply_proxy",
+          "sourceObservedAt": "2026-07-20T00:00:00.000Z"
+        }
+      },
+      {
+        "date": "2026-07-21",
+        "value": 73258588555.15807,
+        "observedAt": "2026-07-21T23:25:05.000Z",
         "source": "cmc",
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/",
         "sourceKey": "cmc",
-        "fetchedAt": "2026-07-20T00:14:48.227Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.852Z",
+        "fetchedAt": "2026-07-21T02:40:43.311Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.055Z",
         "qualityStatus": "available",
         "metadata": {
           "semantics": "circulating_supply_proxy",
-          "sourceObservedAt": "2026-07-20T23:27:05.000Z"
+          "sourceObservedAt": "2026-07-21T23:25:05.000Z"
         }
       }
     ],
     "stablecoin.major.marketCap": [
-      {
-        "date": "2025-06-16",
-        "value": 217587542767,
-        "observedAt": "2025-06-16T00:00:00.000Z",
-        "source": "defillama",
-        "sourceUrl": "https://api-docs.defillama.com/",
-        "fetchedAt": "2026-07-16T03:37:19.293Z",
-        "qualityStatus": "derived_same_date_sum",
-        "metadata": {
-          "coverage": [
-            "USDT",
-            "USDC"
-          ],
-          "derivation": "USDT + USDC same-date circulating USD"
-        },
-        "sourceKey": "defillama",
-        "lastCheckedAt": "2026-07-16T03:37:19.293Z"
-      },
       {
         "date": "2025-06-17",
         "value": 217548107614,
@@ -34063,7 +34120,7 @@
         "observedAt": "2026-07-07T00:00:00.000Z",
         "source": "cmc",
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
-        "fetchedAt": "2026-07-20T23:28:28.981Z",
+        "fetchedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "derived_same_date_sum",
         "metadata": {
           "coverage": [
@@ -34079,7 +34136,7 @@
         "observedAt": "2026-07-08T00:00:00.000Z",
         "source": "cmc",
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
-        "fetchedAt": "2026-07-20T23:28:28.981Z",
+        "fetchedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "derived_same_date_sum",
         "metadata": {
           "coverage": [
@@ -34095,7 +34152,7 @@
         "observedAt": "2026-07-09T00:00:00.000Z",
         "source": "cmc",
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
-        "fetchedAt": "2026-07-20T23:28:28.981Z",
+        "fetchedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "derived_same_date_sum",
         "metadata": {
           "coverage": [
@@ -34111,7 +34168,7 @@
         "observedAt": "2026-07-10T00:00:00.000Z",
         "source": "cmc",
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
-        "fetchedAt": "2026-07-20T23:28:28.981Z",
+        "fetchedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "derived_same_date_sum",
         "metadata": {
           "coverage": [
@@ -34127,7 +34184,7 @@
         "observedAt": "2026-07-11T00:00:00.000Z",
         "source": "cmc",
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
-        "fetchedAt": "2026-07-20T23:28:28.981Z",
+        "fetchedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "derived_same_date_sum",
         "metadata": {
           "coverage": [
@@ -34143,7 +34200,7 @@
         "observedAt": "2026-07-12T00:00:00.000Z",
         "source": "cmc",
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
-        "fetchedAt": "2026-07-20T23:28:28.981Z",
+        "fetchedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "derived_same_date_sum",
         "metadata": {
           "coverage": [
@@ -34159,7 +34216,7 @@
         "observedAt": "2026-07-13T00:00:00.000Z",
         "source": "cmc",
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
-        "fetchedAt": "2026-07-20T23:28:28.981Z",
+        "fetchedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "derived_same_date_sum",
         "metadata": {
           "coverage": [
@@ -34175,7 +34232,7 @@
         "observedAt": "2026-07-14T00:00:00.000Z",
         "source": "cmc",
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
-        "fetchedAt": "2026-07-20T23:28:28.981Z",
+        "fetchedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "derived_same_date_sum",
         "metadata": {
           "coverage": [
@@ -34191,7 +34248,7 @@
         "observedAt": "2026-07-15T00:00:00.000Z",
         "source": "cmc",
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
-        "fetchedAt": "2026-07-20T23:28:28.981Z",
+        "fetchedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "derived_same_date_sum",
         "metadata": {
           "coverage": [
@@ -34207,7 +34264,7 @@
         "observedAt": "2026-07-16T00:00:00.000Z",
         "source": "cmc",
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
-        "fetchedAt": "2026-07-20T23:28:28.981Z",
+        "fetchedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "derived_same_date_sum",
         "metadata": {
           "coverage": [
@@ -34223,7 +34280,7 @@
         "observedAt": "2026-07-17T00:00:00.000Z",
         "source": "cmc",
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
-        "fetchedAt": "2026-07-20T23:28:28.981Z",
+        "fetchedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "derived_same_date_sum",
         "metadata": {
           "coverage": [
@@ -34239,7 +34296,7 @@
         "observedAt": "2026-07-18T00:00:00.000Z",
         "source": "cmc",
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
-        "fetchedAt": "2026-07-20T23:28:28.981Z",
+        "fetchedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "derived_same_date_sum",
         "metadata": {
           "coverage": [
@@ -34255,7 +34312,7 @@
         "observedAt": "2026-07-19T00:00:00.000Z",
         "source": "cmc",
         "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
-        "fetchedAt": "2026-07-20T23:28:28.981Z",
+        "fetchedAt": "2026-07-21T23:26:43.344Z",
         "qualityStatus": "derived_same_date_sum",
         "metadata": {
           "coverage": [
@@ -34267,62 +34324,78 @@
       },
       {
         "date": "2026-07-20",
-        "value": 257299310513.00012,
-        "observedAt": "2026-07-20T23:27:05.000Z",
+        "value": 257363033844.40582,
+        "observedAt": "2026-07-20T00:00:00.000Z",
+        "source": "cmc",
+        "sourceUrl": "https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency",
+        "fetchedAt": "2026-07-21T23:26:43.344Z",
+        "qualityStatus": "derived_same_date_sum",
+        "metadata": {
+          "coverage": [
+            "USDT",
+            "USDC"
+          ],
+          "derivation": "USDT + USDC same-date circulating USD"
+        }
+      },
+      {
+        "date": "2026-07-21",
+        "value": 257361935527.88165,
+        "observedAt": "2026-07-21T23:25:05.000Z",
         "source": "cmc",
         "sourceUrl": null,
         "sourceKey": "cmc",
-        "fetchedAt": "2026-07-20T23:28:28.852Z",
-        "lastCheckedAt": "2026-07-20T23:28:28.852Z",
+        "fetchedAt": "2026-07-21T23:26:43.055Z",
+        "lastCheckedAt": "2026-07-21T23:26:43.055Z",
         "qualityStatus": "available"
       }
     ]
   },
   "historyCoverage": {
     "crypto.totalMarketCap": {
-      "points": 369,
+      "points": 370,
       "startDate": "2025-07-17",
-      "endDate": "2026-07-20",
+      "endDate": "2026-07-21",
       "sources": [
         "cmc"
       ]
     },
     "btc.marketCap": {
-      "points": 369,
+      "points": 370,
       "startDate": "2025-07-17",
-      "endDate": "2026-07-20",
+      "endDate": "2026-07-21",
       "sources": [
         "cmc"
       ]
     },
     "stablecoin.usdt.marketCap": {
-      "points": 369,
+      "points": 370,
       "startDate": "2025-07-17",
-      "endDate": "2026-07-20",
+      "endDate": "2026-07-21",
       "sources": [
         "cmc"
       ]
     },
     "stablecoin.usdt.depegBps": {
-      "points": 369,
+      "points": 370,
       "startDate": "2025-07-17",
-      "endDate": "2026-07-20",
+      "endDate": "2026-07-21",
       "sources": [
         "cmc"
       ]
     },
     "stablecoin.usdc.marketCap": {
-      "points": 369,
+      "points": 370,
       "startDate": "2025-07-17",
-      "endDate": "2026-07-20",
+      "endDate": "2026-07-21",
       "sources": [
         "cmc"
       ]
     },
     "stablecoin.major.marketCap": {
       "points": 400,
-      "startDate": "2025-06-16",
-      "endDate": "2026-07-20",
+      "startDate": "2025-06-17",
+      "endDate": "2026-07-21",
       "sources": [
         "cmc",
         "defillama"
@@ -34330,8 +34403,8 @@
     }
   },
   "historyRefresh": {
-    "lastAttemptedAt": "2026-07-20T23:28:28.853Z",
-    "lastSuccessfulAt": "2026-07-20T23:28:28.853Z",
+    "lastAttemptedAt": "2026-07-21T23:26:43.055Z",
+    "lastSuccessfulAt": "2026-07-21T23:26:43.055Z",
     "initialBackfillDays": 365,
     "minimumBackfillDays": 183,
     "overlapDays": 14,
@@ -34339,12 +34412,12 @@
     "providers": {
       "cmcGlobal": {
         "status": "available",
-        "fetchedAt": "2026-07-20T23:28:28.936Z",
+        "fetchedAt": "2026-07-21T23:26:43.310Z",
         "points": 14,
         "window": {
           "mode": "overlap",
-          "timeStart": "2026-07-05T00:00:00.000Z",
-          "timeEnd": "2026-07-19T00:00:00.000Z",
+          "timeStart": "2026-07-06T00:00:00.000Z",
+          "timeEnd": "2026-07-20T00:00:00.000Z",
           "initialBackfillDays": 365,
           "minimumBackfillDays": 183,
           "overlapDays": 14
@@ -34352,7 +34425,7 @@
       },
       "cmcAssets": {
         "status": "available",
-        "fetchedAt": "2026-07-20T23:28:28.981Z",
+        "fetchedAt": "2026-07-21T23:26:43.344Z",
         "points": {
           "btc.marketCap": 14,
           "stablecoin.usdt.marketCap": 14,
@@ -34361,8 +34434,8 @@
         "missing": [],
         "window": {
           "mode": "overlap",
-          "timeStart": "2026-07-05T00:00:00.000Z",
-          "timeEnd": "2026-07-19T00:00:00.000Z",
+          "timeStart": "2026-07-06T00:00:00.000Z",
+          "timeEnd": "2026-07-20T00:00:00.000Z",
           "initialBackfillDays": 365,
           "minimumBackfillDays": 183,
           "overlapDays": 14
@@ -34370,7 +34443,7 @@
       },
       "defillamaStablecoins": {
         "status": "not_needed_cmc_history_available",
-        "attemptedAt": "2026-07-20T23:28:28.853Z"
+        "attemptedAt": "2026-07-21T23:26:43.055Z"
       }
     }
   },
@@ -35396,17 +35469,17 @@
   "spotPrices": {
     "BTC": {
       "asset": "BTC",
-      "priceUsd": 65168.13586102461,
-      "observedAt": "2026-07-20T23:27:05.000Z",
+      "priceUsd": 66285.2069114716,
+      "observedAt": "2026-07-21T23:25:05.000Z",
       "source": "cmc",
-      "fetchedAt": "2026-07-20T23:28:28.852Z"
+      "fetchedAt": "2026-07-21T23:26:43.055Z"
     },
     "ETH": {
       "asset": "ETH",
-      "priceUsd": 1901.0853441718612,
-      "observedAt": "2026-07-20T23:27:05.000Z",
+      "priceUsd": 1918.926087507356,
+      "observedAt": "2026-07-21T23:25:05.000Z",
       "source": "cmc",
-      "fetchedAt": "2026-07-20T23:28:28.852Z"
+      "fetchedAt": "2026-07-21T23:26:43.055Z"
     }
   },
   "corporateTreasuries": {
@@ -35437,7 +35510,7 @@
           "sourceUrl": "https://www.strategy.com/press/strategy-increases-its-usd-reserve-to-1-4-billion-and-btc-reserve-to-847363_06-22-2026",
           "sourceKey": "Strategy official Form 8-K",
           "fetchedAt": "2026-07-13T13:19:17.698Z",
-          "lastCheckedAt": "2026-07-20T23:28:29.000Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.402Z",
           "qualityStatus": "official_form_8k"
         }
       ],
@@ -35453,9 +35526,9 @@
           "qualityStatus": "official_form_8k"
         }
       ],
-      "spotPriceUsd": 65168.13586102461,
-      "spotObservedAt": "2026-07-20T23:27:05.000Z",
-      "costGapPct": -13.856874514514534,
+      "spotPriceUsd": 66285.2069114716,
+      "spotObservedAt": "2026-07-21T23:25:05.000Z",
+      "costGapPct": -12.380263431452857,
       "historySource": "Strategy official Form 8-K",
       "historyQualityStatus": "database_last_known_good"
     },
@@ -35486,7 +35559,7 @@
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1829311/000149315226032090/ex99-1.htm",
           "sourceKey": "SEC EDGAR company disclosures",
           "fetchedAt": "2026-07-13T13:19:17.698Z",
-          "lastCheckedAt": "2026-07-20T23:28:29.000Z",
+          "lastCheckedAt": "2026-07-21T23:26:43.402Z",
           "qualityStatus": "mixed_disclosure_dates"
         }
       ],
@@ -35502,9 +35575,9 @@
         }
       ],
       "latestAcquisitionCostUsd": null,
-      "spotPriceUsd": 1901.0853441718612,
-      "spotObservedAt": "2026-07-20T23:27:05.000Z",
-      "costGapPct": -49.89569388176267,
+      "spotPriceUsd": 1918.926087507356,
+      "spotObservedAt": "2026-07-21T23:25:05.000Z",
+      "costGapPct": -49.42548981217739,
       "historySource": "SEC EDGAR company disclosures",
       "historyQualityStatus": "database_last_known_good"
     }
@@ -35548,8 +35621,8 @@
     "SoSoValue SOL: SOSOVALUE_API_KEY is not configured"
   ],
   "databaseSync": {
-    "syncedAt": "2026-07-20T23:28:40.993Z",
-    "observationsRead": 1849,
+    "syncedAt": "2026-07-21T23:26:51.969Z",
+    "observationsRead": 1854,
     "role": "service_side_last_known_good_hydration"
   }
 }
