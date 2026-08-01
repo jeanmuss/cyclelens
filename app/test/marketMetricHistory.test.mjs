@@ -314,13 +314,24 @@ test("initial Japan rate persistence is bounded, then uses a short overlap windo
   assert.ok(incremental.length <= 34 && incremental.length >= 15);
 });
 
-test("market history deduplication is idempotent by metric, observation, and source", () => {
+test("market history deduplication matches the database conflict tuple", () => {
   const base = {
     metric_id: "macro.JGB10Y.value", observed_at: "2026-07-10T00:00:00Z", source_key: "mof", value: 1,
   };
-  const rows = dedupeMarketMetricRows([base, { ...base, value: 2 }]);
-  assert.equal(rows.length, 1);
-  assert.equal(rows[0].value, 2);
+  const rows = dedupeMarketMetricRows([
+    base,
+    { ...base, observed_at: "2026-07-10T00:00:00.000Z", value: 2 },
+    { ...base, observed_at: "2026-07-10T08:00:00+08:00", value: 3 },
+    { ...base, observed_at: "2026-07-10", value: 4 },
+    { ...base, source_key: "alternate-source", value: 5 },
+  ]);
+  assert.equal(rows.length, 2);
+  assert.deepEqual(rows.map((item) => item.observed_at), [
+    "2026-07-10T00:00:00.000Z",
+    "2026-07-10T00:00:00.000Z",
+  ]);
+  assert.equal(rows.find((item) => item.source_key === "mof").value, 4);
+  assert.equal(rows.find((item) => item.source_key === "alternate-source").value, 5);
 });
 
 test("market metric migration denies browser roles and grants only service-side writes", async () => {
@@ -344,6 +355,7 @@ test("market history persistence supports opaque keys and an explicit required m
   assert.match(source, /slice\(0, 500\)/, "provider errors written to CI logs must be bounded");
   assert.match(source, /cryptoHistoryPageSize = 1000/);
   assert.match(source, /offset: String\(page \* cryptoHistoryPageSize\)/, "database hydration must page beyond PostgREST's common 1000-row cap");
+  assert.match(source, /normalizedRows = dedupeMarketMetricRows\(rows\)/, "the final Supabase boundary must normalize the complete conflict tuple before batching");
   assert.match(pipelineSource, /hydrateCryptoDatasetFromRows/);
   assert.match(source, /runMetricAdapter/);
   assert.match(adapterSource, /MARKET_HISTORY_CONFLICT_FIELDS/);

@@ -1,19 +1,24 @@
 import { readFile, mkdir, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { execFile } from "node:child_process";
-import { promisify } from "node:util";
 import { productUserAgent } from "../product.config.mjs";
+import { sourcePolicyIdIsEligibleForDataUse } from "../src/domain/metrics/sourcePolicy.js";
+import {
+  dataDirectoryForScope,
+  dataUseScopeFromEnvironment,
+} from "./data-use-scope.mjs";
+import { fetchJsonBounded } from "./secure-fetch.mjs";
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const appRoot = resolve(scriptDir, "..");
 const workspaceRoot = resolve(appRoot, "..");
-const execFileAsync = promisify(execFile);
+const dataUseScope = dataUseScopeFromEnvironment(process.env, process.argv);
+const dataDirectory = dataDirectoryForScope(appRoot, dataUseScope);
 
 const CHAIN_CONFIGS = {
   chip: {
     label: "chip-chain",
-    outputPath: resolve(appRoot, "public/data/chip-chain-hotspots.json"),
+    outputPath: resolve(dataDirectory, "chip-chain-hotspots.json"),
     refreshCadence: "U.S. equities refresh from backend/CI Alpaca cache when credentials are configured. Korea adapter is pending KIS/KRX review; retained rows are visibly marked by sourceKind/dataQuality.",
     methodology: "Category returns are equal-weighted from visible assets for the selected window. U.S. price paths come from backend/CI Alpaca stock bars when configured; the frontend reads only this static JSON and never receives provider credentials.",
     extraSources: [
@@ -26,7 +31,7 @@ const CHAIN_CONFIGS = {
   },
   robot: {
     label: "robot-chain",
-    outputPath: resolve(appRoot, "public/data/robot-chain-watchlist.json"),
+    outputPath: resolve(dataDirectory, "robot-chain-watchlist.json"),
     refreshCadence: "U.S. robotics watchlist equities and ETFs refresh from backend/CI Alpaca cache when credentials are configured.",
     methodology: "Robot-chain table returns and sparklines come from backend/CI Alpaca stock bars when configured; the frontend reads only this static JSON and never receives provider credentials.",
     sourceNoteZh: "\u5f53\u524d\u9875\u9762\u8bfb\u53d6\u540e\u7aef/CI \u751f\u6210\u7684\u9759\u6001\u884c\u60c5\u7f13\u5b58\uff1b\u4ef7\u683c\u3001\u6da8\u8dcc\u5e45\u4e0e\u7b80\u8981 K \u7ebf\u6765\u81ea\u7ecf\u5ba1\u67e5\u7684\u884c\u60c5\u6e90\uff0c\u524d\u7aef\u4e0d\u76f4\u8fde\u884c\u60c5\u6e90\u3002",
@@ -48,7 +53,8 @@ if (!chainConfig) {
 }
 const outputPath = chainConfig.outputPath;
 
-const ALPACA_DATA_BASE = process.env.ALPACA_DATA_BASE_URL || "https://data.alpaca.markets";
+const ALPACA_DATA_BASE = "https://data.alpaca.markets";
+const ALPACA_ALLOWED_ORIGINS = Object.freeze(["https://data.alpaca.markets"]);
 const US_FEED = (process.env.CHIP_CHAIN_US_FEED || "iex").trim().toLowerCase();
 const RANGE_CONFIG = {
   "1d": { days: 2, timeframe: "5Min", limit: 400 },
@@ -118,60 +124,16 @@ function redactSecret(text) {
 }
 
 async function fetchJson(url, options = {}) {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 25_000);
-  try {
-    try {
-      const response = await fetch(url, {
-        ...options,
-        signal: controller.signal,
-        headers: {
-          Accept: "application/json",
-          "User-Agent": productUserAgent("chip-chain"),
-          ...(options.headers || {}),
-        },
-      });
-      if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
-      return await response.json();
-    } catch (error) {
-      if (process.platform !== "win32") throw error;
-      return await fetchJsonWithPowerShell(url, options);
-    }
-  } finally {
-    clearTimeout(timer);
-  }
-}
-
-async function fetchJsonWithPowerShell(url, options = {}) {
-  const headers = options.headers || {};
-  const script = `
-    $headers = @{
-      Accept = 'application/json'
-      'User-Agent' = $env:CYCLELENS_FETCH_USER_AGENT
-    }
-    if ($env:ALPACA_KEY_ID) {
-      $headers['APCA-API-KEY-ID'] = $env:ALPACA_KEY_ID
-      $headers['APCA-API-SECRET-KEY'] = $env:ALPACA_SECRET_KEY
-    }
-    $response = Invoke-RestMethod -Uri $env:CYCLELENS_FETCH_URL -Headers $headers -TimeoutSec 25
-    $response | ConvertTo-Json -Depth 80 -Compress
-  `;
-  const { stdout } = await execFileAsync(
-    "powershell",
-    ["-NoProfile", "-ExecutionPolicy", "Bypass", "-Command", script],
-    {
-      env: {
-        ...process.env,
-        CYCLELENS_FETCH_URL: url,
-        CYCLELENS_FETCH_USER_AGENT: productUserAgent("chip-chain"),
-        ALPACA_KEY_ID: headers["APCA-API-KEY-ID"] || "",
-        ALPACA_SECRET_KEY: headers["APCA-API-SECRET-KEY"] || "",
-      },
-      maxBuffer: 12 * 1024 * 1024,
-      windowsHide: true,
+  return fetchJsonBounded(url, {
+    ...options,
+    allowedOrigins: ALPACA_ALLOWED_ORIGINS,
+    maxResponseBytes: 12 * 1024 * 1024,
+    timeoutMs: 25_000,
+    headers: {
+      "User-Agent": productUserAgent("chip-chain"),
+      ...(options.headers || {}),
     },
-  );
-  return JSON.parse(stdout);
+  });
 }
 
 function alpacaHeaders() {
@@ -282,14 +244,18 @@ function benchmarkReturns(pathsBySymbol) {
 }
 
 function updateAssetFromPaths(asset, paths, benchmarks, asOfNow) {
+  const retainedPaths = asset.pricePaths && typeof asset.pricePaths === "object"
+    ? asset.pricePaths
+    : {};
+  const mergedPaths = { ...retainedPaths, ...paths };
   const returns = {};
   for (const range of Object.keys(RANGE_CONFIG)) {
-    const value = returnFromPath(paths[range]);
+    const value = returnFromPath(mergedPaths[range]);
     returns[range] = value ?? asset.returns?.[range] ?? null;
   }
-  const latest = latestFromPaths(paths);
-  const oneDayVolumeRatio = averageVolumeRatio(paths["1d"]);
-  const week52Position = week52PositionFromPath(paths["3m"], latest.price);
+  const latest = latestFromPaths(mergedPaths);
+  const oneDayVolumeRatio = averageVolumeRatio(mergedPaths["1d"]);
+  const week52Position = week52PositionFromPath(mergedPaths["3m"], latest.price);
   return {
     ...asset,
     price: latest.price ?? asset.price,
@@ -306,7 +272,7 @@ function updateAssetFromPaths(asset, paths, benchmarks, asOfNow) {
     dataQuality: US_FEED === "iex"
       ? "official_alpaca_iex_feed_limited_venue"
       : `official_alpaca_${US_FEED}_feed`,
-    pricePaths: paths,
+    pricePaths: mergedPaths,
     asOf: latest.asOf || asOfNow,
   };
 }
@@ -335,6 +301,13 @@ async function buildOutput(existing) {
   for (const symbol of fetchSymbols) {
     pathsBySymbol[symbol] = await fetchSymbolPaths(symbol, failures);
   }
+  const refreshedUsSymbols = usSymbols
+    .filter((symbol) => Object.keys(pathsBySymbol[symbol] || {}).length > 0)
+    .sort();
+  const missingUsSymbols = usSymbols.filter((symbol) => !refreshedUsSymbols.includes(symbol));
+  if (process.env.CYCLELENS_REQUIRE_FRESH_OWNER_RELEASE === "1" && missingUsSymbols.length) {
+    throw new Error(`Not every required ${chainConfig.label} U.S. asset refreshed`);
+  }
 
   const benchmarks = benchmarkReturns(pathsBySymbol);
   const asOfNow = isoNow();
@@ -357,6 +330,7 @@ async function buildOutput(existing) {
 
   return {
     ...existing,
+    dataUseScope,
     generatedAt: asOfNow,
     timestamps: {
       observedAt,
@@ -369,6 +343,10 @@ async function buildOutput(existing) {
     ...(chainConfig.sourceNoteZh ? { sourceNoteZh: chainConfig.sourceNoteZh } : {}),
     ...(chainConfig.sourceNoteEn ? { sourceNoteEn: chainConfig.sourceNoteEn } : {}),
     failures,
+    refreshSummary: {
+      requiredUsSymbols: [...usSymbols].sort(),
+      refreshedUsSymbols,
+    },
     sources: [
       {
         market: "US",
@@ -386,7 +364,28 @@ async function main() {
   await loadEnvFile(resolve(workspaceRoot, ".env.local"));
 
   const existing = JSON.parse(await readFile(outputPath, "utf8"));
+  if (!sourcePolicyIdIsEligibleForDataUse("alpaca", {
+    scope: dataUseScope,
+    environment: process.env,
+  })) {
+    if (process.env.CYCLELENS_REQUIRE_FRESH_OWNER_RELEASE === "1") {
+      throw new Error("Owner chain collector is not eligible to refresh Alpaca data");
+    }
+    console.log(JSON.stringify({
+      status: "kept-last-known-good",
+      dataUseScope,
+      chain: chainConfig.label,
+      outputPath,
+      reason: "Alpaca is not eligible for this data-use scope.",
+      kind: existing.kind,
+      generatedAt: existing.generatedAt,
+    }));
+    return;
+  }
   if (!hasAlpacaCredentials()) {
+    if (process.env.CYCLELENS_REQUIRE_FRESH_OWNER_RELEASE === "1") {
+      throw new Error("Owner chain collector credentials are not configured");
+    }
     console.log(JSON.stringify({
       status: "kept-last-known-good",
       chain: chainConfig.label,
@@ -402,6 +401,9 @@ async function main() {
   try {
     output = await buildOutput(existing);
   } catch (error) {
+    if (process.env.CYCLELENS_REQUIRE_FRESH_OWNER_RELEASE === "1") {
+      throw new Error("Owner chain collector did not produce a fresh release candidate");
+    }
     console.log(JSON.stringify({
       status: "kept-last-known-good",
       chain: chainConfig.label,

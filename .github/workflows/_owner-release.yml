@@ -1,0 +1,335 @@
+name: Run an owner-only CycleLens release
+
+on:
+  workflow_call:
+    inputs:
+      data_scope:
+        type: string
+        required: true
+      owner_data_collection_approved:
+        type: boolean
+        default: false
+      collect_coinmarketcap:
+        type: boolean
+        default: false
+      collect_crypto_monthly:
+        type: boolean
+        default: true
+      collect_crypto_liquidity:
+        type: boolean
+        default: true
+      collect_market_session:
+        type: boolean
+        default: true
+      collect_chip_chain:
+        type: boolean
+        default: true
+      collect_robot_chain:
+        type: boolean
+        default: true
+      collect_equity_fast:
+        type: boolean
+        default: true
+      collect_equity_weekly:
+        type: boolean
+        default: true
+      collect_manual_macro_events:
+        type: boolean
+        default: true
+      collect_macro_calendar:
+        type: boolean
+        default: true
+      collect_chart_series:
+        type: boolean
+        default: true
+      persist_market_history:
+        type: boolean
+        default: true
+    secrets:
+      CMC_PRO_API_KEY:
+        required: false
+      SOSOVALUE_API_KEY:
+        required: false
+      SEC_USER_AGENT:
+        required: false
+      BLOCKBEATS_API_KEY:
+        required: false
+      APCA_API_KEY_ID:
+        required: false
+      APCA_API_SECRET_KEY:
+        required: false
+      FRED_API_KEY:
+        required: false
+      SUPABASE_URL:
+        required: false
+      SUPABASE_SECRET_KEY:
+        required: false
+      CLOUDFLARE_API_TOKEN:
+        required: true
+      CLOUDFLARE_ACCOUNT_ID:
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  owner-release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    environment:
+      name: cyclelens-admin
+    env:
+      CYCLELENS_DATA_USE_SCOPE: owner_private
+      CYCLELENS_OWNER_PRIVATE_USE_APPROVED: "1"
+      CYCLELENS_PROTECTED_BUILD_APPROVED: "1"
+      CYCLELENS_REQUIRE_FRESH_OWNER_RELEASE: "1"
+      CYCLELENS_COLLECT_CMC: ${{ inputs.collect_coinmarketcap && 'true' || 'false' }}
+    steps:
+      - name: Require the explicit owner-only data scope
+        shell: bash
+        env:
+          DATA_SCOPE: ${{ inputs.data_scope }}
+          OWNER_DATA_COLLECTION_APPROVED: ${{ inputs.owner_data_collection_approved }}
+        run: |
+          if [ "$DATA_SCOPE" != "owner_private" ]; then
+            echo "Only the protected owner data scope may collect data." >&2
+            exit 1
+          fi
+          if [ "$OWNER_DATA_COLLECTION_APPROVED" != "true" ]; then
+            echo "Owner data collection requires an explicit approval input." >&2
+            exit 1
+          fi
+          date -u +%Y-%m-%dT%H:%M:%SZ > /tmp/cyclelens-owner-release-start
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+      - name: Install pinned application dependencies
+        run: npm --prefix app ci
+      - name: Install pinned owner collector dependencies
+        run: |
+          python -m pip install --disable-pip-version-check --no-input --no-cache-dir --force-reinstall --only-binary=:all: --require-hashes --requirement app/requirements-equity.txt
+          python -m pip check
+      - name: Prepare ignored owner-private last-known-good seeds
+        run: npm --prefix app run prepare-owner-data
+      - name: Refresh shared CoinMarketCap provider state
+        if: >-
+          inputs.collect_crypto_liquidity || inputs.collect_market_session || inputs.collect_equity_fast
+        env:
+          CMC_PRO_API_KEY: ${{ inputs.collect_coinmarketcap && secrets.CMC_PRO_API_KEY || '' }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+          CYCLELENS_CMC_DAILY_CREDIT_BUDGET: ${{ vars.OWNER_CMC_DAILY_CREDIT_BUDGET }}
+          CYCLELENS_CMC_MONTHLY_CREDIT_BUDGET: ${{ vars.OWNER_CMC_MONTHLY_CREDIT_BUDGET }}
+          CYCLELENS_CMC_CURRENT_MIN_INTERVAL_MINUTES: ${{ vars.OWNER_CMC_CURRENT_MIN_INTERVAL_MINUTES }}
+        shell: bash
+        run: |
+          if [ -z "${SUPABASE_URL:-}" ] || [ -z "${SUPABASE_SECRET_KEY:-}" ]; then
+            echo "CoinMarketCap provider state requires the private Supabase configuration." >&2
+            exit 1
+          fi
+          if [ "${CYCLELENS_COLLECT_CMC:-false}" = "true" ]; then
+            if [ -z "${CMC_PRO_API_KEY:-}" ] || [ -z "${CYCLELENS_CMC_DAILY_CREDIT_BUDGET:-}" ] || [ -z "${CYCLELENS_CMC_MONTHLY_CREDIT_BUDGET:-}" ]; then
+              echo "Enabled CoinMarketCap collection requires its credential and explicit daily and monthly credit budgets." >&2
+              exit 1
+            fi
+          fi
+          npm --prefix app run refresh-cmc-provider-state
+      - name: Refresh normalized monthly crypto data
+        if: inputs.collect_crypto_monthly
+        working-directory: app
+        run: node scripts/update-market-data.mjs
+      - name: Refresh crypto liquidity data
+        if: inputs.collect_crypto_liquidity
+        working-directory: app
+        env:
+          SOSOVALUE_API_KEY: ${{ secrets.SOSOVALUE_API_KEY }}
+          SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+          BLOCKBEATS_API_KEY: ${{ secrets.BLOCKBEATS_API_KEY }}
+          BLOCKBEATS_AUX_ENABLED: "1"
+        shell: bash
+        run: |
+          if [ -z "${SOSOVALUE_API_KEY:-}" ] || [ -z "${SEC_USER_AGENT:-}" ] || [ -z "${BLOCKBEATS_API_KEY:-}" ]; then
+            echo "Crypto-liquidity collection requires the SoSoValue, SEC, and BlockBeats credentials." >&2
+            exit 1
+          fi
+          node scripts/update-crypto-liquidity-data.mjs
+      - name: Refresh market session data
+        if: inputs.collect_market_session
+        working-directory: app
+        run: node scripts/update-market-session-data.mjs
+      - name: Refresh fast equity indicators
+        if: inputs.collect_equity_fast
+        working-directory: app
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+        shell: bash
+        run: |
+          if [ -z "${FRED_API_KEY:-}" ]; then
+            echo "Fast-equity collection requires the FRED credential." >&2
+            exit 1
+          fi
+          python scripts/update-equity-fast-data.py
+      - name: Refresh chip-chain data
+        if: inputs.collect_chip_chain
+        working-directory: app
+        env:
+          APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
+          APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
+          CHIP_CHAIN_US_FEED: ${{ vars.CHIP_CHAIN_US_FEED }}
+        shell: bash
+        run: |
+          if [ -z "${APCA_API_KEY_ID:-}" ] || [ -z "${APCA_API_SECRET_KEY:-}" ]; then
+            echo "Chip-chain collection requires both Alpaca credentials." >&2
+            exit 1
+          fi
+          node scripts/update-chip-chain-data.mjs
+      - name: Refresh robot-chain data
+        if: inputs.collect_robot_chain
+        working-directory: app
+        env:
+          APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
+          APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
+          CHIP_CHAIN_US_FEED: ${{ vars.CHIP_CHAIN_US_FEED }}
+        shell: bash
+        run: |
+          if [ -z "${APCA_API_KEY_ID:-}" ] || [ -z "${APCA_API_SECRET_KEY:-}" ]; then
+            echo "Robot-chain collection requires both Alpaca credentials." >&2
+            exit 1
+          fi
+          node scripts/update-chip-chain-data.mjs robot
+      - name: Refresh weekly equity and macro data
+        if: inputs.collect_equity_weekly
+        working-directory: app
+        env:
+          APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
+          APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
+          EQUITY_PRICE_SOURCE: alpaca
+          EQUITY_US_FEED: ${{ vars.CHIP_CHAIN_US_FEED || 'iex' }}
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+        shell: bash
+        run: |
+          if [ -z "${APCA_API_KEY_ID:-}" ] || [ -z "${APCA_API_SECRET_KEY:-}" ] || [ -z "${FRED_API_KEY:-}" ]; then
+            echo "Weekly-equity collection requires Alpaca and FRED credentials." >&2
+            exit 1
+          fi
+          python scripts/update-equity-data.py
+      - name: Sync manual macro events
+        if: inputs.collect_manual_macro_events
+        working-directory: app
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+        shell: bash
+        run: |
+          if [ -z "${SUPABASE_URL:-}" ] || [ -z "${SUPABASE_SECRET_KEY:-}" ]; then
+            echo "Manual macro-event sync requires the private Supabase configuration." >&2
+            exit 1
+          fi
+          node scripts/sync-manual-macro-events-from-supabase.mjs
+      - name: Refresh macro calendar
+        if: inputs.collect_macro_calendar
+        working-directory: app
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+        shell: bash
+        run: |
+          if [ -z "${FRED_API_KEY:-}" ]; then
+            echo "Macro-calendar collection requires the FRED credential." >&2
+            exit 1
+          fi
+          python scripts/update-macro-calendar.py
+      - name: Refresh interactive chart series
+        if: inputs.collect_chart_series
+        working-directory: app
+        run: node scripts/update-chart-series-data.mjs
+      - name: Persist canonical market metric history
+        if: inputs.persist_market_history
+        working-directory: app
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+          CYCLELENS_REQUIRE_MARKET_HISTORY: "1"
+          BLOCKBEATS_AUX_ENABLED: "1"
+        shell: bash
+        run: |
+          if [ -z "${SUPABASE_URL:-}" ] || [ -z "${SUPABASE_SECRET_KEY:-}" ]; then
+            echo "Market-history persistence requires the private Supabase configuration." >&2
+            exit 1
+          fi
+          node scripts/persist-market-metric-history.mjs
+      - name: Generate owner-only projections and manifest
+        working-directory: app
+        run: |
+          npm run project-owner-data
+          npm run generate-owner-data-manifest
+      - name: Enforce owner release freshness, scope, size, and manifest hashes
+        env:
+          CYCLELENS_RELEASE_STARTED_AT_FILE: /tmp/cyclelens-owner-release-start
+          CYCLELENS_COLLECT_CRYPTO_MONTHLY: ${{ inputs.collect_crypto_monthly }}
+          CYCLELENS_COLLECT_CRYPTO_LIQUIDITY: ${{ inputs.collect_crypto_liquidity }}
+          CYCLELENS_COLLECT_MARKET_SESSION: ${{ inputs.collect_market_session }}
+          CYCLELENS_COLLECT_CHIP_CHAIN: ${{ inputs.collect_chip_chain }}
+          CYCLELENS_COLLECT_ROBOT_CHAIN: ${{ inputs.collect_robot_chain }}
+          CYCLELENS_COLLECT_EQUITY_FAST: ${{ inputs.collect_equity_fast }}
+          CYCLELENS_COLLECT_EQUITY_WEEKLY: ${{ inputs.collect_equity_weekly }}
+          CYCLELENS_COLLECT_MACRO_CALENDAR: ${{ inputs.collect_macro_calendar }}
+          CYCLELENS_COLLECT_CHART_SERIES: ${{ inputs.collect_chart_series }}
+        run: npm --prefix app run validate-owner-release-data
+      - name: Verify source, owner-data, and release contracts
+        run: |
+          npm --prefix app run lint
+          node --test --test-isolation=none app/test/metricPipeline.test.mjs app/test/marketMetricHistory.test.mjs app/test/dataManifest.test.mjs app/test/cloudflareAdmin.test.mjs app/test/cmcProviderState.test.mjs app/test/cmcProviderStateBounds.test.mjs app/test/cmcProviderHistoryFallback.test.mjs app/test/marketSessionCmcProviderState.test.mjs app/test/manualMacroEventsContract.test.mjs app/test/ownerReleaseRefreshContract.test.mjs app/test/productConfig.test.mjs app/test/secureFetch.test.mjs app/test/workflowGovernance.test.mjs
+          python -m unittest discover -s app/test -p 'test_*.py'
+      - name: Build the owner application and Pages Functions
+        run: |
+          npm --prefix app run build:owner
+          npm --prefix app run build:owner:functions
+      - name: Verify the protected owner release boundary
+        shell: bash
+        run: |
+          test -s app/dist-owner/owner-release.json
+          test -s app/dist-owner/_routes.json
+          node -e "const fs=require('fs');const m=JSON.parse(fs.readFileSync('app/dist-owner/owner-release.json','utf8'));if(m.buildTarget!=='owner'||m.dataScope!=='owner_private'||m.defaultRoute!=='dashboard'||m.accessBoundary!=='cloudflare-access-and-pages-functions'||!Array.isArray(m.routesProtected)||!m.routesProtected.includes('/*'))process.exit(1)"
+          node -e "const fs=require('fs');const r=JSON.parse(fs.readFileSync('app/dist-owner/_routes.json','utf8'));if(!Array.isArray(r.include)||!r.include.includes('/*')||!Array.isArray(r.exclude)||r.exclude.length!==0)process.exit(1)"
+          test -d app/.wrangler/owner-functions
+          find app/.wrangler/owner-functions -type f -print -quit | grep -q .
+      - name: Require anonymous denial on the current protected host
+        shell: bash
+        run: |
+          if ! status="$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' --max-time 20 --max-redirs 0 https://cyclelens-admin.pages.dev/data/data-manifest.json)"; then
+            echo "Could not verify the protected owner host." >&2
+            exit 1
+          fi
+          case "$status" in
+            3??|401|403) ;;
+            *) echo "Protected owner host unexpectedly admitted an anonymous request." >&2; exit 1 ;;
+          esac
+      - name: Deploy owner release to the existing Access-protected Pages project
+        working-directory: app
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        shell: bash
+        run: |
+          if ! npx --no-install wrangler pages deploy dist-owner --project-name cyclelens-admin --branch main >/tmp/cyclelens-owner-deploy.log 2>&1; then
+            echo "Owner deployment failed; inspect the private Cloudflare deployment log." >&2
+            exit 1
+          fi
+      - name: Verify the deployed owner release still denies anonymous access
+        shell: bash
+        run: |
+          if ! status="$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' --max-time 20 --max-redirs 0 https://cyclelens-admin.pages.dev/data/data-manifest.json)"; then
+            echo "Could not verify the deployed protected owner host." >&2
+            exit 1
+          fi
+          case "$status" in
+            3??|401|403) ;;
+            *) echo "Deployed owner host unexpectedly admitted an anonymous request." >&2; exit 1 ;;
+          esac

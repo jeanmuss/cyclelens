@@ -1,5 +1,9 @@
 import { PRODUCT_CONFIG, preferredEnvironmentValue } from "../product.config.mjs";
 import {
+  MANUAL_MACRO_EVENTS_MAX_COUNT,
+  normalizeManualMacroEventsPayload,
+} from "./manual-macro-events-contract.mjs";
+import {
   manualEventKey,
   manualEventsPayloadToSupabaseRows,
   manualEventsSupabaseRowsToPayload,
@@ -13,6 +17,8 @@ export {
 
 const SUPABASE_TABLE = "manual_macro_events";
 const SERVICE_KEY_ENV_NAMES = ["SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"];
+const SUPABASE_REQUEST_TIMEOUT_MS = 15_000;
+const MAX_SUPABASE_RESPONSE_BYTES = 1024 * 1024;
 
 function cleanText(value) {
   return String(value ?? "").trim();
@@ -40,6 +46,27 @@ function supabaseConfig() {
   return { url, key, bearer };
 }
 
+function validatedSupabaseOrigin(value) {
+  let parsed;
+  try {
+    parsed = new URL(value);
+  } catch {
+    throw new Error("SUPABASE_URL must be an absolute HTTPS origin");
+  }
+  const loopback = ["127.0.0.1", "::1", "localhost"].includes(parsed.hostname);
+  const hostedSupabase = parsed.hostname.endsWith(".supabase.co");
+  if ((parsed.protocol !== "https:" && !(parsed.protocol === "http:" && loopback))
+    || (!hostedSupabase && !loopback)
+    || parsed.username
+    || parsed.password
+    || parsed.search
+    || parsed.hash
+    || !["", "/"].includes(parsed.pathname)) {
+    throw new Error("SUPABASE_URL must be an absolute HTTPS origin");
+  }
+  return parsed.origin;
+}
+
 export function hasSupabaseManualEventsConfig() {
   const { url, key } = supabaseConfig();
   return Boolean(url && key);
@@ -53,31 +80,78 @@ export function manualEventsCanonicalWriteAvailable() {
   return hasSupabaseManualEventsConfig();
 }
 
-function redact(text) {
-  const { url, key } = supabaseConfig();
-  let output = String(text || "");
-  if (key) output = output.replaceAll(key, "<redacted>");
-  if (url) output = output.replaceAll(url, "<supabase-url>");
-  return output.replace(/[\r\n\t]+/g, " ").slice(0, 500);
+async function boundedResponseText(response) {
+  const declaredLength = response.headers?.get?.("content-length") ?? null;
+  if (declaredLength != null) {
+    const parsedLength = Number(declaredLength);
+    if (!Number.isSafeInteger(parsedLength) || parsedLength < 0 || parsedLength > MAX_SUPABASE_RESPONSE_BYTES) {
+      throw new Error("Supabase response exceeded the configured byte limit");
+    }
+  }
+  if (!response.body) return "";
+  const reader = response.body.getReader();
+  const chunks = [];
+  let size = 0;
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      size += value.byteLength;
+      if (size > MAX_SUPABASE_RESPONSE_BYTES) {
+        await reader.cancel();
+        throw new Error("Supabase response exceeded the configured byte limit");
+      }
+      chunks.push(value);
+    }
+  } finally {
+    reader.releaseLock();
+  }
+  const bytes = new Uint8Array(size);
+  let offset = 0;
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  try {
+    return new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+  } catch {
+    throw new Error("Supabase response was not valid UTF-8");
+  }
 }
 
 async function supabaseRequest(path, options = {}) {
   const { url, key, bearer } = supabaseConfig();
   if (!url || !key) throw new Error("SUPABASE_URL and SUPABASE_SECRET_KEY (or legacy SUPABASE_SERVICE_ROLE_KEY) are required");
+  const origin = validatedSupabaseOrigin(url);
   const headers = {
     apikey: key,
     ...(bearer ? { Authorization: bearer } : {}),
     "Content-Type": "application/json",
     ...(options.prefer ? { Prefer: options.prefer } : {}),
   };
-  const response = await fetch(`${url}/rest/v1/${path}`, {
-    method: options.method || "GET",
-    headers,
-    body: options.body == null ? undefined : JSON.stringify(options.body),
-  });
-  const text = await response.text();
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), SUPABASE_REQUEST_TIMEOUT_MS);
+  let response;
+  try {
+    response = await fetch(`${origin}/rest/v1/${path}`, {
+      method: options.method || "GET",
+      headers,
+      body: options.body == null ? undefined : JSON.stringify(options.body),
+      redirect: "error",
+      signal: controller.signal,
+    });
+  } catch {
+    clearTimeout(timeout);
+    throw new Error("Supabase request failed before receiving a response");
+  }
+  let text;
+  try {
+    text = await boundedResponseText(response);
+  } finally {
+    clearTimeout(timeout);
+  }
   if (!response.ok) {
-    throw new Error(`Supabase request failed (${response.status}): ${redact(text)}`);
+    throw new Error(`Supabase request failed with status ${response.status}`);
   }
   if (!text) return null;
   try {
@@ -91,13 +165,18 @@ async function readSupabaseRows() {
   const query = [
     "select=*",
     "order=event_date.asc,category.asc,series_id.asc",
+    `limit=${MANUAL_MACRO_EVENTS_MAX_COUNT + 1}`,
   ].join("&");
-  return await supabaseRequest(`${SUPABASE_TABLE}?${query}`) || [];
+  const rows = await supabaseRequest(`${SUPABASE_TABLE}?${query}`) || [];
+  if (!Array.isArray(rows)) throw new Error("Supabase manual-event response must be an array");
+  if (rows.length > MANUAL_MACRO_EVENTS_MAX_COUNT) throw new Error("too many manual events");
+  return rows;
 }
 
 export async function readManualEventsPayloadFromSupabase() {
   const rows = await readSupabaseRows();
-  return manualEventsSupabaseRowsToPayload(rows);
+  const mapped = manualEventsSupabaseRowsToPayload(rows);
+  return normalizeManualMacroEventsPayload(mapped, new Date(mapped.updatedAt));
 }
 
 export async function writeManualEventsPayloadToSupabase(payload) {

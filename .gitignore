@@ -31,6 +31,10 @@ app/public/data/data-manifest.json
 
 # Generated private data
 data/private/
+app/data/private/
+app/dist-admin/
+app/dist-owner/
+app/dist-public/
 tmp/
 temp/
 .reference/

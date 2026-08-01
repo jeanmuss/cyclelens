@@ -6,14 +6,28 @@ import { fileURLToPath } from "node:url";
 
 import { preferredEnvironmentValue } from "../product.config.mjs";
 import { compactSeriesPoints, mergeLastKnownGoodPoints } from "./chart-series-contract.mjs";
+import {
+  DATA_USE_SCOPES,
+  cacheRootForScope,
+  dataDirectoryForScope,
+  dataUseScopeFromEnvironment,
+} from "./data-use-scope.mjs";
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const appRoot = resolve(scriptDir, "..");
 const workspaceRoot = resolve(appRoot, "..");
-const dataDir = resolve(appRoot, "public/data");
+const dataUseScope = dataUseScopeFromEnvironment(process.env, process.argv);
+const dataDir = dataDirectoryForScope(appRoot, dataUseScope);
+const dataSourcePrefix = dataUseScope === DATA_USE_SCOPES.OWNER_PRIVATE
+  ? "app/data/private/raw"
+  : "app/public/data";
 const outputPath = resolve(dataDir, "chart-series.json");
-const macroFredCacheDir = resolve(workspaceRoot, "tmp/macro-cache/fred");
-const mofJgbCachePath = resolve(workspaceRoot, "tmp/equity-cache/mof-JGB10Y.json");
+const cacheRoot = cacheRootForScope(workspaceRoot, dataUseScope);
+const cacheSourcePrefix = dataUseScope === DATA_USE_SCOPES.OWNER_PRIVATE
+  ? "tmp/owner-private"
+  : "tmp";
+const macroFredCacheDir = resolve(cacheRoot, "macro-cache/fred");
+const mofJgbCachePath = resolve(cacheRoot, "equity-cache/mof-JGB10Y.json");
 const execFileAsync = promisify(execFile);
 
 const WINDOWS = [
@@ -328,6 +342,7 @@ async function addMofJgbSeries(output, equityDataset, sourceFetchedAt) {
 }
 
 async function readBaselineOutput() {
+  if (dataUseScope === DATA_USE_SCOPES.OWNER_PRIVATE) return readJson(outputPath);
   const ref = String(preferredEnvironmentValue(
     process.env,
     "CYCLELENS_CHART_BASELINE_GIT_REF",
@@ -405,6 +420,7 @@ async function buildOutput() {
   const output = {
     version: 1,
     page: "chart-series",
+    dataUseScope,
     generatedAt: transformedAt,
     timestamps: {
       observedAt: oldestIso(inputs.map((dataset) => dataset.timestamps?.observedAt || dataset.generatedAt)),
@@ -415,10 +431,10 @@ async function buildOutput() {
     transforms: TRANSFORMS,
     methodology: "Derived static time-series cache built from reviewed page caches and local/CI provider caches. Macro points merge with the last-known-good output; a same-date value is revised only when the provider cache has a non-older fetchedAt. The browser reads this generated JSON only and never calls market-data providers directly.",
     sources: {
-      equity: "app/public/data/equity-weekly.json",
-      macro: "tmp/macro-cache/fred plus app/public/data/macro-calendar.json metadata when available",
-      chipChain: "app/public/data/chip-chain-hotspots.json pricePaths",
-      robotChain: "app/public/data/robot-chain-watchlist.json pricePaths",
+      equity: `${dataSourcePrefix}/equity-weekly.json`,
+      macro: `${cacheSourcePrefix}/macro-cache/fred plus ${dataSourcePrefix}/macro-calendar.json metadata when available`,
+      chipChain: `${dataSourcePrefix}/chip-chain-hotspots.json pricePaths`,
+      robotChain: `${dataSourcePrefix}/robot-chain-watchlist.json pricePaths`,
     },
     metrics: {},
     series: {},

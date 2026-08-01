@@ -144,9 +144,9 @@ export const METRIC_CATALOG = Object.freeze([
     historyLimit: 60,
   }),
   ...[
-    ["qqq", "纳斯达克 100（QQQ）", "Nasdaq 100 proxy (QQQ)", "USD", "currency", ["akshare"]],
-    ["spy", "标普 500（SPY）", "S&P 500 proxy (SPY)", "USD", "currency", ["akshare"]],
-    ["dia", "道琼斯（DIA）", "Dow Jones proxy (DIA)", "USD", "currency", ["akshare"]],
+    ["qqq", "纳斯达克 100（QQQ）", "Nasdaq 100 proxy (QQQ)", "USD", "currency", ["alpaca"]],
+    ["spy", "标普 500（SPY）", "S&P 500 proxy (SPY)", "USD", "currency", ["alpaca"]],
+    ["dia", "道琼斯（DIA）", "Dow Jones proxy (DIA)", "USD", "currency", ["alpaca"]],
     ["sox", "费城半导体指数", "PHLX Semiconductor Index", "index", "number", ["yahoo-finance"]],
   ].map(([symbol, zh, en, unit, format, sourcePolicyIds]) => metric({
     metricId: `equity.us.${symbol}.${symbol === "sox" ? "value" : "price"}`,

@@ -1,142 +1,105 @@
 # CycleLens
 
-CycleLens provides interactive return tables and cached market context for risk assets:
+CycleLens combines a crypto cycle map, macro calendar, U.S. equity view, global market clock, AI chip-chain map, robotics watchlist, and owner-curated events.
 
-- Crypto cycle map: monthly BTC, ETH, SOL, and HYPE returns.
-- Macro and liquidity calendar: six-month macro, rates, dollar, volatility, and credit context.
-- US market map: weekly QQQ/SPY relative strength with FRED macro context from January 20, 2025 onward.
-- Global market clock: crypto, U.S., Korea, and China market-session rotation with prices, market caps where available, and source-quality labels.
-- AI chip-chain hotspots: supply-chain category rotation with ticker-level price paths and a pinned detail panel.
-- Robotics chain watchlist: robotics value-chain table with segment, business role, price, return, and mini price path columns.
+## Visibility model
 
-The interface follows the visual and technical idea of the original Bitcoin four-year cycle map: semantic HTML tables, CSS heat classes, and JavaScript-driven calculations.
+The product now has two deliberately separate outputs:
 
-## Commands
+- `npm run build` or `npm run build:public-retired` creates `dist-public`, a three-file retirement shell with no product data.
+- `npm run build:owner` creates `dist-owner`, which contains plaintext owner-private JSON and must be served only behind both Cloudflare Access and Pages Functions.
+
+A bare `vite build` is rejected. Protected builds require an explicit `--mode owner` or `--mode admin` and `CYCLELENS_PROTECTED_BUILD_APPROVED=1`. Never upload or mirror `dist-owner` to GitHub Pages, object storage, a generic CDN, an Actions artifact, or another static host.
+
+## Data flow
+
+Collectors run only in local backend/CI contexts. The browser never connects to a provider and never receives a provider key.
+
+Owner runs use:
+
+- raw data: `data/private/raw/`
+- curated manual events: `data/private/manual-macro-events.json`
+- projections: `data/private/projections/`
+- provider caches: `../tmp/owner-private/`
+- final manifest: `data/private/data-manifest.json`
+
+These paths are ignored by Git. Public seed files under `public/data/` are read-only historical last-known-good inputs and are not an owner persistence channel.
+
+Current reviewed transports include official FRED REST, Federal Reserve/OPM calendars, Japan MOF CSV, SEC EDGAR, Alpaca, CoinMarketCap, SoSoValue, BlockBeats, DefiLlama’s documented `api.llama.fi` API, and selected public exchange market endpoints. Every network collector pins exact HTTPS origins, rejects redirects, bounds response bodies, and keeps timeouts active through body consumption.
+
+AKShare, yfinance/Yahoo wrappers, unofficial TradingView endpoints, cookies, and authenticated browser-session reuse are blocked. Existing rows bearing those legacy source labels can remain as visibly stale audit/LKG material, but cannot be fetched, persisted as approved observations, or enter a validated projection.
+
+## Source policy
+
+Public redistribution remains fail-closed per source. Owner-private use requires the single global gate:
+
+```text
+CYCLELENS_DATA_USE_SCOPE=owner_private
+CYCLELENS_OWNER_PRIVATE_USE_APPROVED=1
+```
+
+That gate records the operator’s decision to use reviewed sources privately. It does not override provider terms, plan limits, attribution, rate limits, caching restrictions, or prohibitions on redistribution. See [DATA_SOURCE_REVIEW.md](DATA_SOURCE_REVIEW.md).
+
+## Local commands
 
 ```bash
+npm ci
 npm run dev
 npm run build
+```
+
+The ordinary build is intentionally safe and data-free. A local owner run should use ignored environment files and then execute:
+
+```bash
+npm run prepare-owner-data
+npm run refresh-cmc-provider-state
 npm run update-data
 npm run update-crypto-liquidity
 npm run update-market-session
 npm run update-chip-chain
 npm run update-robot-chain
+npm run update-equity-fast-data
 npm run update-equity-data
 npm run sync-manual-macro-events
 npm run update-macro-calendar
+npm run update-chart-series
+npm run project-owner-data
+npm run generate-owner-data-manifest
+npm run validate-owner-release-data
+npm run build:owner
+npm run build:owner:functions
 ```
 
-## Data flow
+The release validator additionally needs the workflow’s start-time file and explicit true/false collector flags; it is normally invoked by `_owner-release.yml`.
 
-`scripts/update-market-data.mjs` retrieves public monthly data and writes a normalized static cache to `public/data/market-monthly.json`. The browser only reads that cache and never receives provider credentials.
+`refresh-cmc-provider-state` is independently default-off and never calls CMC merely because a key exists. Set `CYCLELENS_COLLECT_CMC=true` only for an intentional private refresh, together with positive `CYCLELENS_CMC_DAILY_CREDIT_BUDGET` and `CYCLELENS_CMC_MONTHLY_CREDIT_BUDGET` values (daily must not exceed monthly). The optional current interval defaults to 360 minutes; historical cadence is fixed at 20 hours. With the switch set to `false`, the command only hydrates a private LKG from Supabase and makes zero CMC requests. Before enabling it, apply `supabase/migrations/20260801000000_cmc_atomic_budget_reservation.sql`: the service-role-only RPC serializes reservations in Postgres and a replayed or ambiguous run stops before provider traffic.
 
-- BTC: Blockchain.info market-price chart for the established open/close series; Binance Spot daily candles provide exchange highs/lows and their order from 2017 onward
-- ETH and SOL: Binance Spot daily candles
-- HYPE: Hyperliquid daily candles
-
-If an upstream source fails, the updater preserves the last-known-good cached asset. The checked-in JSON lets the site continue working during an outage. Once directional history has been backfilled, later updates request only the latest two months instead of downloading the full history again.
-
-The monthly return formula is `(close - open) / open * 100%`. For the still-open current month, `close` is replaced by the latest cached spot price so the current-month return does not stay stuck on yesterday's daily candle.
-
-The directional extreme move is `(second extreme - first extreme) / first extreme * 100%`: low-before-high produces a positive potential gain, while high-before-low produces a negative potential loss. Daily candles establish the order; only same-day collisions are refined with hourly and then one-minute public candles. UTC month boundaries are used throughout.
-
-Current spot prices are fetched by the backend/CI updater and cached into the same static JSON:
-
-- BTC, ETH, and SOL: Binance Spot ticker, with multiple public endpoint fallbacks.
-- HYPE: Hyperliquid public mid price.
-
-This keeps the frontend free of provider credentials and avoids browser-side scraping. The GitHub Pages workflow refreshes the deployed static cache hourly; GitHub's scheduler can run a few minutes late, so this is near-hourly rather than tick-level realtime.
-
-Hyperliquid's public API exposes the HYPE launch month as a monthly candle but does not retain intramonth candles for that month. Its high and low remain visible, while the directional extreme move is explicitly cached as unavailable instead of being inferred.
-
-`scripts/update-equity-data.py` retrieves US market data and writes `public/data/equity-weekly.json`.
-
-- QQQ and SPY: AKShare/Sina U.S. daily data by default, grouped into Friday-ending weeks. `EQUITY_PRICE_SOURCE=yfinance` can be used when Yahoo access is healthy.
-- FRED: `DGS10`, `VIXCLS`, and `DFF`, read with `FRED_API_KEY` from the local environment or deployment secrets.
-- Events: the `events` array is reserved in each weekly row, but no automatic event source or editor is enabled yet.
-
-Only derived weekly data is cached. API keys, cookies, sessions, raw tick data, and personal data are never written to frontend files.
-
-`scripts/update-market-session-data.mjs` retrieves the fourth-page market-session snapshot and writes `public/data/market-session.json`.
-
-- Crypto prices: OKX public spot tickers for BTC/USDT, BNB/USDT, HYPE/USDT, and USDT/USD.
-- Crypto market caps: CoinMarketCap `quotes/latest`, read with `CMC_PRO_API_KEY` from local environment or deployment secrets.
-- U.S. proxy prices: OKX public equity-swap tickers for TSLA, NVDA, and MSFT when an official U.S. equity feed is not connected.
-- CL proxy: OKX CL index ticker with index component metadata; it is labeled as a proxy, not as an official CME/ICE price.
-- Korea and China rows: session clocks are generated locally; price and market-cap fields remain `N/A` until reviewed sources are connected.
-
-The browser reads only the generated JSON. `CMC_PRO_API_KEY` must never be exposed through `VITE_*` variables or frontend code.
-
-Production refreshes are additionally controlled by the non-secret approval variables documented in [DATA_SOURCE_REVIEW.md](DATA_SOURCE_REVIEW.md). An API key alone is never treated as permission to cache or publicly display provider data.
-
-For persistent local credentials, copy `.env.example` to `.env.local` inside `app/` and fill the values there. The ignored `.env.local` file is loaded by the backend update scripts; variables already present in the shell take precedence. Never paste provider keys into frontend code or commit the local file.
-
-`scripts/update-chip-chain-data.mjs` retrieves the chip-chain and robotics-chain market caches and writes `public/data/chip-chain-hotspots.json` or `public/data/robot-chain-watchlist.json`.
-
-- U.S. equities, ETFs, and ADRs: Alpaca official stock bars via backend/CI, using `APCA_API_KEY_ID` and `APCA_API_SECRET_KEY` from local ignored env files or GitHub Actions secrets.
-- Feed selection: set `CHIP_CHAIN_US_FEED` to `iex` by default, or to `delayed_sip` / `sip` only when the account subscription and redistribution terms support it.
-- Price paths: `1D`, `5D`, `1M`, and `3M` are written as static `pricePaths` and the frontend draws those paths when present.
-- Korea rows: Samsung Electronics `005930.KS` and SK hynix `000660.KS` remain in the page, but the KIS/KRX adapter is pending reviewed credentials, licensing, and redistribution terms. Until then those rows keep their visible sample/static source quality.
-
-If Alpaca credentials are not configured, the updater keeps the last-known-good JSON and does not rewrite `generatedAt`. A commit or deploy does not automatically convert sample chip-chain or robotics-chain data into live market data; provider credentials and reviewed adapters must be configured first.
-
-`scripts/update-macro-calendar.py` retrieves the first macro-calendar source set and writes `public/data/macro-calendar.json`.
-
-- Inflation: CPI, core CPI, PPI, core PPI goods, PCE, and core PCE from FRED.
-- Employment and growth: nonfarm payrolls, unemployment, average hourly earnings, initial claims, retail sales, industrial production, real GDP, and consumer sentiment from FRED.
-- Rates and dollar: Fed target range, effective fed funds, 2Y/10Y Treasury yields, 10Y real yield, 10Y breakeven, broad USD index, USD/JPY, USD/CNY, Japan overnight rates, China 3M interbank rates, and FOMC SEP fed funds projections from FRED.
-- Volatility and credit: VIX, investment-grade OAS, high-yield OAS, and St. Louis Fed financial stress index from FRED.
-- Liquidity and balance sheet: M2, Federal Reserve total assets, reserve balances, Treasury General Account, and overnight reverse repo from FRED.
-
-The script caches provider observations under `tmp/macro-cache/fred` before generating the public JSON. `tmp/` is ignored by git, so local reruns avoid repeated API calls without committing provider cache files. By default the provider cache is reused for 18 hours; set `MACRO_CACHE_REFRESH=1` to force a refresh, `MACRO_CALENDAR_MONTHS=6` to adjust the output window, or `MACRO_CACHE_MAX_AGE_HOURS=...` to tune local reuse.
-
-FRED observation dates are retained as economic observation/period dates, not publication timestamps. Forecast values stay `null` until a reviewed forecast source or manual backend input is added. This avoids presenting period dates or unreviewed consensus numbers as release-calendar facts.
-
-Supabase is the canonical store for curated manual events. `data/manual-macro-events.json` is a generated, read-only snapshot used for offline inspection, last-known-good fallback, and calendar script input; it is never an alternative writable source. When `SUPABASE_URL` and `SUPABASE_SECRET_KEY` are configured for backend/CI only, `npm run sync-manual-macro-events` refreshes that snapshot before `update-macro-calendar` runs. The legacy `SUPABASE_SERVICE_ROLE_KEY` variable remains supported during Supabase's key migration. These are discretionary liquidity or attention annotations, not economic data releases.
-
-The local admin editor is available only in local development:
+Install Python dependencies with hash verification:
 
 ```bash
-npm run admin:macro-events
-npm run dev
+python -m pip install --require-hashes -r requirements-equity.txt
 ```
 
-Use the Supabase secret key only in ignored local environment setup or GitHub Actions secrets. The Vite frontend must never receive this key through `VITE_*` variables. If Supabase is not configured, the admin API exposes `data/manual-macro-events.json` for read-only inspection but rejects save and publish requests with HTTP 503.
+Never paste a provider key into chat or commit it. Use `.env.local`/`.dev.vars` files that are already ignored, or the `cyclelens-admin` GitHub Environment.
 
-The local client and loopback API share the configured `x-cyclelens-admin` request marker. It is only a local accidental-action guard, not authentication, and must never be trusted by an internet-facing service. `CYCLELENS_ADMIN_ACTOR` and `CYCLELENS_PYTHON` are the current local configuration names; the corresponding `CYCLE_MAP_*` names remain read-only migration fallbacks.
+## Last-known-good behavior
 
-Other product-prefixed script controls now use `CYCLELENS_SKIP_LOCAL_ENV`, `CYCLELENS_DISABLE_PUBLIC_HISTORY`, `CYCLELENS_FORCE_HISTORY_REFRESH`, `CYCLELENS_REQUIRE_MARKET_HISTORY`, and `CYCLELENS_CHART_BASELINE_GIT_REF`. Their former `CYCLE_MAP_*` spellings remain temporary compatibility fallbacks, while repository workflows set only the current names.
+Collectors merge partial successful responses with their local private LKG where possible. A scheduled GitHub runner is ephemeral, and private datasets are intentionally not transferred through GitHub cache/artifact or a branch. Supabase preserves selected metric history, curated manual events, and the bounded derived CMC provider state/credit ledger. It is not a complete canonical snapshot for every raw dataset.
 
-For manual legislation, policy, or surprise events, use `category: other`, an uppercase stable `seriesId` such as `MANUAL_BILL_STABLECOIN_20260718`, `role: policy_legislation_event` for legislation or `role: manual_attention_event` for one-off surprises, and `unit: event`. Keep the source field specific enough to audit later.
+Consequently, the owner release requires enabled datasets to be transformed during the current run and refuses deployment if a reviewed source does not refresh sufficiently. CMC is handled separately: one central step hydrates its service-only cross-run LKG, enforces cadence and credit budgets, and supplies all three consumers; those consumers still have to refresh their independent non-CMC primary sources. Cloudflare retains the prior successful deployment when a gate fails. Any broader private Supabase/R2 snapshot store still requires a separate access, schema, size, retention, and integrity review.
 
-For CI or deployment, install Python dependencies with:
+## Deployment
 
-```bash
-python -m pip install -r requirements-equity.txt
-```
+`deploy-owner.yml` calls `_owner-release.yml` as one job on one runner. Secrets are scoped to the individual collector or deploy step. No private artifact, dependency cache containing data, Git branch, or public workflow carries owner bytes.
 
-On GitHub Actions, store `FRED_API_KEY`, `SUPABASE_URL`, and preferably `SUPABASE_SECRET_KEY` in repository secrets. `SUPABASE_SERVICE_ROLE_KEY` is accepted only as a temporary legacy fallback. Do not put keys in frontend code, checked-in JSON, logs, screenshots, or chat.
+Before deploying:
 
-## Deployment notes
+- restrict the `cyclelens-admin` GitHub Environment to `main`;
+- configure exactly one pseudonymous allowed Access actor;
+- protect production, preview, `pages.dev`, and any custom domains;
+- keep Cloudflare and Supabase credentials in their secret stores;
+- apply and verify required Supabase migrations separately.
 
-GitHub Pages is the preferred static-share path for this repo. `.github/workflows/deploy-pages.yml` builds the Vite app, refreshes the crypto cache, uploads `app/dist`, and deploys it on:
+The workflow performs anonymous-denial checks before and after deployment. Configuration details are in [the Cloudflare handoff](../docs/deployment/ADMIN_CLOUDFLARE.md).
 
-- every push to `main`
-- manual workflow dispatch
-- an hourly schedule for current spot, US market, market-session, and configured chip-chain / robotics-chain refreshes
-
-Hourly Pages refreshes do not create hourly commits. The separate `update-market-data.yml` workflow publishes auditable cache snapshots to the machine-managed `data-cache` branch on a lower-frequency schedule, including macro-calendar, chip-chain, and robotics-chain cache files. It never commits generated cache updates to `main`; do not merge `data-cache` back into a development branch.
-
-When a development branch also contains intentional cache-contract or calendar changes, reconcile the snapshot by value rather than merging the machine branch. From `app`, run `node scripts/merge-data-cache-snapshot.mjs --ref origin/data-cache` for a dry run, repeat it with `--write`, rebuild the calendar with `npm run update-market-session-calendar`, and run `node scripts/verify-data-cache-merge.mjs`. The allowlisted merger takes seven ordinary generated snapshots only when the remote `generatedAt` is newer; crypto liquidity and market-session data use field-level contracts so longer local history, point provenance, reviewed treasury disclosures, and official session rules cannot be replaced by a stale cache schema.
-
-Scheduled deployments restore the most recent Actions cache first and fall back to `data-cache` when that cache has been evicted or is unavailable. A fast refresh fails closed when neither baseline exists, so it cannot rebuild the whole site from stale checked-in JSON. Full refreshes may bootstrap from the checked-in last-known-good files until the first `data-cache` snapshot has been published.
-
-The frontend is intentionally static. It should not call FRED, CoinMarketCap, AKShare, Yahoo, or any other provider from the browser. Scheduled backend/CI jobs refresh checked-in JSON caches, and the deployed site serves those static cache files.
-
-`scripts/update-crypto-liquidity-data.mjs` writes `public/data/crypto-liquidity.json`. CoinMarketCap is the primary source for current aggregate and asset market caps. The updater requests up to 365 completed UTC days from CoinMarketCap's documented historical endpoints on first backfill and only a 14-day overlap after the minimum 183-day contract is satisfied. Global history and asset history fail independently because CoinMarketCap plan access differs by endpoint.
-
-When CoinMarketCap asset history is unavailable, the documented DefiLlama free Stablecoins API (no authentication) supplies only USDT and USDC circulating-USD history. Same-date USDT + USDC is derived locally and no missing day is filled. A fresh CoinMarketCap current level is retained; a missing or stale stablecoin current level may advance to the newest documented point from the coherent historical series. Each retained point records provider, source URL, observation time, fetch time, last-check time, and quality. CoinMarketCap documents local application caching as a supported pattern; this project retains only the selected daily series needed by the page.
-
-SoSoValue supplies daily U.S. BTC and ETH spot ETF flow series only when both `SOSOVALUE_API_KEY` and `SOSOVALUE_REDISTRIBUTION_APPROVED=1` are configured. SOL ETF flow remains explicitly pending until a reviewed source is available. Strategy holdings and average cost use only the reviewed official company disclosure file; run `npm run apply-reviewed-treasuries` after updating that review. The optional BlockBeats adapter requires `BLOCKBEATS_API_KEY`, `BLOCKBEATS_AUX_ENABLED=1`, and the separate `BLOCKBEATS_REDISTRIBUTION_APPROVED=1` release gate; it is an auxiliary BTC cross-check and cannot replace primary ETF data. `scripts/persist-market-metric-history.mjs` service-side upserts allowlisted observations into Supabase, then pages through the private table in 1,000-row batches and hydrates selected market-cap, ETF-flow, and corporate-treasury last-known-good histories into the static JSON before the site build. Database history may extend a chart without overwriting a newer official current disclosure. Browser roles retain no table access and never receive a Supabase secret.
-
-For mainland China users, if real-user testing shows unstable access on the primary static host, the same `app/dist` build can be mirrored to a China-friendly static host such as Alibaba Cloud OSS + CDN or Tencent Cloud COS + CDN. No data relay is required as long as the browser continues to read only static JSON.
+Telegram delivery and the old public data-cache/publishing paths are retired. Their remaining rendering or compatibility code is not reachable from a scheduled publishing workflow.

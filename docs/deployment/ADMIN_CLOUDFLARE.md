@@ -1,98 +1,113 @@
-# CycleLens 管理端：Cloudflare Pages / Access 部署交接
+# CycleLens owner deployment: Cloudflare Pages and Access
 
-更新日期：2026-07-19
+Updated: 2026-07-23
 
-状态：`cyclelens-admin` 已通过 Cloudflare Pages Direct Upload 部署；生产域和预览域均由 Cloudflare Access 保护，Pages Functions 已连接现有 CycleLens Supabase 项目并完成真实写入与审计验证。
+This document describes the required boundary. Repository configuration alone does not prove that the external Cloudflare, GitHub, or Supabase settings are currently correct.
 
-## 1. 已实现边界
+## Architecture
 
-- `npm run build:admin` 生成独立管理端构建，根路径默认进入宏观事件后台，并生成 `noindex` 元标签与覆盖 `/*` 的 `_routes.json`。
-- 公开构建继续静态排除 `MacroAdminRoute`；管理端故障不会改变 GitHub Pages 公共站点的数据读取路径。
-- 根 Pages middleware 在返回 HTML、静态资源或 API 之前验证 `Cf-Access-Jwt-Assertion`：只接受 RS256、指定 issuer/audience、有效期内并由当前 Access JWKS 签名的 token。
-- API 再校验同源、HTTP 方法、JSON content type、64 KiB body 上限、300 条事件上限和共享字段 schema。
-- Access subject 经过 SHA-256 截断后成为稳定的非敏感审计 actor；不记录邮箱、JWT、Supabase 响应正文或 secret。
-- 远程页面只调用同源 `/api/manual-macro-events`。远程构建不发送或信任本地 `x-cyclelens-admin` header，也不包含 Python 子进程、校验或发布命令。
-- 保存只执行 Supabase CRUD，并返回 `queued_for_next_projection`；静态 JSON 仍由后续 GitHub Actions / 定时投影任务生成。
+`dist-owner` contains plaintext private JSON. It is safe to publish only when both controls cover every route:
 
-## 2. 凭据与工具边界
+1. Cloudflare Access protects the production domain, the stable `pages.dev` domain, preview domains, and every custom domain.
+2. Pages Functions executes `_middleware.js` for `/*`, validates the Access JWT, and admits exactly one configured pseudonymous actor.
 
-不要把任何 key、token、Access JWT 或项目私有 URL 发到对话、提交到仓库或写入前端环境变量。六个运行时字段只保存在 Cloudflare Pages 的 encrypted secrets 中；仓库仅保留变量名和无值示例。
+The owner build emits `_routes.json` with `include: ["/*"]` and no exclusions. Middleware authenticates HTML, assets, JSON, and APIs before content is returned and sets `Cache-Control: private, no-store`.
 
-Wrangler 已作为固定版本的开发依赖加入 `app/package.json`。Supabase CLI 不是构建或部署的必需项，本次 migration、查询和 advisors 均通过已连接的 Supabase 工具完成。GitHub CLI 未参与 Phase 6，Phase 8 前也不会推送或切换仓库。
+Do not use Cloudflare Pages’ static asset bypass for owner data. Do not mirror `dist-owner` to another static/CDN/object-storage host.
 
-## 3. 已完成的外部配置
+## Cloudflare encrypted secrets
 
-### 3.1 Supabase
+Configure these separately for production and preview:
 
-1. 复用并升级 CycleLens 前身项目对应的现有 Supabase 项目；没有新建第二个项目，也没有删除已有业务数据。
-2. 已核对并应用 `phase3_metric_catalog`、`strategy_official_source` 和 `phase6_admin_grants_and_legacy_catalog` migration；仓库保留与远端历史一致的 Phase 6 migration 文件。
-3. Phase 6 migration 显式授予 `service_role` 最小 CRUD/审计权限，同时撤销 `anon`、`authenticated` 和 `PUBLIC` 对管理表与 trigger 函数的权限并保留 RLS。
-4. migration 前后数据量不变：手动事件 1、审计 1、指标观测 13,714、修订 558；catalog 为 15 项，其中 14 项 active，旧 `equity.JGB10Y.value` 仅作为 private/inactive alias 保留。
-5. Security Advisor 为 0；Performance Advisor 为 5 条 `unused_index` INFO，当前数据量太小，先保留索引并在真实流量后复核。
-6. Pages Function 使用新的后端 secret key；其 Supabase 控制台显示名称为 `cyclelens_admin_pages`，运行时 Cloudflare binding 仍为 `SUPABASE_SECRET_KEY`。
-
-### 3.2 Cloudflare Pages 与 Access
-
-1. 已创建 Direct Upload Pages 项目 `cyclelens-admin`，生产分支为 `main`；预览验收分支为 `phase6-preview`。
-2. 已分别配置生产精确域和预览通配域的 Access self-hosted application，策略 fail closed，仅允许指定成员邮箱通过 OTP；没有共享静态密码。
-3. Access policy 在 Pages 内容前生效，Pages middleware 的 JWT 校验继续作为第二道边界。
-4. 生产和预览环境均保存下表六项 encrypted secrets；`CF_ACCESS_AUD` 按两个 Access application 分别配置。
-
-需要在 Pages 项目中设置的变量全部通过 Cloudflare encrypted secrets 保存：
-
-| 名称 | 用途 |
+| Name | Purpose |
 | --- | --- |
-| `CF_ACCESS_TEAM_DOMAIN` | `https://<team>.cloudflareaccess.com` issuer/JWKS origin |
-| `CF_ACCESS_AUD` | Access application audience |
-| `CYCLELENS_ADMIN_ORIGINS` | 逗号分隔的精确 HTTPS 管理端 origin |
-| `CYCLELENS_ADMIN_HOST_SUFFIXES` | 仅允许项目自身的 `<project>.pages.dev`，用于其 preview 子域 |
-| `SUPABASE_URL` | Supabase 项目 HTTPS API origin |
-| `SUPABASE_SECRET_KEY` | 后端 `sb_secret_...` key；当前 Supabase 控制台密钥名称为 `cyclelens_admin_pages`（显示标签，不是运行时字段名） |
+| `CF_ACCESS_TEAM_DOMAIN` | Exact `https://<team>.cloudflareaccess.com` issuer and JWKS origin |
+| `CF_ACCESS_AUD` | Exact Access application audience |
+| `CF_ACCESS_ALLOWED_ACTORS` | Exactly one `cf-access:<24 lowercase hex>` owner actor |
+| `CYCLELENS_ADMIN_ORIGINS` | Comma-separated exact HTTPS application origins |
+| `CYCLELENS_ADMIN_HOST_SUFFIXES` | Only the project’s own `pages.dev` suffixes needed for previews |
+| `SUPABASE_URL` | Hosted `https://<project>.supabase.co` API origin |
+| `SUPABASE_SECRET_KEY` | Backend-only `sb_secret_...` key |
 
-本地调试时复制 `app/.dev.vars.example` 为未跟踪的 `app/.dev.vars`，只在本机填写。`.dev.vars*` 已被 git 忽略，示例文件除外。
+The middleware hashes the verified Access JWT `sub` claim with SHA-256 and uses the first 24 lowercase hex characters, prefixed by `cf-access:`. Derive this value offline from a locally verified token/identity; do not paste the JWT, email address, subject, or key into chat, tickets, logs, or the repository. `CF_ACCESS_ALLOWED_ACTORS` must contain exactly one value. A missing, malformed, or second actor causes fail-closed authentication.
 
-## 4. 构建、部署和验证顺序
+Access policy and the application actor check are independent. Configure the Access policy for only the owner identity, then configure the matching pseudonymous actor as the second boundary.
 
-在 `app` 目录执行：
+## GitHub Environment
+
+Create or review the `cyclelens-admin` Environment:
+
+- restrict deployment to `jeanmuss/cyclelens` on `refs/heads/main`;
+- optionally require a human reviewer;
+- store provider, Supabase, and Cloudflare credentials as Environment secrets;
+- keep `OWNER_DATA_COLLECTION_APPROVED=1` and individual `OWNER_COLLECT_*` switches as non-secret variables;
+- keep `OWNER_COLLECT_CMC` unset or different from `1` until the account has usable credits; CMC is exact opt-in rather than default-on;
+- apply and verify `supabase/migrations/20260801000000_cmc_atomic_budget_reservation.sql` before enabling CMC; its RPC is granted only to `service_role`, serializes the UTC budget ledger, and rejects replayed reservations before provider traffic;
+- before setting `OWNER_COLLECT_CMC=1`, set positive integer `OWNER_CMC_DAILY_CREDIT_BUDGET` and `OWNER_CMC_MONTHLY_CREDIT_BUDGET` values with the daily limit no greater than the monthly limit; `OWNER_CMC_CURRENT_MIN_INTERVAL_MINUTES` is optional and defaults to 360 minutes;
+- use least-privilege Cloudflare and Supabase credentials.
+
+The reusable workflow scopes each secret to its collector/deploy step. It does not use `secrets: inherit`, Actions data artifacts, dependency cache for private bytes, or a data branch.
+
+CoinMarketCap is acquired once per release into `tmp/owner-private/provider-state/coinmarketcap.json`. Only that central step receives the CMC credential. A due current refresh makes at most one global request and one six-asset quote request; historical refresh is fixed at a minimum 20-hour cadence and makes at most two additional requests when its conservative, atomic credit reservation fits both budgets. The three downstream datasets consume the normalized derived state and have no CMC network or credential path.
+
+## Build and release
+
+The public command is deliberately harmless:
 
 ```powershell
-npm ci
-npm run check
-npm run build:admin
-npm run build:admin:functions
+npm --prefix app run build
 ```
 
-确认以上检查通过后，才使用 Wrangler Direct Upload 部署；命令不固化 token，凭据只由本机 Wrangler 登录态管理。当前 Wrangler 版本为 4.112.0，Pages 配置仅保留该产品支持的字段。
+It produces only `dist-public`. A protected local build requires explicit approval:
 
-上线 smoke test 结果（2026-07-19）：
+```powershell
+$env:CYCLELENS_DATA_USE_SCOPE = "owner_private"
+$env:CYCLELENS_OWNER_PRIVATE_USE_APPROVED = "1"
+$env:CYCLELENS_PROTECTED_BUILD_APPROVED = "1"
+npm --prefix app run prepare-owner-data
+npm --prefix app run project-owner-data
+npm --prefix app run generate-owner-data-manifest
+npm --prefix app run build:owner
+npm --prefix app run build:owner:functions
+```
 
-1. 未认证的生产根路径、生产 API、预览 alias 和预览 hash 地址均返回 Access `302`，拿不到 Pages HTML 或 API 正文。
-2. 通过邮箱 OTP 后，生产根路径进入宏观事件后台，受保护 API 成功读取 Supabase 中原有的 1 条事件。
-3. 页面保存了唯一的 `CYCLELENS_PHASE6_SMOKE` 草稿，明确显示“等待下一轮静态投影”；数据库确认该记录与 INSERT 审计存在，审计 actor 符合 `cf-access:<24 hex>`。
-4. 临时记录已按唯一键清理，数据库事件总数恢复为 1；INSERT/DELETE 审计各 1 条且 actor 格式均正确，原有事件未被删除。
-5. API 的身份、同源、方法、body、schema 和 `noindex` 边界由 158 项回归测试及独立 admin/Functions 构建共同验证；公开 bundle 继续静态排除管理路由。
-6. 公开 GitHub Pages 继续匿名可读；管理端 Direct Upload 与公共站构建、域名和数据路径相互独立。
+The scheduled production path is `.github/workflows/deploy-owner.yml`. `_owner-release.yml` runs collection, projection, Python/Node security tests, release-data validation, both builds, and deployment in one job.
 
-## 5. 剩余风险与后续增强
+Before deploying it verifies that an anonymous request to:
 
-- 当前“替换整个事件列表”由 PostgREST 的 upsert、标记删除 actor、delete 多次调用组成，不具备跨请求事务性；小规模 MVP 可用，但上线前应避免多人并发编辑。若出现并发需求，应改为受限数据库 RPC，在单事务内校验版本并替换。
-- 尚未加入速率限制或受限 workflow dispatch；第一版依赖 Access、来源校验、体积/条数限制并等待定时投影。
-- 预览域已验证未认证请求 fail closed，但没有重复执行生产端的完整 CRUD；两者使用同一 Functions 产物，bindings 则按环境独立维护。
-- 5 个未使用索引目前只属于 INFO；不要因空闲期统计立即删除，待有实际查询流量后再复核。
+```text
+https://cyclelens-admin.pages.dev/data/data-manifest.json
+```
 
-回滚顺序：
+receives only an Access redirect or `401`/`403`. It repeats the check after deployment and never prints the response body. A `2xx` response blocks/fails the release.
 
-1. Pages 代码异常时，重新部署上一个已验证的 Direct Upload 产物；不要绕过或删除 Access policy 来恢复页面。
-2. Supabase migration 只收紧并显式化 grants、补齐 catalog，不删除业务行；若需回退应用代码，保留新 secret key 和兼容表结构即可。
-3. 若怀疑密钥泄露，先在 Supabase 撤销名为 `cyclelens_admin_pages` 的 key，再在生产和预览分别写入替代 key 并重新部署；不要在日志或工单中复制旧值。
-4. 管理端故障不影响公共 GitHub Pages；旧公开站仍是 Phase 8 前的回滚入口。
+## Supabase
 
-## 6. 官方依据
+The browser never receives a Supabase secret. Pages Functions and CI accept hosted `*.supabase.co` origins only (loopback HTTP is allowed solely by the local CLI path), reject redirects, limit response bodies, and suppress response text in errors.
 
-- [Cloudflare Access：验证 Access JWT](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/authorization-cookie/validating-json/)
-- [Cloudflare Pages Functions](https://developers.cloudflare.com/pages/functions/)
-- [Cloudflare Pages Wrangler 配置](https://developers.cloudflare.com/pages/functions/wrangler-configuration/)
-- [Cloudflare Pages Functions bindings 与 secrets](https://developers.cloudflare.com/pages/functions/bindings/)
-- [Cloudflare Workers Logs](https://developers.cloudflare.com/workers/observability/logs/workers-logs/)
-- [Supabase：Securing your API](https://supabase.com/docs/guides/api/securing-your-api)
-- [Supabase API keys](https://supabase.com/docs/guides/getting-started/api-keys)
+Apply migrations separately and verify row counts, grants, RLS, and postconditions. In particular, the repository migration `20260723233044_owner_private_alpaca_source.sql` being present does not mean it has been applied to the production project.
+
+Browser roles must retain no access to private manual-event or metric-history tables. Use a dedicated least-privilege backend key and rotate it if any log or diagnostic may have exposed it.
+
+CMC cross-run state reuses the existing service-only tables rather than adding a new public schema. `dashboard_snapshot_runs` holds the bounded derived state, watermarks, and conservative credit reservations; `market_metric_observations` restores canonical CMC history. A `started` reservation is written before provider traffic and completed or failed afterward. Raw CMC responses and credentials are never stored. CMC state hydration accepts only hosted HTTPS `*.supabase.co` origins and preserves a prior-month LKG while calculating daily/monthly usage only from the current UTC periods.
+
+## Verification checklist
+
+- Anonymous root, asset, JSON, and API requests are denied on production and preview.
+- The verified owner can load the dashboard and manual-event API.
+- A valid Access token for any other subject is denied by the actor allowlist.
+- `_routes.json` protects `/*` with no exclusions.
+- Responses contain `Cache-Control: private, no-store` and `X-Robots-Tag: noindex`.
+- No owner data appears in GitHub Pages, Actions artifacts/cache, Git history, deployment logs, or a public bucket.
+- Provider failures leave the prior Cloudflare deployment active.
+
+## Rollback
+
+Redeploy the previous verified Cloudflare version; never disable Access or remove Functions to restore availability. If a credential may have leaked, revoke/rotate it first, then update the corresponding encrypted secret and redeploy. If anonymous access ever returns `2xx`, treat the deployed owner data as exposed and investigate before resuming collection.
+
+## References
+
+- [Cloudflare Access JWT validation](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/authorization-cookie/validating-json/)
+- [Cloudflare Pages Functions routing](https://developers.cloudflare.com/pages/functions/routing/)
+- [Cloudflare Pages Access known issues](https://developers.cloudflare.com/pages/platform/known-issues/)
+- [Supabase API security](https://supabase.com/docs/guides/api/securing-your-api)

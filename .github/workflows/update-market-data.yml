@@ -1,82 +1,14 @@
-name: Update market caches
+name: Retired legacy data-cache publisher
 
 on:
-  schedule:
-    - cron: "30 22 * * 1-5"
-    - cron: "20 1 1 * *"
-    - cron: "20 2 * * 6"
   workflow_dispatch:
 
 permissions:
-  contents: write
-
-concurrency:
-  group: market-cache
-  cancel-in-progress: false
+  contents: read
 
 jobs:
-  collect-persist:
-    uses: ./.github/workflows/_collect-persist.yml
-    with:
-      refresh_mode: full
-      public_crypto_market_data_approved: ${{ vars.PUBLIC_CRYPTO_MARKET_DATA_APPROVED == '1' }}
-      cmc_redistribution_approved: ${{ vars.CMC_REDISTRIBUTION_APPROVED != '0' }}
-      defillama_redistribution_approved: ${{ vars.DEFILLAMA_REDISTRIBUTION_APPROVED == '1' }}
-      sosovalue_redistribution_approved: ${{ vars.SOSOVALUE_REDISTRIBUTION_APPROVED == '1' }}
-      blockbeats_aux_enabled: ${{ vars.BLOCKBEATS_AUX_ENABLED == '1' }}
-      blockbeats_redistribution_approved: ${{ vars.BLOCKBEATS_REDISTRIBUTION_APPROVED == '1' }}
-      alpaca_redistribution_approved: ${{ vars.ALPACA_REDISTRIBUTION_APPROVED == '1' }}
-      fred_third_party_series_approved: ${{ vars.FRED_THIRD_PARTY_SERIES_APPROVED == '1' }}
-      adp_data_display_approved: ${{ vars.ADP_DATA_DISPLAY_APPROVED == '1' }}
-      cyclelens_require_market_history: ${{ vars.MARKET_HISTORY_REQUIRED == '1' }}
-    secrets: inherit
-
-  project-public-snapshots:
-    needs: collect-persist
-    uses: ./.github/workflows/_project-public-snapshots.yml
-    with:
-      cmc_redistribution_approved: ${{ vars.CMC_REDISTRIBUTION_APPROVED != '0' }}
-      defillama_redistribution_approved: ${{ vars.DEFILLAMA_REDISTRIBUTION_APPROVED == '1' }}
-      sosovalue_redistribution_approved: ${{ vars.SOSOVALUE_REDISTRIBUTION_APPROVED == '1' }}
-      blockbeats_aux_enabled: ${{ vars.BLOCKBEATS_AUX_ENABLED == '1' }}
-      blockbeats_redistribution_approved: ${{ vars.BLOCKBEATS_REDISTRIBUTION_APPROVED == '1' }}
-      fred_third_party_series_approved: ${{ vars.FRED_THIRD_PARTY_SERIES_APPROVED == '1' }}
-
-  publish-versioned-snapshot:
-    needs: project-public-snapshots
+  retired:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
-      - uses: actions/download-artifact@v8
-        with:
-          name: public-market-snapshot
-          path: app
-      - name: Publish the isolated data-cache snapshot
-        shell: bash
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -- app/data/manual-macro-events.json app/public/data
-
-          snapshot_tree="$(git write-tree)"
-          if git fetch --no-tags origin data-cache:refs/remotes/origin/data-cache; then
-            parent_commit="$(git rev-parse refs/remotes/origin/data-cache)"
-          else
-            parent_commit="$GITHUB_SHA"
-          fi
-          parent_tree="$(git rev-parse "${parent_commit}^{tree}")"
-
-          if [ "$snapshot_tree" = "$parent_tree" ]; then
-            if ! git show-ref --verify --quiet refs/remotes/origin/data-cache; then
-              git push origin "$parent_commit:refs/heads/data-cache"
-              echo "Bootstrapped origin/data-cache from the checked-in baseline"
-              exit 0
-            fi
-            echo "Versioned data snapshot is already current"
-            exit 0
-          fi
-
-          snapshot_commit="$(printf '%s\n' 'data: refresh versioned market snapshot' | git commit-tree "$snapshot_tree" -p "$parent_commit")"
-          git push origin "$snapshot_commit:refs/heads/data-cache"
+      - name: Confirm the legacy publisher is inert
+        run: echo "The public data-cache publisher is retired; owner data is never pushed to Git."

@@ -13,30 +13,48 @@ from __future__ import annotations
 import json
 import os
 import csv
+import sys
 from io import StringIO
 from dataclasses import dataclass
 from datetime import UTC, date, datetime, time, timedelta
 from pathlib import Path
-from typing import Callable
 from zoneinfo import ZoneInfo
 
 import pandas as pd
 import requests
 
+from data_use_scope import (
+    cache_root_for_scope,
+    data_directory_for_scope,
+    data_use_scope_from_environment,
+    source_is_eligible,
+)
+from secure_http import get_json_bounded
+
 APP_ROOT = Path(__file__).resolve().parents[1]
 WORKSPACE_ROOT = APP_ROOT.parent
-OUTPUT_PATH = APP_ROOT / "public" / "data" / "equity-weekly.json"
+DATA_USE_SCOPE = data_use_scope_from_environment(os.environ, sys.argv[1:])
+DATA_DIRECTORY = data_directory_for_scope(APP_ROOT, DATA_USE_SCOPE)
+OUTPUT_PATH = DATA_DIRECTORY / "equity-weekly.json"
 RECURRING_EVENTS_PATH = APP_ROOT / "data" / "equity-recurring-events.json"
-CACHE_DIR = WORKSPACE_ROOT / "tmp" / "equity-cache"
-SHARED_FRED_CACHE_DIR = WORKSPACE_ROOT / "tmp" / "macro-cache" / "fred"
+CACHE_ROOT = cache_root_for_scope(WORKSPACE_ROOT, DATA_USE_SCOPE)
+CACHE_DIR = CACHE_ROOT / "equity-cache"
+SHARED_FRED_CACHE_DIR = CACHE_ROOT / "macro-cache" / "fred"
 MOF_JGB10Y_CACHE_PATH = CACHE_DIR / "mof-JGB10Y.json"
 MOF_JGB_CURRENT_URL = "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/jgbcme.csv"
 MOF_JGB_HISTORY_URL = "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv"
 MOF_JGB_METHODOLOGY_URL = "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/qa.htm"
+ALPACA_DATA_ORIGIN = "https://data.alpaca.markets"
+FRED_OBSERVATIONS_URL = "https://api.stlouisfed.org/fred/series/observations"
+FRED_ALLOWED_ORIGINS = frozenset({"https://api.stlouisfed.org"})
+MAX_ALPACA_RESPONSE_BYTES = 8 * 1024 * 1024
+MAX_FRED_RESPONSE_BYTES = 4 * 1024 * 1024
+MAX_MOF_RESPONSE_BYTES = 4 * 1024 * 1024
 
 NY_TZ = ZoneInfo("America/New_York")
 WINDOW_MONTHS = int(os.environ.get("EQUITY_CALENDAR_MONTHS", "6"))
-PRICE_SOURCE = os.environ.get("EQUITY_PRICE_SOURCE", "akshare").strip().lower()
+PRICE_SOURCE = os.environ.get("EQUITY_PRICE_SOURCE", "alpaca").strip().lower()
+ALPACA_FEED = os.environ.get("EQUITY_US_FEED", os.environ.get("CHIP_CHAIN_US_FEED", "iex")).strip().lower()
 CACHE_MAX_AGE_MINUTES = int(os.environ.get("EQUITY_CACHE_MAX_AGE_MINUTES", "55"))
 END_DATE = pd.Timestamp(os.environ.get("EQUITY_CALENDAR_END_DATE", datetime.now(NY_TZ).date().isoformat())).normalize()
 EVENT_LOOKAHEAD_DAYS = int(os.environ.get("EQUITY_EVENT_LOOKAHEAD_DAYS", "45"))
@@ -79,8 +97,18 @@ ASSETS = {
 OPTIONAL_ASSETS = {"SOX"}
 
 FRED_SERIES = {
-    "DGS10": {"label": "10Y Treasury", "unit": "percent", "kind": "yield"},
-    "VIXCLS": {"label": "VIX", "unit": "index", "kind": "volatility"},
+    "DGS10": {
+        "label": "10Y Treasury",
+        "unit": "percent",
+        "kind": "yield",
+        "sourcePolicyId": "fred-government",
+    },
+    "VIXCLS": {
+        "label": "VIX",
+        "unit": "index",
+        "kind": "volatility",
+        "sourcePolicyId": "fred-third-party",
+    },
 }
 
 OFFICIAL_RATE_SERIES = {
@@ -123,11 +151,22 @@ def parse_timestamp(value: str | None) -> datetime | None:
         return None
 
 
+def observation_timestamp(value: object) -> str | None:
+    parsed = parse_timestamp(str(value) if value is not None else None)
+    return parsed.isoformat().replace("+00:00", "Z") if parsed is not None else None
+
+
 def oldest_provider_fetch_at() -> str | None:
     timestamps: list[datetime] = []
-    paths = [CACHE_DIR / f"price-{asset_price_symbol(symbol)}.json" for symbol in ASSETS]
-    paths.append(MOF_JGB10Y_CACHE_PATH)
+    paths: list[Path] = []
+    if source_is_eligible("alpaca", scope=DATA_USE_SCOPE, environment=os.environ):
+        paths.extend(CACHE_DIR / f"price-{asset_price_symbol(symbol)}.json" for symbol in ASSETS)
+    if source_is_eligible("japan-mof", scope=DATA_USE_SCOPE, environment=os.environ):
+        paths.append(MOF_JGB10Y_CACHE_PATH)
     for series_id in FRED_SERIES:
+        source_policy_id = str(FRED_SERIES[series_id]["sourcePolicyId"])
+        if not source_is_eligible(source_policy_id, scope=DATA_USE_SCOPE, environment=os.environ):
+            continue
         local_path = fred_cache_path(series_id)
         paths.append(local_path if local_path.exists() else SHARED_FRED_CACHE_DIR / f"{series_id}.json")
     for path in paths:
@@ -352,60 +391,146 @@ def read_price_cache(symbol: str) -> DailyPrices | None:
 def write_price_cache(prices: DailyPrices) -> None:
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
     frame = prices.frame.reset_index().rename(columns={"index": "date"})
-    frame.to_csv(CACHE_DIR / f"price-{prices.symbol}.csv", index=False)
-    (CACHE_DIR / f"price-{prices.symbol}.json").write_text(
-        json.dumps({"source": prices.source, "fetchedAt": iso_now()}, ensure_ascii=False, indent=2) + "\n",
+    csv_path = CACHE_DIR / f"price-{prices.symbol}.csv"
+    temporary_csv_path = csv_path.with_name(f"{csv_path.name}.tmp")
+    frame.to_csv(temporary_csv_path, index=False)
+    temporary_csv_path.replace(csv_path)
+    write_json_atomic(
+        CACHE_DIR / f"price-{prices.symbol}.json",
+        {"source": prices.source, "fetchedAt": iso_now()},
+    )
+
+
+def write_json_atomic(path: Path, payload: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary_path = path.with_name(f"{path.name}.tmp")
+    temporary_path.write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
+    temporary_path.replace(path)
 
 
-def source_akshare_daily(symbol: str) -> DailyPrices:
-    import akshare as ak
-
-    frame = ak.stock_us_daily(symbol=symbol, adjust="")
-    if frame.empty:
-        raise RuntimeError(f"AKShare returned no rows for {symbol}")
-    frame = normalize_price_frame(frame)
-    return DailyPrices(symbol=symbol, source="AKShare / Sina US stock daily (unadjusted)", frame=frame, cache_status="fresh")
+def alpaca_credentials() -> tuple[str, str]:
+    key_id = os.environ.get("APCA_API_KEY_ID", "").strip()
+    secret_key = os.environ.get("APCA_API_SECRET_KEY", "").strip()
+    if not key_id or not secret_key:
+        raise RuntimeError("Alpaca credentials are not configured")
+    return key_id, secret_key
 
 
-def source_yfinance_daily(symbol: str) -> DailyPrices:
-    import yfinance as yf
+def alpaca_feed() -> str:
+    if ALPACA_FEED not in {"iex", "delayed_sip", "sip"}:
+        raise RuntimeError("EQUITY_US_FEED must be iex, delayed_sip, or sip")
+    return ALPACA_FEED
 
-    cache_dir = WORKSPACE_ROOT / "tmp" / "yfinance-cache"
-    cache_dir.mkdir(parents=True, exist_ok=True)
-    if hasattr(yf, "set_tz_cache_location"):
-        yf.set_tz_cache_location(str(cache_dir))
-    frame = yf.download(
-        symbol,
-        start=LOOKBACK_START.strftime("%Y-%m-%d"),
-        interval="1d",
-        auto_adjust=False,
-        progress=False,
-        threads=False,
-        timeout=20,
+
+def bounded_json_response(response: requests.Response, maximum_bytes: int = MAX_ALPACA_RESPONSE_BYTES) -> dict:
+    declared_length = response.headers.get("content-length")
+    if declared_length:
+        try:
+            if int(declared_length) > maximum_bytes:
+                raise RuntimeError("Provider response exceeds the configured byte limit")
+        except ValueError as exc:
+            raise RuntimeError("Provider returned an invalid Content-Length header") from exc
+    chunks: list[bytes] = []
+    total = 0
+    for chunk in response.iter_content(chunk_size=64 * 1024):
+        if not chunk:
+            continue
+        total += len(chunk)
+        if total > maximum_bytes:
+            response.close()
+            raise RuntimeError("Provider response exceeds the configured byte limit")
+        chunks.append(chunk)
+    try:
+        payload = json.loads(b"".join(chunks).decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise RuntimeError("Alpaca response is not valid UTF-8 JSON") from exc
+    if not isinstance(payload, dict):
+        raise RuntimeError("Alpaca response must be a JSON object")
+    return payload
+
+
+def alpaca_get(path: str, params: dict[str, str | int]) -> dict:
+    key_id, secret_key = alpaca_credentials()
+    response = requests.get(
+        f"{ALPACA_DATA_ORIGIN}{path}",
+        params=params,
+        headers={
+            "APCA-API-KEY-ID": key_id,
+            "APCA-API-SECRET-KEY": secret_key,
+            "Accept": "application/json",
+            "User-Agent": "cyclelens-equity-data/1.0",
+        },
+        timeout=(10, 45),
+        allow_redirects=False,
+        stream=True,
     )
+    try:
+        if 300 <= response.status_code < 400:
+            raise RuntimeError("Alpaca response redirected unexpectedly")
+        response.raise_for_status()
+        return bounded_json_response(response)
+    finally:
+        response.close()
+
+
+def source_alpaca_daily(symbol: str) -> DailyPrices:
+    if symbol.startswith("^"):
+        raise RuntimeError(f"Alpaca stock bars do not provide the index symbol {symbol}")
+    rows: list[dict] = []
+    page_token: str | None = None
+    for _ in range(5):
+        params: dict[str, str | int] = {
+            "timeframe": "1Day",
+            "start": LOOKBACK_START.strftime("%Y-%m-%d"),
+            "end": (END_DATE + pd.DateOffset(days=1)).strftime("%Y-%m-%d"),
+            "limit": 10_000,
+            "feed": alpaca_feed(),
+        }
+        if page_token:
+            params["page_token"] = page_token
+        payload = alpaca_get(f"/v2/stocks/{symbol}/bars", params)
+        page_rows = payload.get("bars")
+        if not isinstance(page_rows, list):
+            raise RuntimeError("Alpaca bars response is missing bars")
+        rows.extend(item for item in page_rows if isinstance(item, dict))
+        page_token = payload.get("next_page_token")
+        if not page_token:
+            break
+    if page_token:
+        raise RuntimeError("Alpaca bars response exceeded the pagination limit")
+    frame = pd.DataFrame([
+        {
+            "date": item.get("t"),
+            "open": item.get("o"),
+            "high": item.get("h"),
+            "low": item.get("l"),
+            "close": item.get("c"),
+            "volume": item.get("v"),
+        }
+        for item in rows
+    ])
     if frame.empty:
-        raise RuntimeError(f"yfinance returned no rows for {symbol}")
-    if isinstance(frame.columns, pd.MultiIndex):
-        frame.columns = [str(col[0]).lower().replace(" ", "_") for col in frame.columns]
-    else:
-        frame.columns = [str(col).lower().replace(" ", "_") for col in frame.columns]
+        raise RuntimeError(f"Alpaca returned no rows for {symbol}")
     frame = normalize_price_frame(frame)
-    return DailyPrices(symbol=symbol, source="yfinance daily (unadjusted close)", frame=frame, cache_status="fresh")
+    source = f"Alpaca Market Data official {alpaca_feed().upper()} daily bars"
+    return DailyPrices(symbol=symbol, source=source, frame=frame, cache_status="fresh")
 
 
 def fetch_daily_prices(symbol: str, failures: list[str], status: dict) -> DailyPrices:
+    source_allowed = source_is_eligible("alpaca", scope=DATA_USE_SCOPE, environment=os.environ)
+    if not source_allowed:
+        failures.append(f"{symbol}: Alpaca is not eligible for {DATA_USE_SCOPE}; provider cache not read")
+        raise RuntimeError(f"Alpaca is not eligible for data-use scope {DATA_USE_SCOPE}")
     cached = read_price_cache(symbol)
     if cached and cache_is_fresh(CACHE_DIR / f"price-{symbol}.csv", status):
         cached.frame = cached.frame[cached.frame.index >= LOOKBACK_START]
         return cached
 
-    providers: dict[str, Callable[[str], DailyPrices]] = {
-        "akshare": source_akshare_daily,
-        "yfinance": source_yfinance_daily,
-    }
-    ordered = (["yfinance", "akshare"] if symbol.startswith("^") else [PRICE_SOURCE] + [name for name in providers if name != PRICE_SOURCE])
+    providers = {"alpaca": source_alpaca_daily}
+    ordered = [PRICE_SOURCE]
     last_error: Exception | None = None
     for provider_name in ordered:
         provider = providers.get(provider_name)
@@ -456,27 +581,61 @@ def write_fred_cache(series_id: str, series: pd.Series) -> None:
         for index, value in series.sort_index().items()
         if finite_number(value) is not None
     ]
-    fred_cache_path(series_id).write_text(
-        json.dumps({"seriesId": series_id, "fetchedAt": iso_now(), "observations": rows}, ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
+    write_json_atomic(
+        fred_cache_path(series_id),
+        {"seriesId": series_id, "fetchedAt": iso_now(), "observations": rows},
     )
 
 
-def fetch_fred_series(failures: list[str], status: dict) -> dict[str, pd.Series]:
-    from fredapi import Fred
+def fetch_fred_series_via_rest(series_id: str) -> pd.Series:
+    api_key = os.environ.get("FRED_API_KEY", "").strip()
+    if not api_key:
+        raise RuntimeError("FRED_API_KEY is not configured")
+    payload = get_json_bounded(
+        FRED_OBSERVATIONS_URL,
+        allowed_origins=FRED_ALLOWED_ORIGINS,
+        params={
+            "series_id": series_id,
+            "api_key": api_key,
+            "file_type": "json",
+            "observation_start": LOOKBACK_START.strftime("%Y-%m-%d"),
+        },
+        headers={"User-Agent": "cyclelens-equity-data/1.0"},
+        maximum_bytes=MAX_FRED_RESPONSE_BYTES,
+    )
+    rows: dict[pd.Timestamp, float] = {}
+    for observation in payload.get("observations", []):
+        if not isinstance(observation, dict):
+            continue
+        value = finite_number(observation.get("value"))
+        if value is None:
+            continue
+        try:
+            observed_date = pd.Timestamp(observation.get("date")).normalize()
+        except (TypeError, ValueError):
+            continue
+        rows[observed_date] = value
+    if not rows:
+        raise RuntimeError(f"FRED returned no valid observations for {series_id}")
+    series = pd.Series(rows, dtype="float64").sort_index()
+    series.name = series_id
+    return series
 
+
+def fetch_fred_series(failures: list[str], status: dict) -> dict[str, pd.Series]:
     output: dict[str, pd.Series] = {}
-    fred: Fred | None = None
-    for series_id in FRED_SERIES:
+    for series_id, definition in FRED_SERIES.items():
+        source_policy_id = str(definition["sourcePolicyId"])
+        source_allowed = source_is_eligible(source_policy_id, scope=DATA_USE_SCOPE, environment=os.environ)
+        if not source_allowed:
+            failures.append(f"FRED {series_id}: source is not eligible for {DATA_USE_SCOPE}; provider cache not read")
+            continue
         cached = read_fred_cache(series_id)
         if cached is not None and cache_is_fresh(fred_cache_path(series_id), status):
             output[series_id] = cached[cached.index >= LOOKBACK_START]
             continue
         try:
-            fred = fred or Fred()
-            series = fred.get_series(series_id, observation_start=LOOKBACK_START.strftime("%Y-%m-%d"))
-            series.index = pd.to_datetime(series.index)
-            series = pd.to_numeric(series, errors="coerce").dropna()
+            series = fetch_fred_series_via_rest(series_id)
             write_fred_cache(series_id, series)
             output[series_id] = series
         except Exception:  # noqa: BLE001
@@ -539,13 +698,14 @@ def write_mof_jgb10y_cache(series: pd.Series) -> None:
         "dateMeaning": "japan_market_close_1500_jst",
         "observations": rows,
     }
-    MOF_JGB10Y_CACHE_PATH.write_text(
-        json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
-    )
+    write_json_atomic(MOF_JGB10Y_CACHE_PATH, payload)
 
 
 def fetch_mof_jgb10y(failures: list[str], status: dict) -> pd.Series | None:
+    source_allowed = source_is_eligible("japan-mof", scope=DATA_USE_SCOPE, environment=os.environ)
+    if not source_allowed:
+        failures.append(f"Japan MOF JGB10Y: source is not eligible for {DATA_USE_SCOPE}; provider cache not read")
+        raise RuntimeError(f"Japan MOF JGB10Y is not eligible for data-use scope {DATA_USE_SCOPE}")
     cached = read_mof_jgb10y_cache()
     recent_enough = cached is not None and cached.index[-1] >= END_DATE - pd.DateOffset(days=7)
     if recent_enough and cache_is_fresh(MOF_JGB10Y_CACHE_PATH, status):
@@ -555,12 +715,29 @@ def fetch_mof_jgb10y(failures: list[str], status: dict) -> pd.Series | None:
         for source_url in [MOF_JGB_HISTORY_URL, MOF_JGB_CURRENT_URL]:
             response = requests.get(
                 source_url,
-                timeout=45,
+                timeout=(10, 45),
                 headers={"User-Agent": "cyclelens-market-data/1.0"},
+                allow_redirects=False,
+                stream=True,
             )
-            response.raise_for_status()
-            response.encoding = response.apparent_encoding or "utf-8"
-            series_parts.append(parse_mof_jgb10y_csv(response.text))
+            try:
+                if 300 <= response.status_code < 400:
+                    raise RuntimeError("Japan MOF response redirected unexpectedly")
+                response.raise_for_status()
+                chunks: list[bytes] = []
+                total = 0
+                for chunk in response.iter_content(chunk_size=64 * 1024):
+                    if not chunk:
+                        continue
+                    total += len(chunk)
+                    if total > MAX_MOF_RESPONSE_BYTES:
+                        raise RuntimeError("Japan MOF response exceeds the configured byte limit")
+                    chunks.append(chunk)
+                encoding = response.encoding or "utf-8"
+                text = b"".join(chunks).decode(encoding, errors="strict")
+                series_parts.append(parse_mof_jgb10y_csv(text))
+            finally:
+                response.close()
         series = pd.concat(series_parts)
         series = series[~series.index.duplicated(keep="last")].sort_index()
         write_mof_jgb10y_cache(series)
@@ -617,46 +794,38 @@ def daily_asset_row(frame: pd.DataFrame, date_key: str, symbol: str) -> dict | N
     }
 
 
-def parse_spot_number(row: pd.Series, candidates: list[str]) -> float | None:
-    normalized = {str(key).lower().replace(" ", "").replace("_", ""): key for key in row.index}
-    for candidate in candidates:
-        key = normalized.get(candidate.lower().replace(" ", "").replace("_", ""))
-        if key is not None:
-            value = finite_number(row.get(key))
-            if value is not None:
-                return value
-    return None
-
-
 def fetch_delayed_spot_quotes(failures: list[str]) -> dict[str, dict]:
+    if not source_is_eligible("alpaca", scope=DATA_USE_SCOPE, environment=os.environ):
+        failures.append(f"Alpaca latest bars: source is not eligible for {DATA_USE_SCOPE}")
+        return {}
     try:
-        import akshare as ak
-
-        frame = ak.stock_us_spot_em()
-    except Exception:  # noqa: BLE001
-        failures.append("AKShare delayed spot: provider request failed")
+        symbols = sorted(set(ASSETS) - {"SOX"})
+        payload = alpaca_get("/v2/stocks/bars/latest", {
+            "symbols": ",".join(symbols),
+            "feed": alpaca_feed(),
+        })
+    except Exception:  # noqa: BLE001 - live quote failures retain daily LKG.
+        failures.append("Alpaca latest bars: provider request failed")
         return {}
-    if frame.empty:
+    bars = payload.get("bars")
+    if not isinstance(bars, dict):
+        failures.append("Alpaca latest bars: invalid provider response")
         return {}
-    symbols = set(ASSETS) - {"SOX"}
-    output = {}
-    for _, row in frame.iterrows():
-        row_text = " ".join(str(value).upper() for value in row.values)
-        matched = next((symbol for symbol in symbols if symbol in row_text), None)
-        if not matched:
+    output: dict[str, dict] = {}
+    for symbol in symbols:
+        row = bars.get(symbol)
+        if not isinstance(row, dict):
             continue
-        price = parse_spot_number(row, ["最新价", "price", "latest", "最新"])
-        open_value = parse_spot_number(row, ["今开", "open"])
-        previous = parse_spot_number(row, ["昨收", "previous close", "prevclose", "昨收价"])
-        pct = parse_spot_number(row, ["涨跌幅", "pct", "changepercent"])
-        output[matched] = {
-            "symbol": matched,
+        price = finite_number(row.get("c"))
+        open_value = finite_number(row.get("o"))
+        output[symbol] = {
+            "symbol": symbol,
             "price": price,
             "open": open_value,
-            "previousClose": previous,
-            "pct": pct,
-            "source": "AKShare / Eastmoney US delayed spot",
-            "asOf": iso_now(),
+            "previousClose": None,
+            "pct": pct_change(open_value, price),
+            "source": f"Alpaca Market Data official {alpaca_feed().upper()} latest bar",
+            "asOf": observation_timestamp(row.get("t")) or iso_now(),
         }
     return output
 
@@ -700,7 +869,15 @@ def build_output() -> dict:
             failures.append(f"{symbol}: optional index unavailable")
             price_daily[symbol] = None
     macro_daily = fetch_fred_series(failures, status)
+    missing_fred_series = sorted(set(FRED_SERIES) - set(macro_daily))
+    if os.environ.get("CYCLELENS_REQUIRE_FRESH_OWNER_RELEASE") == "1" and missing_fred_series:
+        raise RuntimeError("Not every required equity FRED series refreshed")
     macro_daily["JGB10Y"] = fetch_mof_jgb10y(failures, status)
+    if (
+        os.environ.get("CYCLELENS_REQUIRE_FRESH_OWNER_RELEASE") == "1"
+        and macro_daily["JGB10Y"] is None
+    ):
+        raise RuntimeError("The required official Japan 10Y series did not refresh")
     spot_quotes = fetch_delayed_spot_quotes(failures) if status["isOpen"] else {}
 
     days = []
@@ -739,10 +916,22 @@ def build_output() -> dict:
         for series_id in MACRO_SERIES
     }
     transformed_at = iso_now()
+    required_price_assets = sorted(set(ASSETS) - OPTIONAL_ASSETS)
+    fresh_price_assets = sorted(
+        symbol
+        for symbol in required_price_assets
+        if price_daily[symbol] is not None and price_daily[symbol].cache_status == "fresh"
+    )
+    if (
+        os.environ.get("CYCLELENS_REQUIRE_FRESH_OWNER_RELEASE") == "1"
+        and fresh_price_assets != required_price_assets
+    ):
+        raise RuntimeError("Not every required equity price asset refreshed")
 
     return {
         "version": 2,
         "page": "equity-macro",
+        "dataUseScope": DATA_USE_SCOPE,
         "timezone": "America/New_York for trading dates; macro observations retain their provider dates",
         "generatedAt": transformed_at,
         "timestamps": {
@@ -758,7 +947,8 @@ def build_output() -> dict:
         },
         "market": status,
         "methodology": (
-            "Daily price rows are derived from cached daily OHLC for QQQ, SPY, DIA, and the SOX index when available. "
+            "Daily price rows are derived from official Alpaca Market Data daily OHLC for QQQ, SPY, and DIA, "
+            "plus the legacy SOX last-known-good cache when available. "
             "DIA is used as a Dow Jones Industrial Average ETF proxy. "
             "U.S. 10Y and VIX use FRED daily observations. Japan 10Y JGB uses the Japan Ministry of Finance official "
             "15:00 JST constant-maturity close and displays the latest observation change versus the previous observation. "
@@ -766,10 +956,21 @@ def build_output() -> dict:
         ),
         "priceSourcePreference": PRICE_SOURCE,
         "failures": failures,
+        "refreshSummary": {
+            "requiredPriceAssets": required_price_assets,
+            "freshPriceAssets": fresh_price_assets,
+            "requiredFredSeries": sorted(FRED_SERIES),
+            "freshFredSeries": sorted(macro_daily.keys() & FRED_SERIES.keys()),
+            "jgb10yRefreshed": macro_daily.get("JGB10Y") is not None,
+        },
         "assets": {
             symbol: {
                 **ASSETS[symbol],
-                "sourceLabel": price_daily[symbol].source if price_daily[symbol] is not None else "yfinance ^SOX pending",
+                "sourceLabel": (
+                    price_daily[symbol].source
+                    if price_daily[symbol] is not None
+                    else "Legacy SOX last-known-good unavailable; no unofficial refresh"
+                ),
                 "cacheStatus": price_daily[symbol].cache_status if price_daily[symbol] is not None else "unavailable",
                 "rows": len(price_daily[symbol].frame) if price_daily[symbol] is not None else 0,
                 "firstDate": price_daily[symbol].frame.index[0].strftime("%Y-%m-%d") if price_daily[symbol] is not None else None,
@@ -779,13 +980,20 @@ def build_output() -> dict:
         },
         "macroSeries": MACRO_SERIES,
         "sources": {
-            "prices": "AKShare/Sina US daily by default; yfinance remains a local fallback and is the reviewed source for Yahoo symbol ^SOX. Delayed AKShare/Eastmoney spot is used only during market hours when reachable.",
+            "prices": (
+                "Official Alpaca Market Data bars for QQQ, SPY, and DIA. SOX is retained only from an existing "
+                "last-known-good cache; unofficial AKShare and yfinance refreshes are disabled."
+            ),
             "FRED": "https://fred.stlouisfed.org/docs/api/fred/",
             "Japan Ministry of Finance JGB": MOF_JGB_CURRENT_URL,
             "Japan Ministry of Finance JGB history": MOF_JGB_HISTORY_URL,
             "Japan Ministry of Finance methodology": MOF_JGB_METHODOLOGY_URL,
             "calendar": "Built-in NYSE holiday rules for regular full market closures; early closes are not modeled in this version.",
-            "cache": "tmp/equity-cache",
+            "cache": (
+                "tmp/owner-private/equity-cache"
+                if DATA_USE_SCOPE == "owner_private"
+                else "tmp/equity-cache"
+            ),
             "recurringEvents": "app/data/equity-recurring-events.json",
         },
         "latest": {
@@ -797,8 +1005,64 @@ def build_output() -> dict:
     }
 
 
+def merge_optional_last_known_good(output: dict, existing: dict | None) -> dict:
+    """Retain optional legacy rows without allowing them to become a fetch path."""
+    if not existing:
+        return output
+    existing_days = {
+        str(item.get("date")): item
+        for item in existing.get("days", [])
+        if isinstance(item, dict) and item.get("date")
+    }
+    retained_sox = 0
+    retained_macro: dict[str, int] = {series_id: 0 for series_id in MACRO_SERIES}
+    for row in output.get("days", []):
+        prior = existing_days.get(str(row.get("date"))) or {}
+        prior_assets = prior.get("assets") or {}
+        row_assets = row.get("assets") or {}
+        if row_assets.get("SOX") is None and prior_assets.get("SOX") is not None:
+            row_assets["SOX"] = prior_assets["SOX"]
+            retained_sox += 1
+        prior_macro = prior.get("macro") or {}
+        row_macro = row.get("macro") or {}
+        for series_id in MACRO_SERIES:
+            if row_macro.get(series_id) is None and prior_macro.get(series_id) is not None:
+                row_macro[series_id] = prior_macro[series_id]
+                retained_macro[series_id] += 1
+
+    existing_latest = existing.get("latest") or {}
+    latest = output.setdefault("latest", {})
+    latest_assets = latest.setdefault("assets", {})
+    if latest_assets.get("SOX") is None:
+        latest_assets["SOX"] = (existing_latest.get("assets") or {}).get("SOX")
+    latest_macro = latest.setdefault("macro", {})
+    for series_id in MACRO_SERIES:
+        if latest_macro.get(series_id) is None:
+            latest_macro[series_id] = (existing_latest.get("macro") or {}).get(series_id)
+
+    if retained_sox:
+        existing_sox = (existing.get("assets") or {}).get("SOX") or {}
+        output.setdefault("assets", {})["SOX"] = {
+            **ASSETS["SOX"],
+            **existing_sox,
+            "sourceLabel": "Legacy SOX last-known-good only; unofficial refresh remains blocked",
+            "cacheStatus": "seeded-last-known-good",
+        }
+        output.setdefault("failures", []).append(
+            f"SOX: retained {retained_sox} legacy last-known-good rows; no unofficial refresh attempted"
+        )
+    for series_id, count in retained_macro.items():
+        if count:
+            output.setdefault("failures", []).append(
+                f"FRED/MOF {series_id}: retained {count} last-known-good rows after provider unavailability"
+            )
+    output["dataUseScope"] = DATA_USE_SCOPE
+    return output
+
+
 def merge_recurring_events_into_existing(existing: dict) -> dict:
     output = json.loads(json.dumps(existing))
+    output["dataUseScope"] = DATA_USE_SCOPE
     existing_days = {str(item.get("date")): item for item in output.get("days", []) if item.get("date")}
     has_sox_rows = any((item.get("assets") or {}).get("SOX") for item in existing_days.values())
     start_value = output.get("window", {}).get("startDate") or WINDOW_START.strftime("%Y-%m-%d")
@@ -826,7 +1090,10 @@ def merge_recurring_events_into_existing(existing: dict) -> dict:
 
     output.setdefault("assets", {})["SOX"] = {
         **ASSETS["SOX"],
-        "sourceLabel": output.get("assets", {}).get("SOX", {}).get("sourceLabel") or "yfinance ^SOX pending next market refresh",
+        "sourceLabel": (
+            output.get("assets", {}).get("SOX", {}).get("sourceLabel")
+            or "Legacy SOX last-known-good unavailable; no unofficial refresh"
+        ),
         "cacheStatus": output.get("assets", {}).get("SOX", {}).get("cacheStatus") or "unavailable",
         "rows": output.get("assets", {}).get("SOX", {}).get("rows") or 0,
         "firstDate": output.get("assets", {}).get("SOX", {}).get("firstDate"),
@@ -850,7 +1117,7 @@ def main() -> int:
         if not existing:
             raise RuntimeError("EQUITY_EVENTS_ONLY requires an existing equity-weekly.json")
         output = merge_recurring_events_into_existing(existing)
-        OUTPUT_PATH.write_text(json.dumps(output, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        write_json_atomic(OUTPUT_PATH, output)
         print(json.dumps({
             "status": "merged-recurring-events",
             "outputPath": str(OUTPUT_PATH),
@@ -860,18 +1127,20 @@ def main() -> int:
         return 0
     try:
         output = build_output()
-    except Exception as exc:  # noqa: BLE001
+    except Exception:  # noqa: BLE001
+        if os.environ.get("CYCLELENS_REQUIRE_FRESH_OWNER_RELEASE") == "1":
+            raise RuntimeError("Owner equity collector did not produce a fresh release candidate") from None
         if existing:
             print(json.dumps({
                 "status": "kept-last-known-good",
                 "outputPath": str(OUTPUT_PATH),
-                "error": str(exc),
+                "error": "owner collector failed; last-known-good retained",
             }, ensure_ascii=False))
             return 0
         raise
 
-    OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    OUTPUT_PATH.write_text(json.dumps(output, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    output = merge_optional_last_known_good(output, existing)
+    write_json_atomic(OUTPUT_PATH, output)
     print(json.dumps({
         "status": "updated",
         "outputPath": str(OUTPUT_PATH),

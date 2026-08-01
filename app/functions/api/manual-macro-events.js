@@ -34,6 +34,7 @@ function clientError(error) {
     "numeric field must be finite",
     "request body must be an object",
     "source URL must be an absolute HTTP(S) URL",
+    "source URL must not contain credentials",
     "source URL must use HTTP(S)",
     "too many manual events",
   ].includes(code) || code.startsWith("text exceeds ") || code === "release time must be a valid timestamp") {

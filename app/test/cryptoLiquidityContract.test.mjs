@@ -26,6 +26,7 @@ import {
   planCmcHistoryFetch,
   requireCmcLiquiditySnapshot,
   requireSosoEtfHistory,
+  shouldRefreshHistoryProvider,
 } from "../scripts/crypto-liquidity-contract.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -37,6 +38,8 @@ function runUpdaterWithoutCredentials() {
   const env = {
     ...process.env,
     BLOCKBEATS_AUX_ENABLED: "0",
+    CYCLELENS_COLLECT_CMC: "false",
+    CYCLELENS_DATA_USE_SCOPE: "public",
     CYCLELENS_DISABLE_PUBLIC_HISTORY: "1",
     CYCLELENS_SKIP_LOCAL_ENV: "1",
   };
@@ -142,6 +145,13 @@ test("CMC stablecoin history must be both wide and fresh before disabling the fa
     "stablecoin.usdt.marketCap": seriesEnding("2026-07-12"),
     "stablecoin.usdc.marketCap": seriesEnding("2026-07-12"),
   }, now), false);
+});
+
+test("DefiLlama fallback cadence is independent from a CMC history attempt", () => {
+  const now = new Date("2026-07-16T12:00:00Z");
+  assert.equal(shouldRefreshHistoryProvider(null, now), true);
+  assert.equal(shouldRefreshHistoryProvider({ lastAttemptedAt: "2026-07-16T11:00:00Z" }, now), false);
+  assert.equal(shouldRefreshHistoryProvider({ attemptedAt: "2026-07-15T12:00:00Z" }, now), true);
 });
 
 test("DefiLlama stablecoin history keeps provider provenance and derives only same-date totals", () => {
@@ -333,6 +343,10 @@ test("updater preserves the last-known-good snapshot when every upstream is unav
 
 test("crypto updater limits SoSoValue to ETF data and uses reviewed official Strategy disclosures", async () => {
   const source = await readFile(updaterPath, "utf8");
+  assert.equal(source.match(/CMC_PRO_API_KEY/g)?.length, 1);
+  assert.match(source, /DENIED_CONSUMER_ENV_KEYS/);
+  assert.match(source, /delete process\.env\[key\]/);
+  assert.doesNotMatch(source, /X-CMC|pro-api\.coinmarketcap\.com/i);
   assert.match(source, /https:\/\/openapi\.sosovalue\.com\/openapi\/v1/);
   assert.match(source, /etfs\/summary-history/);
   assert.doesNotMatch(source, /btc-treasuries\/MSTR\/purchase-history/);

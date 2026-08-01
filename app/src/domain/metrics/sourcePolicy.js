@@ -1,4 +1,10 @@
-export const SOURCE_POLICY_VERSION = 1;
+import {
+  DATA_USE_SCOPES,
+  normalizeDataUseScope,
+  ownerPrivateUseApproved,
+} from "../../../scripts/data-use-scope.mjs";
+
+export const SOURCE_POLICY_VERSION = 2;
 
 const reviewedAt = "2026-07-18";
 
@@ -7,7 +13,7 @@ function policy(entry) {
 }
 
 export const SOURCE_POLICIES = Object.freeze([
-  policy({ id: "coinmarketcap", label: "CoinMarketCap Pro API", transport: "licensed_json_api", reviewStatus: "approval_required", productionEligible: false, approvalVariable: "CMC_REDISTRIBUTION_APPROVED", approvalDefault: "1", termsUrl: "https://coinmarketcap.com/terms/", cachePolicy: "Cache only derived values within the subscribed plan.", redistributionPolicy: "Operator approved derived public values on 2026-07-18; set the gate to 0 to suspend publication.", attribution: "CoinMarketCap" }),
+  policy({ id: "coinmarketcap", label: "CoinMarketCap Pro API", transport: "licensed_json_api", reviewStatus: "approval_required", productionEligible: false, approvalVariable: "CMC_REDISTRIBUTION_APPROVED", approvalDefault: "0", termsUrl: "https://coinmarketcap.com/terms/", cachePolicy: "Cache only derived values within the subscribed plan.", redistributionPolicy: "Public redistribution is fail-closed and requires the explicit gate.", attribution: "CoinMarketCap" }),
   policy({ id: "defillama", label: "DefiLlama stablecoins API", transport: "public_json_api", reviewStatus: "approval_required", productionEligible: false, approvalVariable: "DEFILLAMA_REDISTRIBUTION_APPROVED", termsUrl: "https://api-docs.defillama.com/", cachePolicy: "Derived daily values only.", redistributionPolicy: "No explicit redistribution grant recorded; operator approval required.", attribution: "DefiLlama" }),
   policy({ id: "sosovalue", label: "SoSoValue Open API", transport: "licensed_json_api", reviewStatus: "approval_required", productionEligible: false, approvalVariable: "SOSOVALUE_REDISTRIBUTION_APPROVED", termsUrl: "https://sosovalue-1.gitbook.io/sosovalue-api-doc/", cachePolicy: "Derived daily ETF and treasury observations only.", redistributionPolicy: "Requires confirmation of the account plan and public display rights.", attribution: "SoSoValue" }),
   policy({ id: "blockbeats", label: "BlockBeats Pro API", transport: "licensed_json_api", reviewStatus: "approval_required", productionEligible: false, approvalVariable: "BLOCKBEATS_REDISTRIBUTION_APPROVED", termsUrl: "https://www.theblockbeats.info/apiDoc", cachePolicy: "Auxiliary cross-check only; never primary LKG.", redistributionPolicy: "A legal approval variable is required separately from the feature flag.", attribution: "BlockBeats" }),
@@ -29,18 +35,32 @@ export const SOURCE_POLICY_BY_ID = Object.freeze(Object.fromEntries(
   SOURCE_POLICIES.map((item) => [item.id, item]),
 ));
 
+function hostMatches(host, domains) {
+  return domains.some((domain) => host === domain || host.endsWith(`.${domain}`));
+}
+
+function attestedSource(row, sourcePattern, domains = []) {
+  if (!sourcePattern.test(row.source)) return false;
+  return !row.host || hostMatches(row.host, domains);
+}
+
 const sourceMatchers = Object.freeze([
-  ["coinmarketcap", (row) => /(^|\b)cmc(\b|$)/i.test(row.source) || /coinmarketcap\.com$/i.test(row.host)],
-  ["defillama", (row) => /defillama/i.test(row.source) || /llama\.fi$/i.test(row.host) || /defillama\.com$/i.test(row.host)],
-  ["sosovalue", (row) => /sosovalue/i.test(row.source) || /sosovalue/i.test(row.host)],
-  ["blockbeats", (row) => /blockbeats/i.test(row.source) || /blockbeats/i.test(row.host)],
-  ["sec-edgar", (row) => /SEC EDGAR/i.test(row.source) || /sec\.gov$/i.test(row.host)],
-  ["strategy-disclosures", (row) => /Strategy official/i.test(row.source) || /strategy\.com$/i.test(row.host)],
-  ["japan-mof", (row) => /Japan Ministry of Finance/i.test(row.source) || /mof\.go\.jp$/i.test(row.host)],
-  ["fred-third-party", (row) => /FRED\s*\/\s*(CBOE|ICE BofA|Credit Suisse|NASDAQ)/i.test(row.source)],
-  ["fred-government", (row) => /FRED\s*\/\s*(U\.S\. Treasury|Federal Reserve|Board of Governors|St\. Louis Fed)/i.test(row.source)],
-  ["akshare", (row) => /AKShare|Sina US/i.test(row.source)],
-  ["yahoo-finance", (row) => /Yahoo|yfinance/i.test(row.source) || /finance\.yahoo\.com$/i.test(row.host)],
+  ["coinmarketcap", (row) => attestedSource(row, /^(?:cmc|CoinMarketCap(?: Pro API)?)$/i, ["coinmarketcap.com"])],
+  ["defillama", (row) => attestedSource(row, /^defillama$/i, ["defillama.com", "llama.fi"])],
+  ["sosovalue", (row) => attestedSource(row, /^sosovalue$/i, ["sosovalue.com", "sosovalue-1.gitbook.io"])],
+  ["blockbeats", (row) => attestedSource(row, /^blockbeats(?: pro api)?$/i, ["theblockbeats.info"])],
+  ["sec-edgar", (row) => attestedSource(row, /^SEC EDGAR(?: company disclosures)?$/i, ["sec.gov"])],
+  ["strategy-disclosures", (row) => attestedSource(row, /^Strategy (?:official|investor) (?:Form 8-K|disclosures?)$/i, ["strategy.com"])],
+  ["japan-mof", (row) => attestedSource(row, /^Japan Ministry of Finance$/i, ["mof.go.jp"])],
+  ["fred-third-party", (row) => attestedSource(row, /^FRED\s*\/\s*(?:CBOE|ICE BofA|Credit Suisse|NASDAQ)(?:\b|$)/i, ["stlouisfed.org"])],
+  ["fred-government", (row) => attestedSource(row, /^FRED\s*\/\s*(?:U\.S\. Treasury|Federal Reserve|Board of Governors|St\. Louis Fed)(?:\b|$)/i, ["stlouisfed.org"])],
+  ["federal-reserve", (row) => attestedSource(row, /^Federal Reserve (?:Board|FOMC calendar)$/i, ["federalreserve.gov"])],
+  ["official-market-calendars", (row) => attestedSource(row, /^(?:NYSE|KRX|SSE|SZSE).*(?:calendar|trading rules)$/i, ["nyse.com", "krx.co.kr", "sse.com.cn", "szse.cn"])],
+  ["public-crypto-market-apis", (row) => attestedSource(row, /^(?:Binance|OKX|Hyperliquid|Blockchain\.(?:com|info))(?:\b|$)/i, ["binance.com", "binance.vision", "okx.com", "hyperliquid.xyz", "blockchain.com", "blockchain.info"])],
+  ["alpaca", (row) => attestedSource(row, /^Alpaca Market Data official (?:IEX|DELAYED_SIP|SIP) (?:daily bars|latest bar)$/i, ["alpaca.markets"])],
+  ["adp", (row) => attestedSource(row, /^ADP National Employment Report$/i, ["adpemploymentreport.com", "adp.com"])],
+  ["akshare", (row) => attestedSource(row, /^(?:AKShare|AKShare\s*\/\s*Sina US).*/i)],
+  ["yahoo-finance", (row) => attestedSource(row, /^(?:Yahoo Finance|yfinance).*/i, ["yahoo.com"])],
 ]);
 
 function hostFrom(value) {
@@ -67,6 +87,25 @@ export function sourceIsProductionEligible(policy, environment = process.env) {
   const configured = environment?.[policy.approvalVariable];
   if (configured != null) return configured === "1";
   return policy.approvalDefault === "1";
+}
+
+export function sourceIsEligibleForDataUse(
+  policy,
+  { scope = DATA_USE_SCOPES.PUBLIC, environment = process.env } = {},
+) {
+  const normalizedScope = normalizeDataUseScope(scope);
+  if (!policy || policy.reviewStatus === "blocked") return false;
+  if (normalizedScope === DATA_USE_SCOPES.OWNER_PRIVATE) {
+    return ownerPrivateUseApproved(environment);
+  }
+  return sourceIsProductionEligible(policy, environment);
+}
+
+export function sourcePolicyIdIsEligibleForDataUse(
+  sourcePolicyId,
+  { scope = DATA_USE_SCOPES.PUBLIC, environment = process.env } = {},
+) {
+  return sourceIsEligibleForDataUse(SOURCE_POLICY_BY_ID[sourcePolicyId], { scope, environment });
 }
 
 export function validateSourcePolicies(policies = SOURCE_POLICIES) {

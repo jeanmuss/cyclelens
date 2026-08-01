@@ -2,15 +2,29 @@ import { readFile, mkdir, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { productUserAgent } from "../product.config.mjs";
+import { sourcePolicyIdIsEligibleForDataUse } from "../src/domain/metrics/sourcePolicy.js";
+import {
+  dataDirectoryForScope,
+  dataUseScopeFromEnvironment,
+} from "./data-use-scope.mjs";
+import { fetchJsonBounded } from "./secure-fetch.mjs";
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const appRoot = resolve(scriptDir, "..");
-const outputPath = resolve(appRoot, "public/data/market-monthly.json");
+const dataUseScope = dataUseScopeFromEnvironment(process.env, process.argv);
+const dataDirectory = dataDirectoryForScope(appRoot, dataUseScope);
+const outputPath = resolve(dataDirectory, "market-monthly.json");
 const legacyBtcPath = resolve(appRoot, "../.reference/original/data/monthly-seed.json");
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 const HOUR_MS = 60 * 60 * 1000;
 const REQUIRED_ASSETS = ["BTC", "ETH", "SOL", "HYPE", "BNB"];
+const MARKET_DATA_ALLOWED_ORIGINS = Object.freeze([
+  "https://api.binance.com",
+  "https://data-api.binance.vision",
+  "https://api.hyperliquid.xyz",
+  "https://api.blockchain.info",
+]);
 const now = new Date();
 const nowMs = now.getTime();
 const currentMonthKey = `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, "0")}`;
@@ -181,29 +195,21 @@ function mergeCachedRows(existingRows, freshRows) {
 }
 
 async function fetchJson(url, options = {}) {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 25_000);
-  try {
-    const response = await fetch(url, {
-      ...options,
-      signal: controller.signal,
-      headers: {
-        Accept: "application/json",
-        "User-Agent": productUserAgent("data-cache", "2.0"),
-        ...(options.headers || {}),
-      },
-    });
-    if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
-    return await response.json();
-  } finally {
-    clearTimeout(timer);
-  }
+  return fetchJsonBounded(url, {
+    ...options,
+    allowedOrigins: MARKET_DATA_ALLOWED_ORIGINS,
+    maxResponseBytes: 8 * 1024 * 1024,
+    timeoutMs: 25_000,
+    headers: {
+      "User-Agent": productUserAgent("data-cache", "2.0"),
+      ...(options.headers || {}),
+    },
+  });
 }
 
 async function fetchBinanceSpotPrice(symbol) {
   const pair = `${symbol}USDT`;
   const endpoints = [
-    `https://api.binance.me/api/v3/ticker/price?symbol=${pair}`,
     `https://api.binance.com/api/v3/ticker/price?symbol=${pair}`,
     `https://data-api.binance.vision/api/v3/ticker/price?symbol=${pair}`,
   ];
@@ -518,6 +524,20 @@ async function loadInitialBtcFallback() {
 }
 
 const existing = (await readJson(outputPath)) || { assets: {} };
+if (!sourcePolicyIdIsEligibleForDataUse("public-crypto-market-apis", {
+  scope: dataUseScope,
+  environment: process.env,
+})) {
+  if (process.env.CYCLELENS_REQUIRE_FRESH_OWNER_RELEASE === "1") {
+    throw new Error("Owner monthly crypto collector is not eligible to refresh reviewed providers");
+  }
+  console.log(JSON.stringify({
+    status: "kept-last-known-good",
+    dataUseScope,
+    reason: "Public crypto market APIs are not eligible for this data-use scope.",
+  }));
+  process.exit(0);
+}
 const cachedRows = (symbol) => existing.version >= 4 ? existing.assets?.[symbol]?.rows || [] : [];
 const attempts = [
   ["BTC", () => fetchBtcRows(cachedRows("BTC")), "Blockchain + Binance", "USD"],
@@ -529,12 +549,17 @@ const attempts = [
 
 const assets = { ...existing.assets };
 const failures = [];
+let freshSourceCount = 0;
+const refreshedAssets = new Set();
+const refreshedSpotAssets = new Set();
 
 for (const [symbol, fetcher, sourceLabel, quote] of attempts) {
   try {
     const rows = await fetcher();
     if (!rows.length) throw new Error("empty response");
     assets[symbol] = { symbol, quote, sourceLabel, updatedAt: new Date().toISOString(), rows };
+    freshSourceCount += 1;
+    refreshedAssets.add(symbol);
   } catch (error) {
     failures.push(`${symbol}: ${error instanceof Error ? error.message : String(error)}`);
     if (!assets[symbol] && symbol === "BTC") {
@@ -563,6 +588,8 @@ for (const symbol of REQUIRED_ASSETS) {
       spot,
       rows: applySpotToCurrentMonthRows(asset.rows, spot, asset.rows[0]?.source || asset.sourceLabel),
     };
+    freshSourceCount += 1;
+    refreshedSpotAssets.add(symbol);
   } catch (error) {
     failures.push(`${symbol} spot: ${error instanceof Error ? error.message : String(error)}`);
     if (assets[symbol]?.rows?.length) {
@@ -579,11 +606,20 @@ for (const symbol of REQUIRED_ASSETS) {
     throw new Error(`No last-known-good data for ${symbol}. Fetch failures: ${failures.join(" | ")}`);
   }
 }
+const missingRequiredAssets = REQUIRED_ASSETS.filter((symbol) => !refreshedAssets.has(symbol));
+if (missingRequiredAssets.length) {
+  throw new Error("Not every required monthly crypto asset refreshed; refusing to replace the owner release");
+}
+const missingRequiredSpotAssets = REQUIRED_ASSETS.filter((symbol) => !refreshedSpotAssets.has(symbol));
+if (process.env.CYCLELENS_REQUIRE_FRESH_OWNER_RELEASE === "1" && missingRequiredSpotAssets.length) {
+  throw new Error("Not every required monthly crypto spot quote refreshed; refusing to replace the owner release");
+}
 
 const transformedAt = new Date().toISOString();
 const assetTimestamps = Object.values(assets).flatMap((asset) => [asset.updatedAt, asset.spot?.updatedAt]);
 const output = {
   version: 5,
+  dataUseScope,
   timezone: "UTC",
   generatedAt: transformedAt,
   timestamps: {
@@ -595,6 +631,12 @@ const output = {
   spotRefreshCadence: "Hourly static cache refresh by CI; provider schedules and GitHub Actions queues can add small delays.",
   methodology: "Monthly return = (close - open) / open × 100%. Directional extreme move = (second extreme - first extreme) / first extreme × 100%, ordered by occurrence time.",
   failures,
+  refreshSummary: {
+    freshSourceCount,
+    requiredAssets: REQUIRED_ASSETS,
+    refreshedAssets: [...refreshedAssets].sort(),
+    refreshedSpotAssets: [...refreshedSpotAssets].sort(),
+  },
   sources: {
     BTC: "https://api.blockchain.info/charts/market-price + https://data-api.binance.vision/api/v3/klines",
     ETH: "https://data-api.binance.vision/api/v3/klines",

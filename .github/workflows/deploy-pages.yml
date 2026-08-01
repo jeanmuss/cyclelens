@@ -1,93 +1,57 @@
-name: Deploy GitHub Pages
+name: Deploy retired public GitHub Pages shell
 
 on:
   push:
     branches: [main]
-  schedule:
-    - cron: "0 * * * *"
-    - cron: "15,30,45 * * * *"
   workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: github-pages
+  group: github-pages-retired
   cancel-in-progress: false
 
 jobs:
-  collect-persist:
-    uses: ./.github/workflows/_collect-persist.yml
-    with:
-      refresh_mode: ${{ github.event_name == 'schedule' && github.event.schedule == '15,30,45 * * * *' && 'fast' || 'full' }}
-      require_durable_baseline: ${{ github.event_name == 'schedule' && github.event.schedule == '15,30,45 * * * *' }}
-      public_crypto_market_data_approved: ${{ vars.PUBLIC_CRYPTO_MARKET_DATA_APPROVED == '1' }}
-      cmc_redistribution_approved: ${{ vars.CMC_REDISTRIBUTION_APPROVED != '0' }}
-      defillama_redistribution_approved: ${{ vars.DEFILLAMA_REDISTRIBUTION_APPROVED == '1' }}
-      sosovalue_redistribution_approved: ${{ vars.SOSOVALUE_REDISTRIBUTION_APPROVED == '1' }}
-      blockbeats_aux_enabled: ${{ vars.BLOCKBEATS_AUX_ENABLED == '1' }}
-      blockbeats_redistribution_approved: ${{ vars.BLOCKBEATS_REDISTRIBUTION_APPROVED == '1' }}
-      alpaca_redistribution_approved: ${{ vars.ALPACA_REDISTRIBUTION_APPROVED == '1' }}
-      fred_third_party_series_approved: ${{ vars.FRED_THIRD_PARTY_SERIES_APPROVED == '1' }}
-      adp_data_display_approved: ${{ vars.ADP_DATA_DISPLAY_APPROVED == '1' }}
-      cyclelens_require_market_history: ${{ vars.MARKET_HISTORY_REQUIRED == '1' }}
-    secrets: inherit
-
-  project-public-snapshots:
-    needs: collect-persist
-    uses: ./.github/workflows/_project-public-snapshots.yml
-    with:
-      cmc_redistribution_approved: ${{ vars.CMC_REDISTRIBUTION_APPROVED != '0' }}
-      defillama_redistribution_approved: ${{ vars.DEFILLAMA_REDISTRIBUTION_APPROVED == '1' }}
-      sosovalue_redistribution_approved: ${{ vars.SOSOVALUE_REDISTRIBUTION_APPROVED == '1' }}
-      blockbeats_aux_enabled: ${{ vars.BLOCKBEATS_AUX_ENABLED == '1' }}
-      blockbeats_redistribution_approved: ${{ vars.BLOCKBEATS_REDISTRIBUTION_APPROVED == '1' }}
-      fred_third_party_series_approved: ${{ vars.FRED_THIRD_PARTY_SERIES_APPROVED == '1' }}
-
   build:
-    needs: project-public-snapshots
     runs-on: ubuntu-latest
-    env:
-      GITHUB_PAGES: "true"
-      CMC_REDISTRIBUTION_APPROVED: ${{ vars.CMC_REDISTRIBUTION_APPROVED || '1' }}
-      DEFILLAMA_REDISTRIBUTION_APPROVED: ${{ vars.DEFILLAMA_REDISTRIBUTION_APPROVED || '0' }}
-      SOSOVALUE_REDISTRIBUTION_APPROVED: ${{ vars.SOSOVALUE_REDISTRIBUTION_APPROVED || '0' }}
-      BLOCKBEATS_AUX_ENABLED: ${{ vars.BLOCKBEATS_AUX_ENABLED || '0' }}
-      BLOCKBEATS_REDISTRIBUTION_APPROVED: ${{ vars.BLOCKBEATS_REDISTRIBUTION_APPROVED || '0' }}
-      FRED_THIRD_PARTY_SERIES_APPROVED: ${{ vars.FRED_THIRD_PARTY_SERIES_APPROVED || '0' }}
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/download-artifact@v8
-        with:
-          name: public-market-snapshot
-          path: app
-      - uses: actions/setup-node@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 22
           cache: npm
           cache-dependency-path: app/package-lock.json
-      - name: Install frontend dependencies
+      - name: Install pinned frontend dependencies
         run: npm --prefix app ci
-      - name: Verify source, data, and calendar contracts
+      - name: Build the data-free public retirement shell
+        run: npm --prefix app run build:public-retired
+      - name: Verify the public artifact contains no product data
+        shell: bash
         run: |
-          npm --prefix app run lint
-          npm --prefix app test
-          npm --prefix app run verify-market-calendar
-      - name: Build static site for GitHub Pages
-        run: npm --prefix app run build:pages
-      - uses: actions/configure-pages@v6
-      - uses: actions/upload-pages-artifact@v5
+          test -d app/dist-public
+          test -s app/dist-public/index.html
+          test -s app/dist-public/404.html
+          test -s app/dist-public/public-retired-release.json
+          node -e "const fs=require('fs');const m=JSON.parse(fs.readFileSync('app/dist-public/public-retired-release.json','utf8'));if(m.buildTarget!=='public-retired'||m.dataIncluded!==false||m.status!=='retired')process.exit(1)"
+          find app/dist-public -type f -printf '%P\n' | sort > /tmp/cyclelens-public-files.txt
+          printf '%s\n' 404.html index.html public-retired-release.json > /tmp/cyclelens-public-allowlist.txt
+          diff -u /tmp/cyclelens-public-allowlist.txt /tmp/cyclelens-public-files.txt
+      - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
-          path: app/dist
+          path: app/dist-public
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v5
+        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5.0.0

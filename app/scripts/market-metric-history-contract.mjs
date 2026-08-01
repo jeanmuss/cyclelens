@@ -19,6 +19,13 @@ function observationTimestamp(value) {
   return Number.isNaN(date.getTime()) ? null : date.toISOString();
 }
 
+function canonicalConflictTimestamp(value) {
+  const timestamp = observationTimestamp(value);
+  if (!timestamp) return null;
+  const date = new Date(timestamp);
+  return Number.isNaN(date.getTime()) ? null : date.toISOString();
+}
+
 function compactObject(value) {
   return Object.fromEntries(Object.entries(value || {}).filter(([, item]) => item !== "" && item != null));
 }
@@ -423,7 +430,16 @@ export function selectIncrementalObservationRows(rows, latestObservedAt, options
 export function dedupeMarketMetricRows(rows) {
   const byKey = new Map();
   for (const item of rows.filter(Boolean)) {
-    byKey.set(`${item.metric_id}::${item.observed_at}::${item.source_key}`, item);
+    const canonicalObservedAt = canonicalConflictTimestamp(item.observed_at);
+    const normalizedItem = canonicalObservedAt
+      ? { ...item, observed_at: canonicalObservedAt }
+      : item;
+    const conflictKey = JSON.stringify([
+      normalizedItem.metric_id,
+      normalizedItem.observed_at,
+      normalizedItem.source_key,
+    ]);
+    byKey.set(conflictKey, normalizedItem);
   }
   return [...byKey.values()].sort((a, b) => {
     const metric = a.metric_id.localeCompare(b.metric_id);

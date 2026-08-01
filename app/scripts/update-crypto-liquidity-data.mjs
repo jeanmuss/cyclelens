@@ -1,7 +1,22 @@
-import { readFile, rename, writeFile } from "node:fs/promises";
+import { lstat, readFile, rename, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { preferredEnvironmentValue, productUserAgent } from "../product.config.mjs";
+import { sourcePolicyIdIsEligibleForDataUse } from "../src/domain/metrics/sourcePolicy.js";
+import {
+  dataDirectoryForScope,
+  dataUseScopeFromEnvironment,
+} from "./data-use-scope.mjs";
+import {
+  CMC_PROVIDER_STATE_MAX_BYTES,
+  cmcLiquidityFromProviderState,
+  cmcProviderStatePath,
+  validateCmcProviderState,
+} from "./cmc-provider-state-contract.mjs";
+import {
+  fetchJsonBounded,
+  fetchTextBounded,
+} from "./secure-fetch.mjs";
 
 import {
   attachHistoricalMetricFallbacks,
@@ -17,36 +32,38 @@ import {
   mergeMetricHistory,
   mergeTreasurySnapshots,
   normalizeBlockbeatsBtcHistory,
-  normalizeCmcHistoricalLiquidity,
-  normalizeCmcLiquidity,
-  normalizeCmcSpotPrices,
   normalizeDefiLlamaStablecoinHistory,
   normalizeReviewedTreasuryDisclosure,
   normalizeSosoEtfHistory,
-  planCmcHistoryFetch,
-  requireCmcLiquiditySnapshot,
   requireSosoEtfHistory,
-  shouldRefreshCmcHistory,
+  shouldRefreshHistoryProvider,
   summarizeMetricHistory,
 } from "./crypto-liquidity-contract.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appRoot = resolve(__dirname, "..");
 const workspaceRoot = resolve(appRoot, "..");
-const outputPath = resolve(appRoot, "public", "data", "crypto-liquidity.json");
+const dataUseScope = dataUseScopeFromEnvironment(process.env, process.argv);
+const dataDirectory = dataDirectoryForScope(appRoot, dataUseScope);
+const outputPath = resolve(dataDirectory, "crypto-liquidity.json");
+const cmcStatePath = cmcProviderStatePath(workspaceRoot);
 const treasuryDisclosuresPath = resolve(appRoot, "data", "corporate-treasury-disclosures.json");
-const equityFastPath = resolve(appRoot, "public", "data", "equity-fast.json");
-const marketSessionPath = resolve(appRoot, "public", "data", "market-session.json");
-const CMC_GLOBAL_URL = "https://pro-api.coinmarketcap.com/v1/global-metrics/quotes/latest?convert=USD";
-const CMC_QUOTES_URL = "https://pro-api.coinmarketcap.com/v3/cryptocurrency/quotes/latest?id=1,1027,825,3408&convert=USD";
-const CMC_GLOBAL_HISTORY_URL = "https://pro-api.coinmarketcap.com/v1/global-metrics/quotes/historical";
-const CMC_ASSET_HISTORY_URL = "https://pro-api.coinmarketcap.com/v3/cryptocurrency/quotes/historical";
-const DEFILLAMA_STABLECOIN_BASE_URL = "https://stablecoins.llama.fi";
+const equityFastPath = resolve(dataDirectory, "equity-fast.json");
+const marketSessionPath = resolve(dataDirectory, "market-session.json");
+const DEFILLAMA_STABLECOIN_BASE_URL = "https://api.llama.fi";
 const SOSO_BASE_URL = "https://openapi.sosovalue.com/openapi/v1";
 const SOSO_ETF_URL = `${SOSO_BASE_URL}/etfs/summary-history`;
 const BLOCKBEATS_URL = "https://api-pro.theblockbeats.info/v1/data/btc_etf";
 const BITMINE_CIK = "0001829311";
 const SEC_SUBMISSIONS_URL = `https://data.sec.gov/submissions/CIK${BITMINE_CIK}.json`;
+const CRYPTO_LIQUIDITY_ALLOWED_ORIGINS = Object.freeze([
+  "https://api.llama.fi",
+  "https://openapi.sosovalue.com",
+  "https://api-pro.theblockbeats.info",
+  "https://data.sec.gov",
+  "https://www.sec.gov",
+]);
+const DENIED_CONSUMER_ENV_KEYS = new Set(["CMC_PRO_API_KEY"]);
 
 function isoNow() {
   return new Date().toISOString();
@@ -64,7 +81,7 @@ async function loadEnvFile(path) {
     const trimmed = line.trim();
     if (!trimmed || trimmed.startsWith("#")) continue;
     const match = trimmed.match(/^([A-Za-z_][A-Za-z0-9_]*)=(.*)$/);
-    if (!match || process.env[match[1]]) continue;
+    if (!match || DENIED_CONSUMER_ENV_KEYS.has(match[1]) || process.env[match[1]]) continue;
     let value = match[2].trim();
     if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
       value = value.slice(1, -1);
@@ -75,10 +92,20 @@ async function loadEnvFile(path) {
 
 function safeFailure(error) {
   let text = String(error?.message || error || "unknown error");
-  for (const value of [process.env.CMC_PRO_API_KEY, process.env.SOSOVALUE_API_KEY, process.env.BLOCKBEATS_API_KEY, process.env.SEC_USER_AGENT]) {
+  for (const value of [process.env.SOSOVALUE_API_KEY, process.env.BLOCKBEATS_API_KEY, process.env.SEC_USER_AGENT]) {
     if (value) text = text.replaceAll(value, "<redacted>");
   }
   return text.slice(0, 500);
+}
+
+async function readCmcProviderSnapshot(now = new Date()) {
+  const metadata = await lstat(cmcStatePath);
+  if (!metadata.isFile() || metadata.isSymbolicLink()
+    || metadata.size < 2 || metadata.size > CMC_PROVIDER_STATE_MAX_BYTES) {
+    throw new Error("CMC provider state has an invalid size");
+  }
+  const state = validateCmcProviderState(JSON.parse(await readFile(cmcStatePath, "utf8")), { now });
+  return cmcLiquidityFromProviderState(state);
 }
 
 async function readJson(path, fallback = null) {
@@ -91,111 +118,29 @@ async function readJson(path, fallback = null) {
 }
 
 async function fetchJson(url, options = {}) {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 30_000);
-  try {
-    const response = await fetch(url, {
-      ...options,
-      signal: controller.signal,
-      headers: {
-        Accept: "application/json",
-        "User-Agent": productUserAgent("crypto-liquidity"),
-        ...options.headers,
-      },
-    });
-    const text = await response.text();
-    if (!response.ok) throw new Error(`HTTP ${response.status} from ${new URL(url).hostname}`);
-    return JSON.parse(text);
-  } finally {
-    clearTimeout(timeout);
-  }
+  return fetchJsonBounded(url, {
+    ...options,
+    allowedOrigins: CRYPTO_LIQUIDITY_ALLOWED_ORIGINS,
+    maxResponseBytes: 8 * 1024 * 1024,
+    timeoutMs: 30_000,
+    headers: {
+      "User-Agent": productUserAgent("crypto-liquidity"),
+      ...(options.headers || {}),
+    },
+  });
 }
 
 async function fetchText(url, options = {}) {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 30_000);
-  try {
-    const response = await fetch(url, {
-      ...options,
-      signal: controller.signal,
-      headers: {
-        "User-Agent": productUserAgent("market-data"),
-        ...options.headers,
-      },
-    });
-    const text = await response.text();
-    if (!response.ok) throw new Error(`HTTP ${response.status} from ${new URL(url).hostname}`);
-    return text;
-  } finally {
-    clearTimeout(timeout);
-  }
-}
-
-async function fetchCmcMetrics() {
-  const key = process.env.CMC_PRO_API_KEY;
-  if (!key) throw new Error("CMC_PRO_API_KEY is not configured");
-  const headers = { "X-CMC_PRO_API_KEY": key };
-  const [globalPayload, quotesPayload] = await Promise.all([
-    fetchJson(CMC_GLOBAL_URL, { headers }),
-    fetchJson(CMC_QUOTES_URL, { headers }),
-  ]);
-  const result = requireCmcLiquiditySnapshot(
-    normalizeCmcLiquidity(globalPayload, quotesPayload),
-    normalizeCmcSpotPrices(quotesPayload),
-  );
-  const fetchedAt = isoNow();
-  return {
-    metrics: result.metrics.map((item) => ({ ...item, fetchedAt })),
-    spotPrices: Object.fromEntries(Object.entries(result.spotPrices).map(([asset, item]) => [asset, { ...item, fetchedAt }])),
-  };
-}
-
-function cmcHistoryQuery(plan, parameters = {}) {
-  return new URLSearchParams({
-    time_start: plan.timeStart,
-    time_end: plan.timeEnd,
-    interval: "daily",
-    convert: "USD",
-    ...parameters,
+  return fetchTextBounded(url, {
+    ...options,
+    allowedOrigins: CRYPTO_LIQUIDITY_ALLOWED_ORIGINS,
+    maxResponseBytes: 8 * 1024 * 1024,
+    timeoutMs: 30_000,
+    headers: {
+      "User-Agent": productUserAgent("market-data"),
+      ...(options.headers || {}),
+    },
   });
-}
-
-async function fetchCmcGlobalHistory(existingHistory, now) {
-  const key = process.env.CMC_PRO_API_KEY;
-  if (!key) throw new Error("CMC_PRO_API_KEY is not configured");
-  const plan = planCmcHistoryFetch(existingHistory?.["crypto.totalMarketCap"], now);
-  const payload = await fetchJson(`${CMC_GLOBAL_HISTORY_URL}?${cmcHistoryQuery(plan, { aux: "search_interval" })}`, {
-    headers: { "X-CMC_PRO_API_KEY": key },
-  });
-  const history = normalizeCmcHistoricalLiquidity(payload, null, isoNow());
-  const points = history["crypto.totalMarketCap"] || [];
-  if (!points.length) throw new Error("CMC global historical response contained no total-market-cap observations");
-  return { history, plan, points: points.length, fetchedAt: payload?.status?.timestamp || isoNow() };
-}
-
-async function fetchCmcAssetHistory(existingHistory, now) {
-  const key = process.env.CMC_PRO_API_KEY;
-  if (!key) throw new Error("CMC_PRO_API_KEY is not configured");
-  const plan = planCmcHistoryFetch(existingHistory?.["btc.marketCap"], now);
-  const query = cmcHistoryQuery(plan, {
-    id: "1,825,3408",
-    aux: "price,market_cap,quote_timestamp,search_interval",
-    skip_invalid: "false",
-  });
-  const payload = await fetchJson(`${CMC_ASSET_HISTORY_URL}?${query}`, {
-    headers: { "X-CMC_PRO_API_KEY": key },
-  });
-  const history = normalizeCmcHistoricalLiquidity(null, payload, isoNow());
-  const required = ["btc.marketCap", "stablecoin.usdt.marketCap", "stablecoin.usdc.marketCap"];
-  const missing = required.filter((metricId) => !(history[metricId] || []).length);
-  if (missing.length === required.length) throw new Error("CMC asset historical response contained no requested market-cap observations");
-  return {
-    history,
-    plan,
-    points: Object.fromEntries(required.map((metricId) => [metricId, history[metricId]?.length || 0])),
-    missing,
-    fetchedAt: payload?.status?.timestamp || isoNow(),
-  };
 }
 
 async function fetchDefiLlamaStablecoinHistory() {
@@ -406,23 +351,62 @@ async function writeJsonAtomic(path, payload) {
   await rename(tempPath, path);
 }
 
+for (const key of DENIED_CONSUMER_ENV_KEYS) delete process.env[key];
 if (preferredEnvironmentValue(process.env, "CYCLELENS_SKIP_LOCAL_ENV", "CYCLE_MAP_SKIP_LOCAL_ENV") !== "1") {
   await loadEnvFile(resolve(appRoot, ".env.local"));
   await loadEnvFile(resolve(workspaceRoot, ".env.local"));
 }
 
+const providerAllowed = (sourcePolicyId) => sourcePolicyIdIsEligibleForDataUse(sourcePolicyId, {
+  scope: dataUseScope,
+  environment: process.env,
+});
+const cmcAllowed = dataUseScope === "owner_private" && providerAllowed("coinmarketcap");
+const defillamaAllowed = providerAllowed("defillama");
+const sosoAllowed = providerAllowed("sosovalue");
+const secAllowed = providerAllowed("sec-edgar");
+const blockbeatsAllowed = providerAllowed("blockbeats");
+const cmcCollectionRequested = ["1", "true"].includes(String(process.env.CYCLELENS_COLLECT_CMC || "").trim().toLowerCase());
 const existing = await readJson(outputPath, null);
 const failures = [];
 let freshSourceCount = 0;
+let cmcCurrentRefreshed = false;
+let cmcCurrentAvailable = false;
+let cmcStateLoaded = false;
+let cmcStateMode = "missing";
+const sosoRefreshedAssets = new Set();
 let metrics = null;
 let spotPrices = existing?.spotPrices || null;
-try {
-  const cmc = await fetchCmcMetrics();
-  metrics = cmc.metrics;
-  spotPrices = cmc.spotPrices;
-  freshSourceCount += 1;
-} catch (error) {
-  failures.push(`CMC: ${safeFailure(error)}`);
+let freshMetricHistory = {};
+let historyRefresh = existing?.historyRefresh || null;
+if (cmcAllowed) {
+  try {
+    const cmc = await readCmcProviderSnapshot();
+    if (cmc.currentAvailable) {
+      metrics = cmc.metrics;
+      spotPrices = cmc.spotPrices;
+    }
+    freshMetricHistory = mergeHistoricalMetricSeries(freshMetricHistory, cmc.history);
+    historyRefresh = cmc.historyRefresh
+      ? {
+        ...cmc.historyRefresh,
+        providers: {
+          ...(historyRefresh?.providers || {}),
+          ...(cmc.historyRefresh.providers || {}),
+        },
+      }
+      : historyRefresh;
+    cmcCurrentAvailable = cmc.currentAvailable === true;
+    cmcCurrentRefreshed = cmc.currentRefreshed === true;
+    cmcStateLoaded = true;
+    cmcStateMode = cmc.refreshMode;
+    if (cmcCurrentRefreshed) freshSourceCount += 1;
+  } catch {
+    failures.push("CMC provider state unavailable; last-known-good values preserved.");
+  }
+} else {
+  cmcStateMode = "policy_denied";
+  if (cmcCollectionRequested) failures.push("CMC provider state denied by the active data-use boundary.");
 }
 
 if (!metrics) {
@@ -430,8 +414,6 @@ if (!metrics) {
   else metrics = localFallbackMetrics(await readJson(equityFastPath, {}), await readJson(marketSessionPath, {}));
 }
 
-let freshMetricHistory = {};
-let historyRefresh = existing?.historyRefresh || null;
 const historyNow = new Date();
 const publicHistoryDisabled = preferredEnvironmentValue(
   process.env,
@@ -443,55 +425,24 @@ const historyRefreshForced = preferredEnvironmentValue(
   "CYCLELENS_FORCE_HISTORY_REFRESH",
   "CYCLE_MAP_FORCE_HISTORY_REFRESH",
 ) === "1" || process.argv.includes("--force-history");
-if (!publicHistoryDisabled && (historyRefreshForced || shouldRefreshCmcHistory(historyRefresh, historyNow))) {
+const defillamaHistoryStatus = historyRefresh?.providers?.defillamaStablecoins;
+if (
+  !publicHistoryDisabled
+  && defillamaAllowed
+  && (historyRefreshForced || shouldRefreshHistoryProvider(defillamaHistoryStatus, historyNow))
+) {
   const attemptedAt = isoNow();
-  const providerStatus = {};
+  const providerStatus = { ...(historyRefresh?.providers || {}) };
   let historyProviderSuccess = false;
-  const [globalResult, assetResult] = await Promise.allSettled([
-    fetchCmcGlobalHistory(existing?.history || {}, historyNow),
-    fetchCmcAssetHistory(existing?.history || {}, historyNow),
-  ]);
-  if (globalResult.status === "fulfilled") {
-    freshMetricHistory = mergeHistoricalMetricSeries(freshMetricHistory, globalResult.value.history);
-    providerStatus.cmcGlobal = {
-      status: "available",
-      fetchedAt: globalResult.value.fetchedAt,
-      points: globalResult.value.points,
-      window: globalResult.value.plan,
-    };
-    freshSourceCount += 1;
-    historyProviderSuccess = true;
-  } else {
-    failures.push(`CMC global history: ${safeFailure(globalResult.reason)}`);
-    providerStatus.cmcGlobal = { status: "failed_preserved_last_known_good", attemptedAt };
-  }
-  if (assetResult.status === "fulfilled") {
-    freshMetricHistory = mergeHistoricalMetricSeries(freshMetricHistory, assetResult.value.history);
-    providerStatus.cmcAssets = {
-      status: assetResult.value.missing.length ? "partial" : "available",
-      fetchedAt: assetResult.value.fetchedAt,
-      points: assetResult.value.points,
-      missing: assetResult.value.missing,
-      window: assetResult.value.plan,
-    };
-    if (assetResult.value.missing.length) {
-      failures.push(`CMC asset history omitted: ${assetResult.value.missing.join(", ")}`);
-    }
-    freshSourceCount += 1;
-    historyProviderSuccess = true;
-  } else {
-    failures.push(`CMC asset history: ${safeFailure(assetResult.reason)}`);
-    providerStatus.cmcAssets = { status: "failed_preserved_last_known_good", attemptedAt };
-  }
-
   const candidateHistory = mergeHistoricalMetricSeries(existing?.history, freshMetricHistory);
   const stablecoinHasCmcBackfill = hasFreshCmcStablecoinBackfill(candidateHistory, historyNow);
-  if (!stablecoinHasCmcBackfill) {
+  if (!stablecoinHasCmcBackfill && defillamaAllowed) {
     try {
       const defillama = await fetchDefiLlamaStablecoinHistory();
       freshMetricHistory = mergeHistoricalMetricSeries(freshMetricHistory, defillama.history);
       providerStatus.defillamaStablecoins = {
         status: "available",
+        lastAttemptedAt: attemptedAt,
         fetchedAt: defillama.fetchedAt,
         points: defillama.points,
         providerAssetIds: defillama.providerAssetIds,
@@ -500,10 +451,21 @@ if (!publicHistoryDisabled && (historyRefreshForced || shouldRefreshCmcHistory(h
       historyProviderSuccess = true;
     } catch (error) {
       failures.push(`DefiLlama stablecoin history: ${safeFailure(error)}`);
-      providerStatus.defillamaStablecoins = { status: "failed_preserved_last_known_good", attemptedAt };
+      providerStatus.defillamaStablecoins = {
+        status: "failed_preserved_last_known_good",
+        lastAttemptedAt: attemptedAt,
+      };
     }
+  } else if (stablecoinHasCmcBackfill) {
+    providerStatus.defillamaStablecoins = {
+      status: "not_needed_cmc_history_available",
+      lastAttemptedAt: attemptedAt,
+    };
   } else {
-    providerStatus.defillamaStablecoins = { status: "not_needed_cmc_history_available", attemptedAt };
+    providerStatus.defillamaStablecoins = {
+      status: "denied_preserved_last_known_good",
+      lastAttemptedAt: attemptedAt,
+    };
   }
   historyRefresh = {
     lastAttemptedAt: attemptedAt,
@@ -528,33 +490,42 @@ if (!spotPrices) {
 }
 
 const etf = { ...(existing?.etf || {}) };
-for (const asset of ["BTC", "ETH", "SOL"]) {
-  try {
-    etf[asset] = mergeSosoEtfHistory(etf[asset], await fetchSosoAsset(asset));
-    freshSourceCount += 1;
-  } catch (error) {
-    failures.push(`SoSoValue ${asset}: ${safeFailure(error)}`);
-    etf[asset] ||= {
-      asset,
-      cadence: "daily",
-      status: "pending_credentials",
-      source: "sosovalue",
-      observedAt: null,
-      daily: [],
-      weekly: [],
-    };
+if (sosoAllowed) {
+  for (const asset of ["BTC", "ETH", "SOL"]) {
+    try {
+      etf[asset] = mergeSosoEtfHistory(etf[asset], await fetchSosoAsset(asset));
+      freshSourceCount += 1;
+      sosoRefreshedAssets.add(asset);
+    } catch (error) {
+      failures.push(`SoSoValue ${asset}: ${safeFailure(error)}`);
+      etf[asset] ||= {
+        asset,
+        cadence: "daily",
+        status: "pending_credentials",
+        source: "sosovalue",
+        observedAt: null,
+        daily: [],
+        weekly: [],
+      };
+    }
   }
+} else {
+  failures.push("SoSoValue refresh denied by data-use scope; last-known-good ETF history preserved.");
 }
 
 const reviewedDisclosures = await readJson(treasuryDisclosuresPath, { treasuries: {} });
 const reviewedStrategy = normalizeReviewedTreasuryDisclosure(reviewedDisclosures?.treasuries?.MSTR || {});
 let bitmineSec = { status: "reserved_missing_user_agent", holdings: [] };
-try {
-  bitmineSec = await fetchBitmineSecHoldings();
-  if (bitmineSec.holdings.length) freshSourceCount += 1;
-} catch (error) {
-  failures.push(`BitMine SEC holdings: ${safeFailure(error)}`);
-  bitmineSec = { status: "failed_preserved_reviewed_disclosures", holdings: [] };
+if (secAllowed) {
+  try {
+    bitmineSec = await fetchBitmineSecHoldings();
+    if (bitmineSec.holdings.length) freshSourceCount += 1;
+  } catch (error) {
+    failures.push(`BitMine SEC holdings: ${safeFailure(error)}`);
+    bitmineSec = { status: "failed_preserved_reviewed_disclosures", holdings: [] };
+  }
+} else {
+  bitmineSec = { status: "denied_preserved_reviewed_disclosures", holdings: [] };
 }
 const bitmineDisclosurePayload = reviewedDisclosures?.treasuries?.BMNR || {};
 const reviewedBitmine = normalizeReviewedTreasuryDisclosure({
@@ -567,22 +538,40 @@ const corporateTreasuries = {
 };
 
 let blockbeats;
-try {
-  blockbeats = await fetchBlockbeatsAuxiliary();
-  if (blockbeats.status === "available") freshSourceCount += 1;
-} catch (error) {
-  failures.push(`BlockBeats auxiliary: ${safeFailure(error)}`);
-  blockbeats = {
-    enabled: true,
-    configured: true,
-    status: "failed_preserved_primary",
+if (blockbeatsAllowed) {
+  try {
+    blockbeats = await fetchBlockbeatsAuxiliary();
+    if (blockbeats.status === "available") freshSourceCount += 1;
+  } catch (error) {
+    failures.push(`BlockBeats auxiliary: ${safeFailure(error)}`);
+    blockbeats = {
+      enabled: true,
+      configured: true,
+      status: "failed_preserved_primary",
+      role: "auxiliary_cross_check_only",
+      endpoint: "/v1/data/btc_etf",
+      data: existing?.auxiliarySources?.blockbeats?.data || null,
+    };
+  }
+} else {
+  blockbeats = existing?.auxiliarySources?.blockbeats || {
+    enabled: false,
+    configured: false,
+    status: "denied_preserved_primary",
     role: "auxiliary_cross_check_only",
     endpoint: "/v1/data/btc_etf",
-    data: existing?.auxiliarySources?.blockbeats?.data || null,
+    data: null,
   };
 }
 
-if (existing && freshSourceCount === 0) {
+const requiredSosoAssets = ["BTC", "ETH", "SOL"];
+const missingSosoAssets = requiredSosoAssets.filter((asset) => !sosoRefreshedAssets.has(asset));
+const cmcStateUsableForRequestedCollection = cmcCurrentAvailable && cmcStateMode !== "disabled";
+if (process.env.CYCLELENS_REQUIRE_FRESH_OWNER_RELEASE === "1"
+  && ((cmcCollectionRequested && !cmcStateUsableForRequestedCollection) || missingSosoAssets.length)) {
+  throw new Error("Owner crypto-liquidity collector did not refresh every required primary source");
+}
+if (existing && freshSourceCount === 0 && !cmcStateLoaded) {
   console.log("Crypto liquidity update skipped: no primary or auxiliary source refreshed; preserving last-known-good JSON.");
   process.exit(0);
 }
@@ -601,6 +590,7 @@ const observedAt = oldest([levelsObservedAt, etfObservedAt]);
 const output = {
   version: CRYPTO_LIQUIDITY_VERSION,
   page: "crypto-liquidity",
+  dataUseScope,
   generatedAt: transformedAt,
   timestamps: {
     observedAt,
@@ -645,6 +635,14 @@ const output = {
     blockbeats: "https://www.theblockbeats.info/apiDoc",
   },
   failures,
+  refreshSummary: {
+    cmcCollectionRequested,
+    cmcCurrentAvailable,
+    cmcCurrentRefreshed,
+    cmcStateMode,
+    requiredSosoAssets,
+    sosoRefreshedAssets: [...sosoRefreshedAssets].sort(),
+  },
 };
 
 await writeJsonAtomic(outputPath, output);

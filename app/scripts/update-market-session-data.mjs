@@ -1,19 +1,47 @@
-import { readFile, mkdir, writeFile } from "node:fs/promises";
+import { lstat, readFile, mkdir, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { execFile } from "node:child_process";
-import { promisify } from "node:util";
 import { buildOfficialMarketCalendar } from "./market-session-calendar.mjs";
 import { productUserAgent } from "../product.config.mjs";
+import { sourcePolicyIdIsEligibleForDataUse } from "../src/domain/metrics/sourcePolicy.js";
+import {
+  dataDirectoryForScope,
+  dataUseScopeFromEnvironment,
+} from "./data-use-scope.mjs";
+import { fetchJsonBounded } from "./secure-fetch.mjs";
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const appRoot = resolve(scriptDir, "..");
 const workspaceRoot = resolve(appRoot, "..");
-const outputPath = resolve(appRoot, "public/data/market-session.json");
-const execFileAsync = promisify(execFile);
+const dataUseScope = dataUseScopeFromEnvironment(process.env, process.argv);
+const dataDirectory = dataDirectoryForScope(appRoot, dataUseScope);
+const outputPath = resolve(dataDirectory, "market-session.json");
+const cmcProviderStatePath = resolve(workspaceRoot, "tmp/owner-private/provider-state/coinmarketcap.json");
 
 const OKX_BASE = "https://www.okx.com/api/v5";
-const CMC_BASE = "https://pro-api.coinmarketcap.com/v2";
+const MARKET_SESSION_ALLOWED_ORIGINS = Object.freeze([
+  "https://www.okx.com",
+]);
+const REQUIRED_MARKET_SESSION_ASSETS = Object.freeze(["BTC", "USDT", "HYPE", "BNB"]);
+const CMC_PROVIDER_STATE_ASSETS = Object.freeze({ BTC: 1, ETH: 1027, USDT: 825, USDC: 3408, HYPE: 32196, BNB: 1839 });
+const CMC_PROVIDER_STATE_MODES = new Set([
+  "refreshed",
+  "disabled",
+  "cadence_guard",
+  "budget_guard",
+  "provider_failed_lkg",
+  "hydrated",
+]);
+const CMC_PROVIDER_STATE_ACTIVE_MODES = new Set([
+  "refreshed",
+  "cadence_guard",
+  "budget_guard",
+  "provider_failed_lkg",
+  "hydrated",
+]);
+const CMC_PROVIDER_STATE_MAX_BYTES = 4 * 1024 * 1024;
+const CMC_PROVIDER_STATE_FRESH_MS = 30 * 60 * 1000;
+const DENIED_CONSUMER_ENV_KEYS = new Set(["CMC_PRO_API_KEY"]);
 
 const MARKETS = [
   {
@@ -210,7 +238,7 @@ function loadEnvFile(path) {
         const trimmed = line.trim();
         if (!trimmed || trimmed.startsWith("#")) continue;
         const match = trimmed.match(/^([A-Za-z_][A-Za-z0-9_]*)=(.*)$/);
-        if (!match || process.env[match[1]]) continue;
+        if (!match || DENIED_CONSUMER_ENV_KEYS.has(match[1]) || process.env[match[1]]) continue;
         let value = match[2].trim();
         if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
           value = value.slice(1, -1);
@@ -228,6 +256,163 @@ function isoNow() {
 function finiteNumber(value) {
   const number = Number(value);
   return Number.isFinite(number) ? number : null;
+}
+
+function isRecord(value) {
+  return value != null && typeof value === "object" && !Array.isArray(value);
+}
+
+function strictFiniteNumber(value, { minimum = -Infinity } = {}) {
+  return typeof value === "number" && Number.isFinite(value) && value >= minimum ? value : null;
+}
+
+function nonFutureIso(value, nowMs) {
+  if (typeof value !== "string" || !value.trim()) return null;
+  const parsed = Date.parse(value);
+  return Number.isFinite(parsed) && parsed <= nowMs ? new Date(parsed).toISOString() : null;
+}
+
+function invalidCmcProviderState(reason) {
+  return {
+    valid: false,
+    fresh: false,
+    reason,
+    mode: reason === "scope_denied" ? "policy_denied" : "missing",
+    fetchedAt: null,
+    global: {},
+    assets: {},
+  };
+}
+
+export function normalizeCmcProviderState(payload, options = {}) {
+  const now = options.now instanceof Date ? options.now : new Date(options.now || Date.now());
+  const nowMs = now.getTime();
+  if (!Number.isFinite(nowMs)) return invalidCmcProviderState("invalid_clock");
+  if (!isRecord(payload)
+    || payload.version !== 1
+    || payload.provider !== "coinmarketcap"
+    || payload.dataUseScope !== "owner_private") {
+    return invalidCmcProviderState("invalid_identity");
+  }
+  if (![payload.current, payload.history, payload.watermarks, payload.budget, payload.refresh].every(isRecord)) {
+    return invalidCmcProviderState("invalid_schema");
+  }
+  const updatedAt = nonFutureIso(payload.updatedAt, nowMs);
+  const fetchedAt = nonFutureIso(payload.current.fetchedAt, nowMs);
+  const mode = typeof payload.refresh.mode === "string" && CMC_PROVIDER_STATE_MODES.has(payload.refresh.mode)
+    ? payload.refresh.mode
+    : null;
+  const globalObservedAt = nonFutureIso(payload.current.global?.observedAt, nowMs);
+  const totalMarketCapUsd = strictFiniteNumber(payload.current.global?.totalMarketCapUsd, { minimum: 0 });
+  const totalMarketCapYesterdayUsd = strictFiniteNumber(payload.current.global?.totalMarketCapYesterdayUsd, { minimum: 0 });
+  const totalMarketCapChangePct24h = strictFiniteNumber(payload.current.global?.totalMarketCapChangePct24h);
+  if (!updatedAt || !fetchedAt || !globalObservedAt || totalMarketCapUsd == null
+    || (payload.current.global?.totalMarketCapYesterdayUsd != null && totalMarketCapYesterdayUsd == null)
+    || (payload.current.global?.totalMarketCapChangePct24h != null && totalMarketCapChangePct24h == null)
+    || !mode || typeof payload.refresh.currentRefreshed !== "boolean") {
+    return invalidCmcProviderState("invalid_current_global");
+  }
+
+  const assets = {};
+  for (const [symbol, expectedId] of Object.entries(CMC_PROVIDER_STATE_ASSETS)) {
+    const item = payload.current.assets?.[symbol];
+    const id = strictFiniteNumber(item?.id, { minimum: 1 });
+    const priceUsd = strictFiniteNumber(item?.priceUsd, { minimum: 0 });
+    const marketCapUsd = strictFiniteNumber(item?.marketCapUsd, { minimum: 0 });
+    const percentChange24h = strictFiniteNumber(item?.percentChange24h);
+    const observedAt = nonFutureIso(item?.observedAt, nowMs);
+    if (!isRecord(item) || item.symbol !== symbol || id !== expectedId
+      || priceUsd == null || marketCapUsd == null
+      || (item.percentChange24h != null && percentChange24h == null) || !observedAt) {
+      return invalidCmcProviderState("invalid_current_assets");
+    }
+    assets[symbol] = {
+      marketCapUsd,
+      marketCapAsOf: observedAt,
+      cmcId: id,
+    };
+  }
+
+  const maxFreshAgeMs = Number.isFinite(options.maxFreshAgeMs)
+    ? Math.max(0, options.maxFreshAgeMs)
+    : CMC_PROVIDER_STATE_FRESH_MS;
+  const nonCollectingModes = new Set(["disabled", "missing", "policy_denied"]);
+  const fresh = payload.refresh.currentRefreshed === true
+    && !nonCollectingModes.has(mode)
+    && nowMs - Date.parse(fetchedAt) <= maxFreshAgeMs;
+  return {
+    valid: true,
+    fresh,
+    reason: fresh ? "current" : "last_known_good",
+    mode,
+    updatedAt,
+    fetchedAt,
+    global: {
+      totalMarketCapUsd,
+      totalMarketCapYesterdayUsd,
+      totalMarketCapChangePct24h,
+      observedAt: globalObservedAt,
+    },
+    assets,
+  };
+}
+
+export async function readCmcProviderState(path = cmcProviderStatePath, options = {}) {
+  try {
+    const metadata = await lstat(path);
+    if (!metadata.isFile() || metadata.isSymbolicLink() || metadata.size < 2 || metadata.size > CMC_PROVIDER_STATE_MAX_BYTES) {
+      return invalidCmcProviderState("unsafe_file");
+    }
+    const payload = JSON.parse(await readFile(path, "utf8"));
+    return normalizeCmcProviderState(payload, options);
+  } catch {
+    return invalidCmcProviderState("unavailable");
+  }
+}
+
+export function cmcCurrentIsAvailable(state) {
+  return Boolean(
+    state?.valid
+    && CMC_PROVIDER_STATE_ACTIVE_MODES.has(state.mode)
+    && typeof state.fetchedAt === "string"
+    && Number.isFinite(state.global?.totalMarketCapUsd)
+    && Object.entries(CMC_PROVIDER_STATE_ASSETS).every(
+      ([symbol, expectedId]) => state.assets?.[symbol]?.cmcId === expectedId
+        && Number.isFinite(state.assets[symbol].marketCapUsd)
+        && typeof state.assets[symbol].marketCapAsOf === "string",
+    ),
+  );
+}
+
+export function projectCmcMarketCap(asset, previous, cmcState) {
+  if (asset.marketCapNotApplicable) {
+    return {
+      marketCapUsd: null,
+      marketCapStatus: "not_applicable",
+      marketCapAsOf: null,
+      marketCapSourceLabel: null,
+    };
+  }
+  const stateRow = cmcState?.valid ? cmcState.assets?.[asset.symbol] : null;
+  if (stateRow?.marketCapUsd != null) {
+    return {
+      marketCapUsd: stateRow.marketCapUsd,
+      marketCapStatus: cmcState.fresh ? "available" : "last-known-good",
+      marketCapAsOf: stateRow.marketCapAsOf,
+      marketCapSourceLabel: cmcState.fresh
+        ? "CoinMarketCap normalized provider state"
+        : "CoinMarketCap normalized provider state (last-known-good)",
+    };
+  }
+  const previousValue = strictFiniteNumber(previous?.marketCapUsd, { minimum: 0 });
+  return {
+    marketCapUsd: previousValue,
+    marketCapStatus: previousValue == null ? "unavailable" : "last-known-good",
+    marketCapAsOf: previousValue == null ? null : previous?.marketCapAsOf || null,
+    marketCapSourceLabel: previousValue == null
+      ? null
+      : previous?.marketCapSourceLabel || "CoinMarketCap last-known-good",
+  };
 }
 
 function latestIso(values) {
@@ -259,62 +444,16 @@ function okxIso(ts) {
 }
 
 async function fetchJson(url, options = {}) {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 25_000);
-  try {
-    try {
-      const response = await fetch(url, {
-        ...options,
-        signal: controller.signal,
-        headers: {
-          Accept: "application/json",
-          "User-Agent": productUserAgent("market-session"),
-          ...(options.headers || {}),
-        },
-      });
-      if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
-      return await response.json();
-    } catch (error) {
-      if (process.platform !== "win32") throw error;
-      return await fetchJsonWithPowerShell(url, options);
-    }
-  } finally {
-    clearTimeout(timer);
-  }
-}
-
-async function fetchJsonWithPowerShell(url, options = {}) {
-  const usesCmc = url.includes("coinmarketcap.com");
-  const hasCmcKey = Boolean(process.env.CMC_PRO_API_KEY);
-  if (usesCmc && !hasCmcKey) throw new Error("CMC_PRO_API_KEY is not configured");
-  const script = `
-    $Url = $env:CYCLELENS_FETCH_URL
-    $UsesCmc = $env:CYCLELENS_FETCH_CMC
-    $headers = @{
-      Accept = 'application/json'
-      'User-Agent' = $env:CYCLELENS_FETCH_USER_AGENT
-    }
-    if ($UsesCmc -eq '1') {
-      $headers['X-CMC_PRO_API_KEY'] = $env:CMC_PRO_API_KEY
-    }
-    $response = Invoke-RestMethod -Uri $Url -Headers $headers -TimeoutSec 25
-    $response | ConvertTo-Json -Depth 40 -Compress
-  `;
-  const { stdout } = await execFileAsync(
-    "powershell",
-    ["-NoProfile", "-ExecutionPolicy", "Bypass", "-Command", script],
-    {
-      env: {
-        ...process.env,
-        CYCLELENS_FETCH_URL: url,
-        CYCLELENS_FETCH_CMC: usesCmc ? "1" : "0",
-        CYCLELENS_FETCH_USER_AGENT: productUserAgent("market-session"),
-      },
-      maxBuffer: 5 * 1024 * 1024,
-      windowsHide: true,
+  return fetchJsonBounded(url, {
+    ...options,
+    allowedOrigins: MARKET_SESSION_ALLOWED_ORIGINS,
+    maxResponseBytes: 5 * 1024 * 1024,
+    timeoutMs: 25_000,
+    headers: {
+      "User-Agent": productUserAgent("market-session"),
+      ...(options.headers || {}),
     },
-  );
-  return JSON.parse(stdout);
+  });
 }
 
 async function fetchOkxAsset(asset) {
@@ -360,59 +499,65 @@ async function fetchOkxAsset(asset) {
   };
 }
 
-function pickCmcRow(symbol, rows, preferredSlug) {
-  if (!Array.isArray(rows)) return null;
-  return rows.find((row) => row.slug === preferredSlug)
-    || rows.find((row) => row.symbol === symbol && row.is_active === 1)
-    || rows[0]
-    || null;
-}
-
-async function fetchCmcMarketCaps(failures) {
-  const key = process.env.CMC_PRO_API_KEY;
-  if (!key) {
-    failures.push("CMC_PRO_API_KEY is not configured for this shell; crypto market caps are unavailable.");
-    return {};
-  }
-  const symbols = [...new Set(ASSETS.filter((asset) => asset.cmcSymbol).map((asset) => asset.cmcSymbol))].join(",");
-  const payload = await fetchJson(`${CMC_BASE}/cryptocurrency/quotes/latest?symbol=${symbols}&convert=USD`, {
-    headers: { "X-CMC_PRO_API_KEY": key },
-  });
-  const output = {};
-  for (const asset of ASSETS.filter((item) => item.cmcSymbol)) {
-    const row = pickCmcRow(asset.cmcSymbol, payload?.data?.[asset.cmcSymbol], asset.cmcSlug);
-    const quote = row?.quote?.USD;
-    output[asset.symbol] = {
-      marketCapUsd: finiteNumber(quote?.market_cap),
-      marketCapAsOf: quote?.last_updated || null,
-      cmcId: row?.id || null,
-      sourceLabel: "CoinMarketCap quotes/latest",
-    };
-  }
-  return output;
-}
-
 async function buildOutput() {
+  for (const key of DENIED_CONSUMER_ENV_KEYS) delete process.env[key];
   await loadEnvFile(resolve(appRoot, ".env.local"));
   await loadEnvFile(resolve(workspaceRoot, ".env.local"));
 
+  const existing = JSON.parse(await readFile(outputPath, "utf8"));
+  const existingAssets = new Map((existing.assets || []).map((asset) => [asset.symbol, asset]));
+  const okxAllowed = sourcePolicyIdIsEligibleForDataUse("public-crypto-market-apis", {
+    scope: dataUseScope,
+    environment: process.env,
+  });
+  const cmcAllowed = sourcePolicyIdIsEligibleForDataUse("coinmarketcap", {
+    scope: dataUseScope,
+    environment: process.env,
+  });
   const failures = [];
-  let cmc = {};
-  try {
-    cmc = await fetchCmcMarketCaps(failures);
-  } catch (error) {
-    failures.push(`CMC market caps: ${error instanceof Error ? error.message : String(error)}`);
+  let freshSourceCount = 0;
+  let cmcCurrentRefreshed = false;
+  let cmcCurrentAvailable = false;
+  const cmcCollectionRequested = process.env.CYCLELENS_COLLECT_CMC === "true";
+  const okxRefreshedAssets = new Set();
+  let cmcState = invalidCmcProviderState("not_loaded");
+  if (cmcAllowed) {
+    if (dataUseScope === "owner_private") {
+      cmcState = await readCmcProviderState();
+      cmcCurrentAvailable = cmcCurrentIsAvailable(cmcState);
+      cmcCurrentRefreshed = cmcCollectionRequested && cmcCurrentAvailable && cmcState.fresh;
+      if (!cmcCollectionRequested && cmcState.fresh) cmcState = { ...cmcState, fresh: false };
+      freshSourceCount += cmcCurrentRefreshed ? 1 : 0;
+      if (!cmcState.valid) {
+        failures.push(`CoinMarketCap provider state unavailable (${cmcState.reason}); last-known-good values preserved.`);
+      } else if (!cmcState.fresh) {
+        failures.push("CoinMarketCap provider state is last-known-good; this collector made no CMC request.");
+      }
+    } else {
+      cmcState = invalidCmcProviderState("scope_denied");
+      failures.push("Owner-private CoinMarketCap provider state is never read for a public-scope build.");
+    }
+  } else {
+    cmcState = invalidCmcProviderState("scope_denied");
+    failures.push("CoinMarketCap refresh denied by data-use scope; last-known-good values preserved.");
   }
 
   const assets = [];
   for (const asset of ASSETS) {
+    const previous = existingAssets.get(asset.symbol) || {};
     let quote = null;
-    try {
-      quote = await fetchOkxAsset(asset);
-    } catch (error) {
-      failures.push(`${asset.symbol} OKX quote: ${error instanceof Error ? error.message : String(error)}`);
+    if (okxAllowed) {
+      try {
+        quote = await fetchOkxAsset(asset);
+        if (quote) {
+          freshSourceCount += 1;
+          okxRefreshedAssets.add(asset.symbol);
+        }
+      } catch (error) {
+        failures.push(`${asset.symbol} OKX quote: ${error instanceof Error ? error.message : String(error)}`);
+      }
     }
-    const cmcRow = cmc[asset.symbol] || {};
+    const marketCap = projectCmcMarketCap(asset, previous, cmcState);
     assets.push({
       symbol: asset.symbol,
       name: asset.name,
@@ -420,20 +565,33 @@ async function buildOutput() {
       market: asset.market,
       quote: asset.quote,
       localQuote: asset.localQuote || null,
-      price: quote?.price ?? null,
-      changePct: quote?.changePct ?? null,
-      changeBasis: quote?.changeBasis || null,
-      marketCapUsd: asset.marketCapNotApplicable ? null : cmcRow.marketCapUsd ?? null,
-      marketCapStatus: asset.marketCapNotApplicable ? "not_applicable" : cmcRow.marketCapUsd ? "available" : "unavailable",
-      marketCapAsOf: cmcRow.marketCapAsOf || null,
-      asOf: quote?.asOf || cmcRow.marketCapAsOf || null,
+      price: quote?.price ?? previous.price ?? null,
+      changePct: quote?.changePct ?? previous.changePct ?? null,
+      changeBasis: quote?.changeBasis || previous.changeBasis || null,
+      marketCapUsd: marketCap.marketCapUsd,
+      marketCapStatus: marketCap.marketCapStatus,
+      marketCapAsOf: marketCap.marketCapAsOf,
+      asOf: quote?.asOf || marketCap.marketCapAsOf || previous.asOf || null,
       sourceKind: asset.sourceKind || "official_public",
       ...(asset.sessionEligibility ? { sessionEligibility: asset.sessionEligibility } : {}),
-      sourceLabel: quote?.sourceLabel || asset.quality || "Source pending",
-      marketCapSourceLabel: cmcRow.sourceLabel || null,
+      sourceLabel: quote?.sourceLabel || previous.sourceLabel || asset.quality || "Source pending",
+      marketCapSourceLabel: marketCap.marketCapSourceLabel,
       quality: asset.quality || asset.note || null,
-      components: quote?.components || null,
+      components: quote?.components || previous.components || null,
     });
+  }
+  const missingPrimaryQuotes = REQUIRED_MARKET_SESSION_ASSETS.filter(
+    (symbol) => !okxRefreshedAssets.has(symbol),
+  );
+  const cmcStateMode = cmcState.mode || "missing";
+  const cmcRequestedButUnavailable = cmcCollectionRequested
+    && (!cmcCurrentAvailable || !CMC_PROVIDER_STATE_ACTIVE_MODES.has(cmcStateMode));
+  if (process.env.CYCLELENS_REQUIRE_FRESH_OWNER_RELEASE === "1"
+    && (missingPrimaryQuotes.length || cmcRequestedButUnavailable)) {
+    throw new Error("Required market-session primary data did not refresh; refusing to replace the owner release");
+  }
+  if (freshSourceCount === 0) {
+    throw new Error("No reviewed market-session provider refreshed; refusing to replace the owner release");
   }
 
   const fetchedAt = isoNow();
@@ -442,6 +600,7 @@ async function buildOutput() {
   return {
     version: 2,
     page: "market-clock",
+    dataUseScope,
     generatedAt: transformedAt,
     timestamps: {
       observedAt,
@@ -449,8 +608,17 @@ async function buildOutput() {
       transformedAt,
     },
     refreshCadence: "Target 10-15 minutes when a backend scheduler is available; static hosts may refresh less frequently.",
-    methodology: "The frontend reads only this generated JSON. OKX public tickers provide crypto, equity-swap proxy, and CL index proxy prices. CoinMarketCap supplies crypto market caps when CMC_PRO_API_KEY is configured in backend or CI. The backend expands reviewed NYSE, KRX, SSE, and SZSE calendars and trading rules into absolute status intervals with holiday, early-close, weekend, and next-transition boundaries; the frontend only selects the current interval and renders its countdown.",
+    methodology: "The frontend reads only this generated JSON. OKX public tickers provide crypto, equity-swap proxy, and CL index proxy prices. CoinMarketCap market caps are consumed only from a bounded owner-private normalized provider-state file; this collector has no CMC credential or CMC network path. The backend expands reviewed NYSE, KRX, SSE, and SZSE calendars and trading rules into absolute status intervals with holiday, early-close, weekend, and next-transition boundaries; the frontend only selects the current interval and renders its countdown.",
     failures,
+    refreshSummary: {
+      freshSourceCount,
+      cmcCollectionRequested,
+      cmcCurrentAvailable,
+      cmcCurrentRefreshed,
+      cmcStateMode,
+      requiredAssets: REQUIRED_MARKET_SESSION_ASSETS,
+      okxRefreshedAssets: [...okxRefreshedAssets].sort(),
+    },
     markets: attachOfficialCalendars(MARKETS, transformedAt),
     assets,
     sources: {
@@ -461,7 +629,7 @@ async function buildOutput() {
       sseCalendar: "https://www.sse.com.cn/disclosure/dealinstruc/closed/",
       sseTradingRules: "https://www.sse.com.cn/lawandrules/sselawsrules2025/stocks/exchange/c/c_20260424_10816482.shtml",
       szseTradingRules: "https://www.szse.cn/lawrules/rule/allrules/bussiness/t20260424_620190.html",
-      note: "No provider credentials are emitted to the frontend cache.",
+      note: "No provider credentials are read by this collector or emitted to the frontend cache.",
     },
   };
 }
@@ -498,13 +666,16 @@ async function buildCalendarOnlyOutput() {
   };
 }
 
-const output = process.argv.includes("--calendar-only") ? await buildCalendarOnlyOutput() : await buildOutput();
-await mkdir(dirname(outputPath), { recursive: true });
-await writeFile(outputPath, `${JSON.stringify(output, null, 2)}\n`, "utf8");
+const invokedPath = process.argv[1] ? resolve(process.argv[1]) : "";
+if (invokedPath && fileURLToPath(import.meta.url) === invokedPath) {
+  const output = process.argv.includes("--calendar-only") ? await buildCalendarOnlyOutput() : await buildOutput();
+  await mkdir(dirname(outputPath), { recursive: true });
+  await writeFile(outputPath, `${JSON.stringify(output, null, 2)}\n`, "utf8");
 
-console.log(JSON.stringify({
-  status: "updated",
-  outputPath,
-  assets: output.assets.length,
-  failures: output.failures.length,
-}));
+  console.log(JSON.stringify({
+    status: "updated",
+    outputPath,
+    assets: output.assets.length,
+    failures: output.failures?.length || 0,
+  }));
+}

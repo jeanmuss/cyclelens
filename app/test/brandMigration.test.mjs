@@ -60,7 +60,7 @@ test("repository docs, icons, and workflows advertise only the current product n
     source("app/public/favicon-tide.svg"),
     source(".github/workflows/deploy-pages.yml"),
     source(".github/workflows/update-market-data.yml"),
-    source(".github/workflows/_collect-persist.yml"),
+    source(".github/workflows/_owner-release.yml"),
   ]);
   assert.match(rootReadme, /^# CycleLens$/m);
   assert.match(appReadme, /^# CycleLens$/m);

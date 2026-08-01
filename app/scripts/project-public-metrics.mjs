@@ -11,15 +11,24 @@ import {
 } from "./market-metric-history-contract.mjs";
 import { validateObservationRows } from "./metric-observation-contract.mjs";
 import {
-  createPublicProjection,
+  createProjection,
   PUBLIC_PROJECTION_IDS,
-  validatePublicProjection,
+  validateProjection,
 } from "./metric-projection-contract.mjs";
+import {
+  DATA_USE_SCOPES,
+  dataDirectoryForScope,
+  dataUseScopeFromEnvironment,
+  visibilityForDataUseScope,
+} from "./data-use-scope.mjs";
 
 const scriptDirectory = dirname(fileURLToPath(import.meta.url));
 const appRoot = resolve(scriptDirectory, "..");
-const dataDirectory = resolve(appRoot, "public/data");
-const projectionDirectory = resolve(dataDirectory, "projections");
+const dataUseScope = dataUseScopeFromEnvironment(process.env, process.argv);
+const dataDirectory = dataDirectoryForScope(appRoot, dataUseScope);
+const projectionDirectory = dataUseScope === DATA_USE_SCOPES.OWNER_PRIVATE
+  ? resolve(appRoot, "data/private/projections")
+  : resolve(dataDirectory, "projections");
 
 async function readJson(path, fallback = null) {
   try {
@@ -59,14 +68,21 @@ const rows = dedupeMarketMetricRows([
   ...extractEquityDashboardRows(equity, equityFast),
   ...extractMacroDashboardRows(macro),
 ]);
-const validation = validateObservationRows(rows);
+const validation = validateObservationRows(rows, { environment: process.env, scope: dataUseScope });
 const results = [];
 for (const projectionId of PUBLIC_PROJECTION_IDS) {
-  const payload = createPublicProjection(projectionId, validation.accepted, generatedAt);
-  const errors = validatePublicProjection(payload);
+  const payload = createProjection(projectionId, validation.accepted, generatedAt, { scope: dataUseScope });
+  const errors = validateProjection(payload, { scope: dataUseScope });
   if (errors.length) throw new Error(`${projectionId} projection failed contract: ${errors.join("; ")}`);
   await writeJsonAtomic(resolve(projectionDirectory, `${projectionId}.json`), payload);
   results.push({ projectionId, metrics: payload.metrics.length, observations: payload.metrics.flatMap((item) => item.observations).length });
 }
 
-console.log(JSON.stringify({ status: "projected", acceptedRows: validation.accepted.length, rejectedRows: validation.rejected.length, projections: results }));
+console.log(JSON.stringify({
+  status: "projected",
+  dataUseScope,
+  visibility: visibilityForDataUseScope(dataUseScope),
+  acceptedRows: validation.accepted.length,
+  rejectedRows: validation.rejected.length,
+  projections: results,
+}));

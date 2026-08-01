@@ -45,7 +45,7 @@ Binance 官方列出的免认证市场数据端点覆盖成交、深度、交易
 ## 3. CMC 与 Strategy 的执行规则
 
 - CMC：仓库记录了 2026-07-18 的产品发布决定。没有显式环境值时按 `1` 处理；部署变量明确设为 `0` 时，CMC 行在持久化和公共投影前被拒绝。API key 仍只允许存在于本地忽略文件或部署 secret，绝不进入浏览器和仓库。
-- Strategy：`app/data/corporate-treasury-disclosures.json` 是审核后的事实输入；`npm run apply-reviewed-treasuries` 将其确定性应用到静态 LKG。更新器不再请求 SoSoValue 的 MSTR treasury 端点，指标目录和后续 migration 也只声明 `strategy-disclosures`。
+- Strategy：`app/data/corporate-treasury-disclosures.json` 是审核后的事实输入；`npm run apply-reviewed-treasuries` 只会在显式批准的 owner-private scope 中将其确定性应用到私有 LKG，绝不写回 tracked `public/data`。更新器不再请求 SoSoValue 的 MSTR treasury 端点，指标目录和后续 migration 也只声明 `strategy-disclosures`。
 - 上游失败仍保留 last-known-good；没有通过来源策略的候选行不会为了消除 `N/A` 而进入公开投影。
 
 ## 4. 剩余风险

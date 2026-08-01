@@ -17,13 +17,29 @@ import {
   normalizeManualMacroEvents,
   normalizeManualMacroEventsPayload,
 } from "./manual-macro-events-contract.mjs";
+import {
+  DATA_USE_SCOPES,
+  dataDirectoryForScope,
+  dataUseScopeFromEnvironment,
+  manualMacroEventsPathForScope,
+  ownerPrivateUseApproved,
+} from "./data-use-scope.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appRoot = resolve(__dirname, "..");
-const manualEventsPath = resolve(appRoot, "data", "manual-macro-events.json");
-const macroCalendarPath = resolve(appRoot, "public", "data", "macro-calendar.json");
+const dataUseScope = dataUseScopeFromEnvironment(process.env, process.argv);
+if (dataUseScope !== DATA_USE_SCOPES.OWNER_PRIVATE || !ownerPrivateUseApproved(process.env)) {
+  throw new Error("The local macro admin requires an explicitly approved owner-private scope");
+}
+const dataDirectory = dataDirectoryForScope(appRoot, dataUseScope);
+const manualEventsPath = manualMacroEventsPathForScope(appRoot, dataUseScope);
+const macroCalendarPath = resolve(dataDirectory, "macro-calendar.json");
 const updateMacroCalendarScript = resolve(appRoot, "scripts", "update-macro-calendar.py");
-const host = process.env.MACRO_EVENTS_ADMIN_HOST || "127.0.0.1";
+if (process.env.MACRO_EVENTS_ADMIN_HOST
+  && process.env.MACRO_EVENTS_ADMIN_HOST !== "127.0.0.1") {
+  throw new Error("The local macro admin may bind only to 127.0.0.1");
+}
+const host = "127.0.0.1";
 const port = Number(process.env.MACRO_EVENTS_ADMIN_PORT || 5174);
 const pythonCommand = preferredEnvironmentValue(process.env, "CYCLELENS_PYTHON", "CYCLE_MAP_PYTHON") || "python";
 const maxBodyBytes = MANUAL_MACRO_EVENTS_MAX_BODY_BYTES;
@@ -151,6 +167,8 @@ async function macroCalendarStatus() {
 function macroPublishEnv() {
   return {
     ...process.env,
+    CYCLELENS_DATA_USE_SCOPE: DATA_USE_SCOPES.OWNER_PRIVATE,
+    CYCLELENS_OWNER_PRIVATE_USE_APPROVED: "1",
     MACRO_MANUAL_ONLY: "1",
     PYTHONIOENCODING: "utf-8",
   };
@@ -194,7 +212,7 @@ async function publishMacroCalendar() {
   const validation = await validateManualEvents();
   const { stdout, stderr } = await execFileAsync(
     pythonCommand,
-    [updateMacroCalendarScript],
+    [updateMacroCalendarScript, "--scope", DATA_USE_SCOPES.OWNER_PRIVATE],
     {
       cwd: appRoot,
       env: macroPublishEnv(),
@@ -205,7 +223,7 @@ async function publishMacroCalendar() {
   );
   return {
     ok: true,
-    command: `${pythonCommand} scripts/update-macro-calendar.py`,
+    command: `${pythonCommand} scripts/update-macro-calendar.py --scope owner_private`,
     output: publishOutput(stdout),
     stderr: redactedText(stderr.trim()),
     validation,

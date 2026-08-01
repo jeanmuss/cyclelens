@@ -9,6 +9,7 @@ import {
   hydrateCryptoDatasetFromRows,
   selectIncrementalObservationRows,
 } from "./market-metric-history-contract.mjs";
+import { dataUseScopeFromEnvironment } from "./data-use-scope.mjs";
 import { validateObservationRows } from "./metric-observation-contract.mjs";
 
 export const MARKET_HISTORY_CONFLICT_FIELDS = Object.freeze([
@@ -17,13 +18,26 @@ export const MARKET_HISTORY_CONFLICT_FIELDS = Object.freeze([
   "source_key",
 ]);
 
+function withoutDataUseMetadata(row) {
+  const output = { ...row };
+  delete output.source_policy_id;
+  delete output.data_use_scope;
+  return output;
+}
+
 export function createMarketHistoryAdapter(dependencies) {
   return defineMetricAdapter({
     id: "market-history",
     async fetch(context) {
       const inputs = await dependencies.readInputs();
       const latestJgb = await dependencies.latestJapanObservation();
-      return { ...inputs, latestJgb, environment: context.environment || process.env };
+      const environment = context.environment || process.env;
+      return {
+        ...inputs,
+        latestJgb,
+        environment,
+        dataUseScope: dataUseScopeFromEnvironment(environment),
+      };
     },
     async normalize(input) {
       const cryptoRows = extractCryptoHistoryRows(input.crypto);
@@ -49,19 +63,25 @@ export function createMarketHistoryAdapter(dependencies) {
       };
     },
     async validate(input) {
-      const validation = validateObservationRows(input.rows, { environment: input.environment });
+      const validation = validateObservationRows(input.rows, {
+        environment: input.environment,
+        scope: input.dataUseScope,
+      });
       if (!validation.accepted.length) throw new Error("No reviewed market metric observations were available to persist");
       return { ...input, rows: validation.accepted, rejectedRows: validation.rejected };
     },
     async persist(input) {
-      const persistenceRows = input.rows.map(({ source_policy_id: ignored, ...row }) => row);
+      const persistenceRows = input.rows.map(withoutDataUseMetadata);
       await dependencies.upsertRows(persistenceRows, { conflictFields: MARKET_HISTORY_CONFLICT_FIELDS });
       const databaseRows = await dependencies.readCryptoHistoryRows();
-      const validation = validateObservationRows(databaseRows, { environment: input.environment });
+      const validation = validateObservationRows(databaseRows, {
+        environment: input.environment,
+        scope: input.dataUseScope,
+      });
       return { ...input, databaseRows: validation.accepted, databaseRejectedRows: validation.rejected };
     },
     async project(input) {
-      const hydrationRows = input.databaseRows.map(({ source_policy_id: ignored, ...row }) => row);
+      const hydrationRows = input.databaseRows.map(withoutDataUseMetadata);
       const hydratedCrypto = hydrationRows.length
         ? hydrateCryptoDatasetFromRows(input.crypto, hydrationRows, new Date().toISOString())
         : input.crypto;

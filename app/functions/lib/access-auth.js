@@ -1,5 +1,7 @@
 const MAX_ACCESS_TOKEN_BYTES = 16 * 1024;
 const MAX_JWKS_BYTES = 256 * 1024;
+const ACCESS_KEYS_TIMEOUT_MS = 10_000;
+const ACTOR_PATTERN = /^cf-access:[a-f0-9]{24}$/;
 
 export class AccessValidationError extends Error {
   constructor(code) {
@@ -13,6 +15,18 @@ function requiredEnvironment(env, name) {
   const value = String(env?.[name] || "").trim();
   if (!value) throw new AccessValidationError("access_not_configured");
   return value;
+}
+
+function configuredOwnerActor(env) {
+  const actors = String(env?.CF_ACCESS_ALLOWED_ACTORS || "")
+    .split(",")
+    .map((value) => value.trim())
+    .filter(Boolean);
+  const uniqueActors = new Set(actors);
+  if (uniqueActors.size !== 1 || actors.some((actor) => !ACTOR_PATTERN.test(actor))) {
+    throw new AccessValidationError("access_owner_not_configured");
+  }
+  return actors[0];
 }
 
 function teamDomain(env) {
@@ -86,13 +100,27 @@ function base64UrlJson(value) {
 }
 
 async function fetchSigningKey(team, keyId, fetchImpl) {
-  const response = await fetchImpl(`${team}/cdn-cgi/access/certs`, {
-    headers: { accept: "application/json" },
-    cf: { cacheEverything: true, cacheTtl: 3600 },
-  });
-  if (!response.ok) throw new AccessValidationError("access_keys_unavailable");
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), ACCESS_KEYS_TIMEOUT_MS);
+  let response;
+  try {
+    response = await fetchImpl(`${team}/cdn-cgi/access/certs`, {
+      headers: { accept: "application/json" },
+      cf: { cacheEverything: true, cacheTtl: 3600 },
+      redirect: "error",
+      signal: controller.signal,
+    });
+  } catch {
+    clearTimeout(timeout);
+    throw new AccessValidationError("access_keys_unavailable");
+  }
+  if (!response.ok) {
+    clearTimeout(timeout);
+    throw new AccessValidationError("access_keys_unavailable");
+  }
   const declaredLength = Number(response.headers.get("content-length"));
   if (Number.isFinite(declaredLength) && declaredLength > MAX_JWKS_BYTES) {
+    clearTimeout(timeout);
     throw new AccessValidationError("access_keys_too_large");
   }
   let text;
@@ -101,6 +129,8 @@ async function fetchSigningKey(team, keyId, fetchImpl) {
   } catch (error) {
     if (error instanceof AccessValidationError) throw error;
     throw new AccessValidationError("access_keys_invalid");
+  } finally {
+    clearTimeout(timeout);
   }
   let payload;
   try {
@@ -173,8 +203,12 @@ export async function validateAccessRequest(request, env, { fetchImpl = fetch, n
   if (!expectedAudience(payload, audience)) throw new AccessValidationError("access_audience_invalid");
   const subject = String(payload?.sub || "").trim();
   if (!subject) throw new AccessValidationError("access_subject_missing");
+  const actor = await auditActor(subject);
+  if (actor !== configuredOwnerActor(env)) {
+    throw new AccessValidationError("access_owner_denied");
+  }
   return {
-    actor: await auditActor(subject),
+    actor,
     expiresAt: new Date(payload.exp * 1000).toISOString(),
   };
 }

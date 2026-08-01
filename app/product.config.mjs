@@ -11,8 +11,10 @@ const legacyStorageKeys = Object.freeze({
 
 const buildTargets = Object.freeze({
   public: "public",
+  publicRetired: "public-retired",
   development: "development",
   admin: "admin",
+  owner: "owner",
 });
 
 const localAdmin = Object.freeze({
@@ -66,5 +68,11 @@ export function resolveBuildTarget(value, fallback = PRODUCT_CONFIG.buildTargets
 }
 
 export function isAdminBuildTarget(value) {
-  return value === PRODUCT_CONFIG.buildTargets.development || value === PRODUCT_CONFIG.buildTargets.admin;
+  return value === PRODUCT_CONFIG.buildTargets.development
+    || value === PRODUCT_CONFIG.buildTargets.admin
+    || value === PRODUCT_CONFIG.buildTargets.owner;
+}
+
+export function isProtectedBuildTarget(value) {
+  return value === PRODUCT_CONFIG.buildTargets.admin || value === PRODUCT_CONFIG.buildTargets.owner;
 }

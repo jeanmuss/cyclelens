@@ -3,15 +3,25 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { preferredEnvironmentValue } from "../product.config.mjs";
 
+import {
+  cacheRootForScope,
+  dataDirectoryForScope,
+  dataUseScopeFromEnvironment,
+} from "./data-use-scope.mjs";
+import { dedupeMarketMetricRows } from "./market-metric-history-contract.mjs";
 import { runMetricAdapter } from "./metric-adapter-contract.mjs";
 import { createMarketHistoryAdapter } from "./market-history-adapter.mjs";
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const appRoot = resolve(scriptDir, "..");
 const workspaceRoot = resolve(appRoot, "..");
+const dataUseScope = dataUseScopeFromEnvironment(process.env, process.argv);
+const dataDirectory = dataDirectoryForScope(appRoot, dataUseScope);
+const cacheRoot = cacheRootForScope(workspaceRoot, dataUseScope);
 const table = "market_metric_observations";
 const batchSize = 500;
 const requestTimeoutMs = 30_000;
+const maxResponseBytes = 8 * 1024 * 1024;
 const maxRequestAttempts = 3;
 const cryptoHistoryPageSize = 1000;
 const cryptoHistoryMaxPages = 10;
@@ -62,10 +72,29 @@ async function loadEnvFile(path) {
 }
 
 function config() {
-  const url = String(process.env.SUPABASE_URL || "").trim().replace(/\/+$/, "");
+  const url = String(process.env.SUPABASE_URL || "").trim();
   const key = String(process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || "").trim();
   const bearer = key && !key.startsWith("sb_") ? `Bearer ${key}` : null;
   return { url, key, bearer };
+}
+
+function validatedSupabaseOrigin(value) {
+  let parsed;
+  try {
+    parsed = new URL(value);
+  } catch {
+    throw new Error("SUPABASE_URL must be a hosted Supabase HTTPS origin");
+  }
+  if (parsed.protocol !== "https:"
+    || !parsed.hostname.endsWith(".supabase.co")
+    || parsed.username
+    || parsed.password
+    || !["", "/"].includes(parsed.pathname)
+    || parsed.search
+    || parsed.hash) {
+    throw new Error("SUPABASE_URL must be a hosted Supabase HTTPS origin");
+  }
+  return parsed.origin;
 }
 
 function redact(value) {
@@ -76,18 +105,59 @@ function redact(value) {
   return text.replace(/[\r\n\t]+/g, " ").slice(0, 500);
 }
 
+async function boundedResponseText(response) {
+  const declaredLength = response.headers.get("content-length");
+  if (declaredLength != null) {
+    const parsedLength = Number(declaredLength);
+    if (!Number.isSafeInteger(parsedLength) || parsedLength < 0 || parsedLength > maxResponseBytes) {
+      throw new Error("Supabase market-history response exceeded the configured byte limit");
+    }
+  }
+  if (!response.body) return "";
+  const reader = response.body.getReader();
+  const chunks = [];
+  let total = 0;
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      total += value.byteLength;
+      if (total > maxResponseBytes) {
+        await reader.cancel();
+        throw new Error("Supabase market-history response exceeded the configured byte limit");
+      }
+      chunks.push(value);
+    }
+  } finally {
+    reader.releaseLock();
+  }
+  const bytes = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  try {
+    return new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+  } catch {
+    throw new Error("Supabase market-history response was not valid UTF-8");
+  }
+}
+
 async function request(path, options = {}) {
   const { url, key, bearer } = config();
+  const origin = validatedSupabaseOrigin(url);
   const requestBody = options.body == null ? undefined : JSON.stringify(options.body);
   let lastError = null;
   for (let attempt = 0; attempt < maxRequestAttempts; attempt += 1) {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), requestTimeoutMs);
-    let response;
+    let retryable = true;
     try {
-      response = await fetch(`${url}/rest/v1/${path}`, {
+      const response = await fetch(`${origin}/rest/v1/${path}`, {
         method: options.method || "GET",
         signal: controller.signal,
+        redirect: "error",
         headers: {
           apikey: key,
           ...(bearer ? { Authorization: bearer } : {}),
@@ -96,20 +166,28 @@ async function request(path, options = {}) {
         },
         body: requestBody,
       });
+      const text = await boundedResponseText(response);
+      if (response.ok) {
+        if (!text) return null;
+        try {
+          return JSON.parse(text);
+        } catch {
+          throw new Error("Supabase market-history response was not valid JSON");
+        }
+      }
+      lastError = new Error(`Supabase market-history request failed with status ${response.status}`);
+      retryable = response.status === 408 || response.status === 425 || response.status === 429 || response.status >= 500;
     } catch (error) {
-      lastError = error;
+      const safeResponseError = /^Supabase market-history response (?:exceeded|was not valid)/.test(String(error?.message || ""));
+      lastError = safeResponseError
+        ? new Error(String(error.message))
+        : new Error("Supabase market-history request failed before receiving a valid response");
+      retryable = !/response (?:exceeded|was not valid)/.test(lastError.message);
     } finally {
       clearTimeout(timeout);
     }
 
-    if (response) {
-      const text = await response.text();
-      if (response.ok) return text ? JSON.parse(text) : null;
-      lastError = new Error(`Supabase market-history request failed (${response.status}): ${redact(text)}`);
-      const retryable = response.status === 408 || response.status === 425 || response.status === 429 || response.status >= 500;
-      if (!retryable) throw lastError;
-    }
-
+    if (!retryable) throw lastError;
     if (attempt === maxRequestAttempts - 1) throw lastError;
     await new Promise((resolvePromise) => setTimeout(resolvePromise, 500 * (2 ** attempt)));
   }
@@ -147,10 +225,11 @@ async function readCryptoHistoryRows() {
 }
 
 async function upsertRows(rows) {
-  for (let index = 0; index < rows.length; index += batchSize) {
+  const normalizedRows = dedupeMarketMetricRows(rows);
+  for (let index = 0; index < normalizedRows.length; index += batchSize) {
     await request(`${table}?on_conflict=metric_id,observed_at,source_key`, {
       method: "POST",
-      body: rows.slice(index, index + batchSize),
+      body: normalizedRows.slice(index, index + batchSize),
       prefer: "resolution=merge-duplicates,return=minimal",
     });
   }
@@ -179,11 +258,11 @@ try {
   const adapter = createMarketHistoryAdapter({
     async readInputs() {
       const [crypto, equity, equityFast, macro, jgbCache] = await Promise.all([
-        readJson(resolve(appRoot, "public/data/crypto-liquidity.json"), {}),
-        readJson(resolve(appRoot, "public/data/equity-weekly.json"), {}),
-        readJson(resolve(appRoot, "public/data/equity-fast.json"), {}),
-        readJson(resolve(appRoot, "public/data/macro-calendar.json"), {}),
-        readJson(resolve(workspaceRoot, "tmp/equity-cache/mof-JGB10Y.json"), null),
+        readJson(resolve(dataDirectory, "crypto-liquidity.json"), {}),
+        readJson(resolve(dataDirectory, "equity-weekly.json"), {}),
+        readJson(resolve(dataDirectory, "equity-fast.json"), {}),
+        readJson(resolve(dataDirectory, "macro-calendar.json"), {}),
+        readJson(resolve(cacheRoot, "equity-cache/mof-JGB10Y.json"), null),
       ]);
       return { crypto, equity, equityFast, macro, jgbCache };
     },
@@ -191,7 +270,7 @@ try {
     readCryptoHistoryRows,
     upsertRows,
     writeCryptoDataset(payload) {
-      return writeJsonAtomic(resolve(appRoot, "public/data/crypto-liquidity.json"), payload);
+      return writeJsonAtomic(resolve(dataDirectory, "crypto-liquidity.json"), payload);
     },
   });
   const result = await runMetricAdapter(adapter, { environment: process.env });

@@ -18,6 +18,11 @@ function base64Url(value) {
   return Buffer.from(bytes).toString("base64url");
 }
 
+async function actorForSubject(subject) {
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(`cyclelens:${subject}`));
+  return `cf-access:${Buffer.from(new Uint8Array(digest).slice(0, 12)).toString("hex")}`;
+}
+
 async function jwtFixture(overrides = {}) {
   const keys = await crypto.subtle.generateKey(
     { name: "RSASSA-PKCS1-v1_5", modulusLength: 2048, publicExponent: new Uint8Array([1, 0, 1]), hash: "SHA-256" },
@@ -43,14 +48,21 @@ async function jwtFixture(overrides = {}) {
 
 test("Cloudflare Access JWT validation checks signature, issuer, audience, expiry, and hashes the actor", async () => {
   const fixture = await jwtFixture();
+  const ownerActor = await actorForSubject("operator-test-subject");
   const request = new Request("https://cyclelens-admin.pages.dev/", {
     headers: { "Cf-Access-Jwt-Assertion": fixture.token },
   });
   const identity = await validateAccessRequest(request, {
     CF_ACCESS_TEAM_DOMAIN: TEAM,
     CF_ACCESS_AUD: AUDIENCE,
+    CF_ACCESS_ALLOWED_ACTORS: ownerActor,
   }, {
-    fetchImpl: async () => new Response(JSON.stringify(fixture.jwks), { status: 200 }),
+    fetchImpl: async (url, options) => {
+      assert.equal(url, `${TEAM}/cdn-cgi/access/certs`);
+      assert.equal(options.redirect, "error");
+      assert.ok(options.signal instanceof AbortSignal);
+      return new Response(JSON.stringify(fixture.jwks), { status: 200 });
+    },
   });
   assert.match(identity.actor, /^cf-access:[a-f0-9]{24}$/);
   assert.doesNotMatch(identity.actor, /operator-test-subject/);
@@ -58,6 +70,7 @@ test("Cloudflare Access JWT validation checks signature, issuer, audience, expir
   await assert.rejects(validateAccessRequest(request, {
     CF_ACCESS_TEAM_DOMAIN: TEAM,
     CF_ACCESS_AUD: "wrong-audience",
+    CF_ACCESS_ALLOWED_ACTORS: ownerActor,
   }, {
     fetchImpl: async () => new Response(JSON.stringify(fixture.jwks), { status: 200 }),
   }), { code: "access_audience_invalid" });
@@ -68,9 +81,40 @@ test("Cloudflare Access JWT validation checks signature, issuer, audience, expir
   }), {
     CF_ACCESS_TEAM_DOMAIN: TEAM,
     CF_ACCESS_AUD: AUDIENCE,
+    CF_ACCESS_ALLOWED_ACTORS: ownerActor,
   }, {
     fetchImpl: async () => new Response(JSON.stringify(expired.jwks), { status: 200 }),
   }), { code: "access_token_expired" });
+});
+
+test("owner access boundary has no multi-user downgrade and admits exactly one configured actor", async () => {
+  const fixture = await jwtFixture();
+  const ownerActor = await actorForSubject("operator-test-subject");
+  const request = new Request("https://cyclelens-admin.pages.dev/", {
+    headers: { "Cf-Access-Jwt-Assertion": fixture.token },
+  });
+  const fetchImpl = async () => new Response(JSON.stringify(fixture.jwks), { status: 200 });
+  const sharedEnvironment = {
+    CF_ACCESS_TEAM_DOMAIN: TEAM,
+    CF_ACCESS_AUD: AUDIENCE,
+  };
+  await assert.rejects(validateAccessRequest(request, sharedEnvironment, { fetchImpl }), {
+    code: "access_owner_not_configured",
+  });
+  await assert.rejects(validateAccessRequest(request, {
+    ...sharedEnvironment,
+    CF_ACCESS_ALLOWED_ACTORS: "cf-access:000000000000000000000000",
+  }, { fetchImpl }), { code: "access_owner_denied" });
+  await assert.rejects(validateAccessRequest(request, {
+    ...sharedEnvironment,
+    CF_ACCESS_ALLOWED_ACTORS: `${ownerActor},cf-access:000000000000000000000000`,
+  }, { fetchImpl }), { code: "access_owner_not_configured" });
+
+  const ownerIdentity = await validateAccessRequest(request, {
+    ...sharedEnvironment,
+    CF_ACCESS_ALLOWED_ACTORS: ownerActor,
+  }, { fetchImpl });
+  assert.equal(ownerIdentity.actor, ownerActor);
 });
 
 test("root middleware denies HTML before invoking the application", async () => {
@@ -86,8 +130,36 @@ test("root middleware denies HTML before invoking the application", async () => 
   });
   assert.equal(response.status, 401);
   assert.equal(called, false);
+  assert.equal(response.headers.get("cache-control"), "private, no-store");
   assert.equal(response.headers.get("x-robots-tag"), "noindex, nofollow, noarchive");
   assert.equal(response.headers.get("x-frame-options"), "DENY");
+});
+
+test("authenticated owner datasets are never cacheable", async () => {
+  const originalFetch = globalThis.fetch;
+  const fixture = await jwtFixture();
+  const ownerActor = await actorForSubject("operator-test-subject");
+  try {
+    globalThis.fetch = async () => new Response(JSON.stringify(fixture.jwks), { status: 200 });
+    const response = await accessMiddleware({
+      request: new Request("https://cyclelens-admin.pages.dev/data/data-manifest.json", {
+        headers: { "Cf-Access-Jwt-Assertion": fixture.token },
+      }),
+      env: {
+        CF_ACCESS_TEAM_DOMAIN: TEAM,
+        CF_ACCESS_AUD: AUDIENCE,
+        CF_ACCESS_ALLOWED_ACTORS: ownerActor,
+      },
+      data: {},
+      next: async () => new Response('{"visibility":"private"}', {
+        headers: { "cache-control": "public, max-age=31536000" },
+      }),
+    });
+    assert.equal(response.status, 200);
+    assert.equal(response.headers.get("cache-control"), "private, no-store");
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
 });
 
 function endpointContext(request, env = {}) {
@@ -133,6 +205,28 @@ test("Pages API rejects missing identity, cross-origin writes, and unsupported m
     body: JSON.stringify({ version: 1, events: [], padding: "x".repeat(70 * 1024) }),
   }));
   assert.equal((await manualEventsEndpoint(oversized)).status, 413);
+
+  const credentialSource = endpointContext(new Request("https://cyclelens-admin.pages.dev/api/manual-macro-events", {
+    method: "PUT",
+    headers: { origin: "https://cyclelens-admin.pages.dev", "content-type": "application/json" },
+    body: JSON.stringify({
+      version: 1,
+      events: [{
+        status: "draft",
+        date: "2026-07-20",
+        seriesId: "CREDENTIAL_SOURCE_TEST",
+        labelEn: "Credential source test",
+        category: "liquidity",
+        role: "manual_liquidity_event",
+        cadence: "event",
+        unit: "event",
+        source: "Test fixture",
+        sourceUrl: "https://user:password@example.com/source",
+        dateMeaning: "scheduled_beijing_date",
+      }],
+    }),
+  }));
+  assert.equal((await manualEventsEndpoint(credentialSource)).status, 400);
 });
 
 test("Pages API reads and writes through Supabase without exposing or forwarding local auth", async () => {
@@ -186,6 +280,27 @@ test("Pages API reads and writes through Supabase without exposing or forwarding
     assert.equal(calls.some(({ options }) => Object.keys(options.headers).some((name) => name.toLowerCase() === "x-cyclelens-admin")), false);
     assert.equal(calls.every(({ options }) => options.headers.apikey === "sb_secret_test-only"), true);
     assert.equal(calls.every(({ options }) => !("authorization" in options.headers)), true);
+    assert.equal(calls.every(({ options }) => options.redirect === "error"), true);
+    assert.equal(calls.every(({ options }) => options.signal instanceof AbortSignal), true);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("Pages API rejects a lookalike Supabase origin before forwarding its secret", async () => {
+  const originalFetch = globalThis.fetch;
+  let fetched = false;
+  try {
+    globalThis.fetch = async () => {
+      fetched = true;
+      return new Response("[]");
+    };
+    const response = await manualEventsEndpoint(endpointContext(
+      new Request("https://cyclelens-admin.pages.dev/api/manual-macro-events"),
+      { SUPABASE_URL: "https://project.supabase.co.evil.example" },
+    ));
+    assert.equal(response.status, 503);
+    assert.equal(fetched, false);
   } finally {
     globalThis.fetch = originalFetch;
   }
@@ -204,6 +319,7 @@ test("remote admin source and Cloudflare config keep explicit security boundarie
   assert.match(page, /!ADMIN_MACRO_REMOTE/);
   assert.match(config, /noindex, nofollow, noarchive/);
   const parsed = JSON.parse(wrangler);
+  assert.equal(parsed.pages_build_output_dir, "./dist-public");
   assert.equal(parsed.compatibility_date, "2026-07-18");
   assert.deepEqual(parsed.compatibility_flags, ["nodejs_compat"]);
   assert.equal("observability" in parsed, false);
@@ -212,6 +328,7 @@ test("remote admin source and Cloudflare config keep explicit security boundarie
   for (const name of [
     "CF_ACCESS_TEAM_DOMAIN",
     "CF_ACCESS_AUD",
+    "CF_ACCESS_ALLOWED_ACTORS",
     "CYCLELENS_ADMIN_ORIGINS",
     "CYCLELENS_ADMIN_HOST_SUFFIXES",
     "SUPABASE_URL",

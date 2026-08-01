@@ -2,9 +2,11 @@ import {
   manualEventsPayloadToSupabaseRows,
   manualEventsSupabaseRowsToPayload,
 } from "../../scripts/manual-macro-events-supabase-mapper.mjs";
+import { normalizeManualMacroEventsPayload } from "../../scripts/manual-macro-events-contract.mjs";
 
 const TABLE = "manual_macro_events";
 const MAX_STORE_RESPONSE_BYTES = 2 * 1024 * 1024;
+const STORE_REQUEST_TIMEOUT_MS = 15_000;
 const SELECT_COLUMNS = [
   "id",
   "status",
@@ -82,7 +84,13 @@ function storeConfig(env) {
   } catch {
     throw new ManualEventsStoreError("manual_events_store_not_configured", 503);
   }
-  if (url.protocol !== "https:" || url.username || url.password || url.pathname !== "/" || url.search || url.hash) {
+  if (url.protocol !== "https:"
+    || !url.hostname.endsWith(".supabase.co")
+    || url.username
+    || url.password
+    || url.pathname !== "/"
+    || url.search
+    || url.hash) {
     throw new ManualEventsStoreError("manual_events_store_not_configured", 503);
   }
   const secret = String(env?.SUPABASE_SECRET_KEY || env?.SUPABASE_SERVICE_ROLE_KEY || "").trim();
@@ -98,6 +106,8 @@ function storeConfig(env) {
 
 async function storeRequest(env, path, options = {}, fetchImpl = fetch) {
   const { baseUrl, secret, bearer } = storeConfig(env);
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), STORE_REQUEST_TIMEOUT_MS);
   let response;
   try {
     response = await fetchImpl(`${baseUrl}/rest/v1/${path}`, {
@@ -110,11 +120,19 @@ async function storeRequest(env, path, options = {}, fetchImpl = fetch) {
         ...(options.prefer ? { prefer: options.prefer } : {}),
       },
       body: options.body === undefined ? undefined : JSON.stringify(options.body),
+      redirect: "error",
+      signal: controller.signal,
     });
   } catch {
+    clearTimeout(timeout);
     throw new ManualEventsStoreError("manual_events_store_unavailable", 502);
   }
-  const text = await limitedResponseText(response);
+  let text;
+  try {
+    text = await limitedResponseText(response);
+  } finally {
+    clearTimeout(timeout);
+  }
   if (!response.ok) {
     console.error({
       event: "cyclelens_admin_store_error",
@@ -144,7 +162,8 @@ async function readRows(env, fetchImpl) {
 }
 
 export async function readRemoteManualEvents(env, { fetchImpl = fetch } = {}) {
-  return manualEventsSupabaseRowsToPayload(await readRows(env, fetchImpl));
+  const mapped = manualEventsSupabaseRowsToPayload(await readRows(env, fetchImpl));
+  return normalizeManualMacroEventsPayload(mapped, new Date(mapped.updatedAt));
 }
 
 export async function replaceRemoteManualEvents(payload, actor, env, { fetchImpl = fetch } = {}) {

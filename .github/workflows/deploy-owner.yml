@@ -1,0 +1,55 @@
+name: Deploy owner-only CycleLens
+
+on:
+  schedule:
+    - cron: "0 * * * *"
+  workflow_dispatch:
+    inputs:
+      confirm_owner_data_scope:
+        description: Confirm that this run handles owner-only data
+        type: boolean
+        required: true
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cyclelens-owner-deployment
+  cancel-in-progress: false
+
+jobs:
+  owner-release:
+    if: >-
+      github.repository == 'jeanmuss/cyclelens' &&
+      github.ref == 'refs/heads/main' &&
+      vars.OWNER_DATA_COLLECTION_APPROVED == '1' &&
+      (github.event_name != 'workflow_dispatch' || inputs.confirm_owner_data_scope)
+    uses: ./.github/workflows/_owner-release.yml
+    with:
+      data_scope: owner_private
+      owner_data_collection_approved: true
+      collect_coinmarketcap: ${{ vars.OWNER_COLLECT_CMC == '1' }}
+      collect_crypto_monthly: ${{ vars.OWNER_COLLECT_CRYPTO_MONTHLY != '0' }}
+      collect_crypto_liquidity: ${{ vars.OWNER_COLLECT_CRYPTO_LIQUIDITY != '0' }}
+      collect_market_session: ${{ vars.OWNER_COLLECT_MARKET_SESSION != '0' }}
+      collect_chip_chain: ${{ vars.OWNER_COLLECT_CHIP_CHAIN != '0' }}
+      collect_robot_chain: ${{ vars.OWNER_COLLECT_ROBOT_CHAIN != '0' }}
+      collect_equity_fast: ${{ vars.OWNER_COLLECT_EQUITY_FAST != '0' }}
+      collect_equity_weekly: ${{ vars.OWNER_COLLECT_EQUITY_WEEKLY != '0' }}
+      collect_manual_macro_events: ${{ vars.OWNER_COLLECT_MANUAL_MACRO_EVENTS != '0' }}
+      collect_macro_calendar: ${{ vars.OWNER_COLLECT_MACRO_CALENDAR != '0' }}
+      collect_chart_series: ${{ vars.OWNER_COLLECT_CHART_SERIES != '0' }}
+      persist_market_history: ${{ vars.OWNER_PERSIST_MARKET_HISTORY != '0' }}
+    secrets:
+      CMC_PRO_API_KEY: ${{ vars.OWNER_COLLECT_CMC == '1' && secrets.CMC_PRO_API_KEY || '' }}
+      SOSOVALUE_API_KEY: ${{ secrets.SOSOVALUE_API_KEY }}
+      SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+      BLOCKBEATS_API_KEY: ${{ secrets.BLOCKBEATS_API_KEY }}
+      APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
+      APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
+      FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

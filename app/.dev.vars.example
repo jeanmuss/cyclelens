@@ -1,5 +1,6 @@
 CF_ACCESS_TEAM_DOMAIN=https://your-team.cloudflareaccess.com
 CF_ACCESS_AUD=replace-with-access-application-audience
+CF_ACCESS_ALLOWED_ACTORS=cf-access:replace-with-the-24-hex-pseudonymous-owner-actor
 CYCLELENS_ADMIN_ORIGINS=https://cyclelens-admin.pages.dev
 CYCLELENS_ADMIN_HOST_SUFFIXES=cyclelens-admin.pages.dev
 SUPABASE_URL=https://your-project-ref.supabase.co

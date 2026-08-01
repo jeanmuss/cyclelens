@@ -3,10 +3,20 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { applyReviewedStrategyDisclosure } from "./crypto-liquidity-contract.mjs";
+import {
+  DATA_USE_SCOPES,
+  dataDirectoryForScope,
+  dataUseScopeFromEnvironment,
+  ownerPrivateUseApproved,
+} from "./data-use-scope.mjs";
 
 const scriptDirectory = dirname(fileURLToPath(import.meta.url));
 const appRoot = resolve(scriptDirectory, "..");
-const datasetPath = resolve(appRoot, "public/data/crypto-liquidity.json");
+const dataUseScope = dataUseScopeFromEnvironment(process.env, process.argv);
+if (dataUseScope !== DATA_USE_SCOPES.OWNER_PRIVATE || !ownerPrivateUseApproved(process.env)) {
+  throw new Error("Reviewed treasury disclosures may only update an explicitly approved owner-private dataset");
+}
+const datasetPath = resolve(dataDirectoryForScope(appRoot, dataUseScope), "crypto-liquidity.json");
 const disclosuresPath = resolve(appRoot, "data/corporate-treasury-disclosures.json");
 
 async function readJson(path) {
@@ -24,6 +34,9 @@ const [dataset, disclosures] = await Promise.all([
   readJson(datasetPath),
   readJson(disclosuresPath),
 ]);
+if (dataset.dataUseScope !== DATA_USE_SCOPES.OWNER_PRIVATE) {
+  throw new Error("Reviewed treasury disclosures require an owner-private input dataset");
+}
 const next = applyReviewedStrategyDisclosure(dataset, disclosures);
 await writeJsonAtomic(datasetPath, next);
 console.log(JSON.stringify({

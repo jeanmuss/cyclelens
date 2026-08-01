@@ -74,7 +74,7 @@ A 股页面仍在产品路线图中，但本轮不创建页面、路由、空数
 
 - 未来 feature 边界：`app/src/features/a-share/`；
 - 未来路由：`#/a-share`，恢复开发前不注册，避免出现空页面；
-- 未来公共投影：`app/public/data/projections/a-share.json`，只由后端/CI adapter 生成；
+- 若未来恢复公共产品，需先完成独立的再展示许可评审；当前自用阶段只允许生成 owner-private 投影，禁止写入 `app/public/data/projections/a-share.json`；
 - 未来指标命名空间：`a-share.index.*`、`a-share.sector.*`、`a-share.liquidity.*`、`a-share.northbound.*`；
 - adapter 继续使用 fetch、normalize、validate、persist、project 五阶段和现有 `market_metric_observations` 事实表；
 - SSE/SZSE 市场日历复用现有官方日历逻辑，但行情、板块数据与市场时钟分别保留 freshness/quality；

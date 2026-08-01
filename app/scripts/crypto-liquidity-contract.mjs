@@ -111,6 +111,15 @@ export function shouldRefreshCmcHistory(historyRefresh, now = new Date()) {
   return !Number.isFinite(attemptedAt) || nowTime - attemptedAt >= CRYPTO_LIQUIDITY_HISTORY_REFRESH_MS;
 }
 
+export function shouldRefreshHistoryProvider(providerStatus, now = new Date()) {
+  return shouldRefreshCmcHistory({
+    lastAttemptedAt: providerStatus?.lastAttemptedAt
+      || providerStatus?.attemptedAt
+      || providerStatus?.fetchedAt
+      || null,
+  }, now);
+}
+
 export function hasFreshCmcStablecoinBackfill(history, now = new Date(), maxStaleDays = 2) {
   const completedUtcDay = addUtcDays(now, -1);
   if (!completedUtcDay) return false;

@@ -4,6 +4,11 @@ import {
   METRIC_CATALOG_VERSION,
 } from "../src/domain/metrics/metricCatalog.js";
 import { SOURCE_POLICY_BY_ID } from "../src/domain/metrics/sourcePolicy.js";
+import {
+  DATA_USE_SCOPES,
+  normalizeDataUseScope,
+  visibilityForDataUseScope,
+} from "./data-use-scope.mjs";
 
 export const PUBLIC_PROJECTION_SCHEMA_VERSION = 1;
 export const PUBLIC_PROJECTION_IDS = Object.freeze(["dashboard", "crypto-liquidity", "us-equity"]);
@@ -105,7 +110,8 @@ function createMetricProjection(catalogEntry, rows) {
   };
 }
 
-export function createPublicProjection(projectionId, acceptedRows, generatedAt = null) {
+export function createProjection(projectionId, acceptedRows, generatedAt = null, options = {}) {
+  const scope = normalizeDataUseScope(options.scope, DATA_USE_SCOPES.PUBLIC);
   if (!PUBLIC_PROJECTION_IDS.includes(projectionId)) throw new Error(`Unknown projection: ${projectionId}`);
   const catalogEntries = METRIC_CATALOG.filter((entry) => entry.projections.includes(projectionId));
   const metrics = catalogEntries.map((entry) => createMetricProjection(
@@ -118,10 +124,12 @@ export function createPublicProjection(projectionId, acceptedRows, generatedAt =
     item.firstFetchedAt,
     item.observedAt,
   ]));
-  return {
+  const payload = {
     schemaVersion: PUBLIC_PROJECTION_SCHEMA_VERSION,
     catalogVersion: METRIC_CATALOG_VERSION,
     projectionId,
+    dataUseScope: scope,
+    visibility: visibilityForDataUseScope(scope),
     generatedAt: transformedAt,
     freshness: {
       observedAt: latestTimestamp(observations.map((item) => item.observedAt)),
@@ -131,6 +139,15 @@ export function createPublicProjection(projectionId, acceptedRows, generatedAt =
     },
     metrics,
   };
+  return payload;
+}
+
+export function createPublicProjection(projectionId, acceptedRows, generatedAt = null) {
+  return createProjection(projectionId, acceptedRows, generatedAt, { scope: DATA_USE_SCOPES.PUBLIC });
+}
+
+export function createOwnerPrivateProjection(projectionId, acceptedRows, generatedAt = null) {
+  return createProjection(projectionId, acceptedRows, generatedAt, { scope: DATA_USE_SCOPES.OWNER_PRIVATE });
 }
 
 function walk(value, visit, path = "$") {
@@ -139,12 +156,20 @@ function walk(value, visit, path = "$") {
   else if (value && typeof value === "object") Object.entries(value).forEach(([key, item]) => walk(item, visit, `${path}.${key}`));
 }
 
-export function validatePublicProjection(payload) {
+export function validateProjection(payload, options = {}) {
+  const expectedScope = normalizeDataUseScope(options.scope, DATA_USE_SCOPES.PUBLIC);
   const errors = [];
   if (payload?.schemaVersion !== PUBLIC_PROJECTION_SCHEMA_VERSION) errors.push("invalid schemaVersion");
   if (!PUBLIC_PROJECTION_IDS.includes(payload?.projectionId)) errors.push("invalid projectionId");
   if (payload?.catalogVersion !== METRIC_CATALOG_VERSION) errors.push("invalid catalogVersion");
   if (!Array.isArray(payload?.metrics)) errors.push("metrics must be an array");
+  if (expectedScope === DATA_USE_SCOPES.OWNER_PRIVATE) {
+    if (payload?.dataUseScope !== DATA_USE_SCOPES.OWNER_PRIVATE) errors.push("owner-private dataUseScope required");
+    if (payload?.visibility !== "private") errors.push("owner-private visibility required");
+  } else {
+    if (payload?.dataUseScope && payload.dataUseScope !== DATA_USE_SCOPES.PUBLIC) errors.push("public projection has invalid dataUseScope");
+    if (payload?.visibility && payload.visibility !== "public") errors.push("public projection has invalid visibility");
+  }
   for (const metricEntry of payload?.metrics || []) {
     const catalogEntry = METRIC_CATALOG_BY_ID[metricEntry.metricId];
     if (!catalogEntry?.projections.includes(payload.projectionId)) errors.push(`${metricEntry.metricId}: not allowed in projection`);
@@ -157,4 +182,12 @@ export function validatePublicProjection(payload) {
     if (typeof value === "string" && /[?&](api[_-]?key|token|signature|secret)=/i.test(value)) errors.push(`${path}: credential-like URL`);
   });
   return errors;
+}
+
+export function validatePublicProjection(payload) {
+  return validateProjection(payload, { scope: DATA_USE_SCOPES.PUBLIC });
+}
+
+export function validateOwnerPrivateProjection(payload) {
+  return validateProjection(payload, { scope: DATA_USE_SCOPES.OWNER_PRIVATE });
 }

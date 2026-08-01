@@ -3,7 +3,7 @@
 
 Security posture:
 - Runs only as a backend/local/CI script.
-- Uses official FRED API access through fredapi.
+- Uses the official FRED REST API directly.
 - Reads secrets from environment variables only; never writes them to output.
 - Stores a local provider cache under tmp/ to avoid repeated API calls.
 - Writes only bounded, derived half-year data for the frontend.
@@ -29,14 +29,31 @@ from typing import Iterable
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 import pandas as pd
-import requests
+
+from data_use_scope import (
+    cache_root_for_scope,
+    data_directory_for_scope,
+    data_use_scope_from_environment,
+    manual_macro_events_path_for_scope,
+    source_is_eligible,
+)
+from secure_http import get_json_bounded, get_text_bounded
 
 APP_ROOT = Path(__file__).resolve().parents[1]
 WORKSPACE_ROOT = APP_ROOT.parent
-OUTPUT_PATH = APP_ROOT / "public" / "data" / "macro-calendar.json"
-MANUAL_EVENTS_PATH = APP_ROOT / "data" / "manual-macro-events.json"
-CACHE_DIR = WORKSPACE_ROOT / "tmp" / "macro-cache" / "fred"
-SCHEDULE_CACHE_DIR = WORKSPACE_ROOT / "tmp" / "macro-cache" / "official-schedules"
+DATA_USE_SCOPE = data_use_scope_from_environment(os.environ, sys.argv)
+DATA_DIRECTORY = data_directory_for_scope(APP_ROOT, DATA_USE_SCOPE)
+OUTPUT_PATH = DATA_DIRECTORY / "macro-calendar.json"
+MANUAL_EVENTS_PATH = manual_macro_events_path_for_scope(APP_ROOT, DATA_USE_SCOPE)
+MANUAL_EVENTS_SOURCE_LABEL = (
+    "app/data/private/manual-macro-events.json"
+    if DATA_USE_SCOPE == "owner_private"
+    else "app/data/manual-macro-events.json"
+)
+CACHE_ROOT = cache_root_for_scope(WORKSPACE_ROOT, DATA_USE_SCOPE)
+CACHE_DIR = CACHE_ROOT / "macro-cache" / "fred"
+SCHEDULE_CACHE_DIR = CACHE_ROOT / "macro-cache" / "official-schedules"
+CACHE_SOURCE_PREFIX = "tmp/owner-private" if DATA_USE_SCOPE == "owner_private" else "tmp"
 FRED_OBSERVATIONS_URL = "https://api.stlouisfed.org/fred/series/observations"
 FRED_RELEASE_DATES_URL = "https://api.stlouisfed.org/fred/release/dates"
 FRED_EMPLOYMENT_SITUATION_RELEASE_ID = 50
@@ -44,6 +61,14 @@ FRED_CPI_RELEASE_ID = 10
 FED_FOMC_CALENDAR_URL = "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
 ADP_NER_JSON_URL = "https://adpemploymentreport.com/ner_production.json"
 US_FEDERAL_HOLIDAYS_URL = "https://www.opm.gov/policy-data-oversight/pay-leave/federal-holidays/"
+FRED_ALLOWED_ORIGINS = frozenset({"https://api.stlouisfed.org"})
+OFFICIAL_SCHEDULE_ALLOWED_ORIGINS = frozenset({
+    "https://www.federalreserve.gov",
+    "https://adpemploymentreport.com",
+    "https://www.opm.gov",
+})
+MAX_FRED_RESPONSE_BYTES = 4 * 1024 * 1024
+MAX_SCHEDULE_RESPONSE_BYTES = 4 * 1024 * 1024
 
 WINDOW_MONTHS = int(os.environ.get("MACRO_CALENDAR_MONTHS", "6"))
 CACHE_MAX_AGE_HOURS = float(os.environ.get("MACRO_CACHE_MAX_AGE_HOURS", "18"))
@@ -166,6 +191,30 @@ STATUS_SERIES: list[Indicator] = [
 
 
 ALL_SERIES = {indicator.id: indicator for indicator in [*EVENT_SERIES, *STATUS_SERIES]}
+REQUIRED_OWNER_RELEASE_SERIES = frozenset({
+    "CPIAUCSL",
+    "PAYEMS",
+    "UNRATE",
+    "DFF",
+    "DGS2",
+    "DGS10",
+    "VIXCLS",
+    "M2SL",
+    "WALCL",
+    "WTREGEN",
+    "RRPONTSYD",
+})
+if not REQUIRED_OWNER_RELEASE_SERIES <= ALL_SERIES.keys():
+    raise RuntimeError("Required owner macro series must be declared in ALL_SERIES")
+FRED_THIRD_PARTY_OWNERS = ("CBOE", "ICE BofA", "University of Michigan", "OECD")
+
+
+def fred_source_policy_id(indicator: Indicator) -> str:
+    return (
+        "fred-third-party"
+        if any(owner in indicator.source for owner in FRED_THIRD_PARTY_OWNERS)
+        else "fred-government"
+    )
 
 
 FALLBACK_MANUAL_EVENTS: list[dict] = [
@@ -250,7 +299,10 @@ def observed_at_from_summary(summary: list[dict]) -> str | None:
 
 def oldest_fred_cache_fetch_at() -> str | None:
     timestamps: list[pd.Timestamp] = []
-    for series_id in ALL_SERIES:
+    for series_id, indicator in ALL_SERIES.items():
+        source_policy_id = fred_source_policy_id(indicator)
+        if not source_is_eligible(source_policy_id, scope=DATA_USE_SCOPE, environment=os.environ):
+            continue
         try:
             payload = json.loads(cache_path(series_id).read_text(encoding="utf-8"))
         except (FileNotFoundError, json.JSONDecodeError):
@@ -352,9 +404,12 @@ def fetch_official_schedule_text(cache_key: str, source_url: str, failures: list
     if cached is not None:
         return cached
     try:
-        response = requests.get(source_url, timeout=30, headers={"User-Agent": "cyclelens-market-calendar/1.0"})
-        response.raise_for_status()
-        text = response.text
+        text = get_text_bounded(
+            source_url,
+            allowed_origins=OFFICIAL_SCHEDULE_ALLOWED_ORIGINS,
+            headers={"User-Agent": "cyclelens-market-calendar/1.0"},
+            maximum_bytes=MAX_SCHEDULE_RESPONSE_BYTES,
+        )
         write_text_cache(cache_key, source_url, text)
         return text
     except Exception as exc:  # noqa: BLE001 - schedule source failures are reported without secrets.
@@ -380,9 +435,13 @@ def fetch_fred_release_dates(release_id: int, failures: list[str]) -> list[pd.Ti
             "limit": 120,
         }
         try:
-            response = requests.get(FRED_RELEASE_DATES_URL, params=params, timeout=30)
-            response.raise_for_status()
-            text = response.text
+            text = get_text_bounded(
+                FRED_RELEASE_DATES_URL,
+                allowed_origins=FRED_ALLOWED_ORIGINS,
+                params=params,
+                headers={"User-Agent": "cyclelens-market-calendar/1.0"},
+                maximum_bytes=MAX_FRED_RESPONSE_BYTES,
+            )
             write_text_cache(cache_key, f"{FRED_RELEASE_DATES_URL}?release_id={release_id}", text)
         except Exception as exc:  # noqa: BLE001 - provider errors are summarized without secrets.
             failures.append(f"FRED release dates {release_id}: {safe_error_message(exc)}")
@@ -428,40 +487,37 @@ def fetch_fred_observations_via_rest(series_id: str, start_date: pd.Timestamp, e
     last_error: Exception | None = None
     for attempt in range(3):
         try:
-            response = requests.get(FRED_OBSERVATIONS_URL, params=params, timeout=30)
-            response.raise_for_status()
-            return observations_from_fred_json(response.json())
+            payload = get_json_bounded(
+                FRED_OBSERVATIONS_URL,
+                allowed_origins=FRED_ALLOWED_ORIGINS,
+                params=params,
+                headers={"User-Agent": "cyclelens-market-calendar/1.0"},
+                maximum_bytes=MAX_FRED_RESPONSE_BYTES,
+            )
+            return observations_from_fred_json(payload)
         except Exception as exc:  # noqa: BLE001 - retried provider errors are summarized without secrets.
             last_error = exc
             if attempt < 2:
                 time.sleep(1.5 * (attempt + 1))
-    raise RuntimeError(f"REST fallback failed for {series_id}: {safe_error_message(last_error)}")
+    raise RuntimeError(f"FRED REST request failed for {series_id}: {safe_error_message(last_error)}")
 
 
-def fetch_fred_observations(fred, series_id: str, start_date: pd.Timestamp, end_date: pd.Timestamp, failures: list[str]) -> list[dict]:
+def fetch_fred_observations(
+    series_id: str,
+    start_date: pd.Timestamp,
+    end_date: pd.Timestamp,
+    failures: list[str],
+) -> list[dict]:
     cached = read_cache(series_id, start_date, end_date)
     if cached is not None:
         return cached
     try:
-        series = fred.get_series(series_id, observation_start=as_date(start_date), observation_end=as_date(end_date))
+        observations = fetch_fred_observations_via_rest(series_id, start_date, end_date)
+        write_cache(series_id, start_date, end_date, observations)
+        return observations
     except Exception as exc:  # noqa: BLE001 - provider errors are surfaced as provenance.
-        try:
-            observations = fetch_fred_observations_via_rest(series_id, start_date, end_date)
-            write_cache(series_id, start_date, end_date, observations)
-            return observations
-        except Exception as fallback_exc:  # noqa: BLE001
-            failures.append(f"FRED {series_id}: {safe_error_message(exc)}; REST fallback: {safe_error_message(fallback_exc)}")
-            return []
-
-    series.index = pd.to_datetime(series.index)
-    series = pd.to_numeric(series, errors="coerce").dropna()
-    observations = [
-        {"date": as_date(index), "value": finite_number(value)}
-        for index, value in series.items()
-        if finite_number(value) is not None
-    ]
-    write_cache(series_id, start_date, end_date, observations)
-    return observations
+        failures.append(f"FRED {series_id}: {safe_error_message(exc)}")
+        return []
 
 
 def observation_frame(observations: Iterable[dict]) -> pd.DataFrame:
@@ -1018,9 +1074,21 @@ def build_fomc_scheduled_events(series_frames: dict[str, pd.DataFrame], failures
     return events
 
 
-def build_scheduled_events(series_frames: dict[str, pd.DataFrame], failures: list[str]) -> list[dict]:
+def build_scheduled_events(
+    series_frames: dict[str, pd.DataFrame],
+    failures: list[str],
+    *,
+    adp_allowed: bool = True,
+    existing_events: list[dict] | None = None,
+) -> list[dict]:
+    adp_events = build_adp_report_events(failures) if adp_allowed else [
+        event for event in (existing_events or [])
+        if event.get("source") == "ADP National Employment Report"
+    ]
+    if not adp_allowed:
+        failures.append("ADP refresh denied by data-use scope; last-known-good ADP events preserved.")
     events = [
-        *build_adp_report_events(failures),
+        *adp_events,
         *build_bls_scheduled_events(series_frames, failures),
         *build_fomc_scheduled_events(series_frames, failures),
         *build_us_holiday_events(),
@@ -1303,21 +1371,44 @@ def read_existing() -> dict | None:
         return None
 
 
-def build_output() -> dict:
-    from fredapi import Fred
-
+def build_output(data_use_scope: str, existing: dict | None = None) -> dict:
     failures: list[str] = []
-    fred = Fred()
     series_frames = {}
-    for series_id in ALL_SERIES:
-        observations = fetch_fred_observations(fred, series_id, LOOKBACK_START, END_DATE, failures)
+    for series_id, indicator in ALL_SERIES.items():
+        source_policy_id = fred_source_policy_id(indicator)
+        if source_is_eligible(source_policy_id, scope=data_use_scope, environment=os.environ):
+            observations = fetch_fred_observations(series_id, LOOKBACK_START, END_DATE, failures)
+        else:
+            observations = []
+            failures.append(
+                f"FRED {series_id}: {source_policy_id} refresh denied by data-use scope; "
+                "provider cache not read"
+            )
         series_frames[series_id] = observation_frame(observations)
 
-    scheduled_events = build_scheduled_events(series_frames, failures)
+    scheduled_events = build_scheduled_events(
+        series_frames,
+        failures,
+        adp_allowed=source_is_eligible("adp", scope=data_use_scope, environment=os.environ),
+        existing_events=list((existing or {}).get("events") or []),
+    )
     events = merge_manual_events(merge_scheduled_events(build_observation_events(series_frames), scheduled_events))
     weekly_rows = weekly_window_rows(series_frames)
     summary = build_summary(series_frames)
     transformed_at = iso_now()
+    fresh_series_ids = sorted(
+        series_id for series_id, frame in series_frames.items()
+        if not frame.empty
+    )
+    fresh_series_count = len(fresh_series_ids)
+    missing_required_series = sorted(REQUIRED_OWNER_RELEASE_SERIES - set(fresh_series_ids))
+    if (
+        os.environ.get("CYCLELENS_REQUIRE_FRESH_OWNER_RELEASE") == "1"
+        and missing_required_series
+    ):
+        raise RuntimeError("Not every required owner macro series refreshed")
+    if data_use_scope == "owner_private" and fresh_series_count == 0:
+        raise RuntimeError("No reviewed FRED series refreshed; refusing to replace the owner release")
     if not events and not weekly_rows:
         raise RuntimeError("No macro calendar rows produced")
 
@@ -1329,6 +1420,7 @@ def build_output() -> dict:
     return {
         "version": 1,
         "page": "macro-calendar",
+        "dataUseScope": data_use_scope,
         "generatedAt": transformed_at,
         "timestamps": {
             "observedAt": observed_at_from_summary(summary),
@@ -1342,8 +1434,8 @@ def build_output() -> dict:
             "lookbackStartDate": as_date(LOOKBACK_START),
         },
         "cache": {
-            "providerCachePath": "tmp/macro-cache/fred",
-            "officialScheduleCachePath": "tmp/macro-cache/official-schedules",
+            "providerCachePath": f"{CACHE_SOURCE_PREFIX}/macro-cache/fred",
+            "officialScheduleCachePath": f"{CACHE_SOURCE_PREFIX}/macro-cache/official-schedules",
             "maxAgeHours": CACHE_MAX_AGE_HOURS,
             "scheduleMaxAgeHours": SCHEDULE_CACHE_MAX_AGE_HOURS,
             "forceRefresh": FORCE_REFRESH,
@@ -1370,14 +1462,20 @@ def build_output() -> dict:
             "ADP National Employment Report": ADP_NER_JSON_URL,
             "U.S. federal holidays": US_FEDERAL_HOLIDAYS_URL,
             "China holiday annotations": "Manual festival-date annotations maintained in scripts/update-macro-calendar.py.",
-            "manualEvents": "Curated policy, legal, holiday, media, sports, and institutional-flow annotations maintained in app/data/manual-macro-events.json.",
+            "manualEvents": f"Curated policy, legal, holiday, media, sports, and institutional-flow annotations maintained in {MANUAL_EVENTS_SOURCE_LABEL}.",
         },
         "failures": failures,
+        "refreshSummary": {
+            "freshSeriesCount": fresh_series_count,
+            "requiredSeriesIds": sorted(REQUIRED_OWNER_RELEASE_SERIES),
+            "freshSeriesIds": fresh_series_ids,
+        },
     }
 
 
 def merge_manual_events_into_existing(existing: dict, error: Exception | None = None) -> dict:
     output = dict(existing)
+    output["dataUseScope"] = DATA_USE_SCOPE
     failures = [
         failure for failure in list(output.get("failures") or [])
         if "manual events merged into last-known-good cache" not in str(failure)
@@ -1395,9 +1493,11 @@ def merge_manual_events_into_existing(existing: dict, error: Exception | None = 
     output["categorySummary"] = category_summary(events, list(output.get("weeklyState") or []))
     output.setdefault("cache", {})["manualEventLookaheadDays"] = MANUAL_EVENT_LOOKAHEAD_DAYS
     output.setdefault("cache", {})["scheduleEventLookaheadDays"] = SCHEDULE_EVENT_LOOKAHEAD_DAYS
-    output.setdefault("cache", {})["officialScheduleCachePath"] = "tmp/macro-cache/official-schedules"
+    output.setdefault("cache", {})["officialScheduleCachePath"] = (
+        f"{CACHE_SOURCE_PREFIX}/macro-cache/official-schedules"
+    )
     output.setdefault("sources", {})["manualEvents"] = (
-        "Curated policy, legal, holiday, media, sports, and institutional-flow annotations maintained in app/data/manual-macro-events.json."
+        f"Curated policy, legal, holiday, media, sports, and institutional-flow annotations maintained in {MANUAL_EVENTS_SOURCE_LABEL}."
     )
     output.setdefault("sources", {})["FRED release dates"] = "https://fred.stlouisfed.org/docs/api/fred/release_dates.html"
     output.setdefault("sources", {})["Federal Reserve FOMC calendar"] = FED_FOMC_CALENDAR_URL
@@ -1412,6 +1512,7 @@ def merge_manual_events_into_existing(existing: dict, error: Exception | None = 
 
 def main() -> int:
     existing = read_existing()
+    data_use_scope = DATA_USE_SCOPE
     if MANUAL_ONLY:
         if not existing:
             raise RuntimeError("MACRO_MANUAL_ONLY requires an existing macro-calendar.json")
@@ -1425,15 +1526,17 @@ def main() -> int:
         return 0
 
     try:
-        output = build_output()
+        output = build_output(data_use_scope, existing)
     except Exception as exc:  # noqa: BLE001
+        if os.environ.get("CYCLELENS_REQUIRE_FRESH_OWNER_RELEASE") == "1":
+            raise RuntimeError("Owner macro collector did not produce a fresh release candidate") from None
         if existing:
             output = merge_manual_events_into_existing(existing, exc)
             OUTPUT_PATH.write_text(json.dumps(output, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
             print(json.dumps({
                 "status": "merged-manual-events-into-last-known-good",
                 "outputPath": str(OUTPUT_PATH),
-                "error": str(exc),
+                "error": safe_error_message(exc),
                 "events": len(output["events"]),
             }, ensure_ascii=False))
             return 0

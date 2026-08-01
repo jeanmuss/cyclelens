@@ -76,11 +76,42 @@ test("opaque Supabase keys use apikey without an invalid bearer header", async (
     process.env.SUPABASE_SECRET_KEY = "sb_secret_test-only";
     globalThis.fetch = async (_url, options) => {
       requestHeaders = options.headers;
-      return { ok: true, text: async () => "[]" };
+      assert.equal(options.redirect, "error");
+      return new Response("[]", { status: 200 });
     };
     await readManualEventsPayloadFromSupabase();
     assert.equal(requestHeaders.apikey, "sb_secret_test-only");
     assert.equal("Authorization" in requestHeaders, false);
+  } finally {
+    globalThis.fetch = originalFetch;
+    for (const name of ENV_NAMES) {
+      if (previous[name] == null) delete process.env[name];
+      else process.env[name] = previous[name];
+    }
+  }
+});
+
+test("database rows are revalidated before entering the owner snapshot", async () => {
+  const previous = Object.fromEntries(ENV_NAMES.map((name) => [name, process.env[name]]));
+  const originalFetch = globalThis.fetch;
+  try {
+    for (const name of ENV_NAMES) delete process.env[name];
+    process.env.SUPABASE_URL = "https://example.supabase.co";
+    process.env.SUPABASE_SECRET_KEY = "sb_secret_test-only";
+    globalThis.fetch = async () => new Response(JSON.stringify([{
+      status: "published",
+      event_date: "2026-07-20",
+      series_id: "MANUAL_TEST_EVENT",
+      label_en: "Test event",
+      category: "liquidity",
+      source: "Official fixture",
+      source_url: "https://example.com/source?token=must-not-survive#private",
+      metadata: { custom: "must-not-survive" },
+      updated_at: "2026-07-18T12:00:00Z",
+    }]), { status: 200 });
+    const payload = await readManualEventsPayloadFromSupabase();
+    assert.equal(payload.events[0].sourceUrl, "https://example.com/source");
+    assert.equal("custom" in payload.events[0], false);
   } finally {
     globalThis.fetch = originalFetch;
     for (const name of ENV_NAMES) {

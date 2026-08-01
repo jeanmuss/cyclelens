@@ -124,7 +124,10 @@ function serialized(snapshot) {
 }
 
 const ref = validateRef(argumentValue("--ref", DEFAULT_REF));
-const shouldWrite = process.argv.includes("--write");
+if (process.argv.includes("--write")) {
+  throw new Error("Public data-cache writes are retired; owner-private data must use the single-run release workflow");
+}
+const shouldWrite = false;
 const now = new Date().toISOString();
 const summary = [];
 const plannedWrites = [];

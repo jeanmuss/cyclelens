@@ -43,6 +43,9 @@ function normalizedUrl(value) {
     throw new Error("source URL must be an absolute HTTP(S) URL");
   }
   if (!["http:", "https:"].includes(url.protocol)) throw new Error("source URL must use HTTP(S)");
+  if (url.username || url.password) throw new Error("source URL must not contain credentials");
+  url.search = "";
+  url.hash = "";
   return url.toString();
 }
 

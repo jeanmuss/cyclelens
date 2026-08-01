@@ -18,7 +18,10 @@ import {
 } from "../scripts/send-telegram-morning-brief.mjs";
 
 function response(status, payload) {
-  return { status, ok: status >= 200 && status < 300, async json() { return payload; } };
+  return new Response(JSON.stringify(payload), {
+    status,
+    headers: { "content-type": "application/json" },
+  });
 }
 
 function projection() {
@@ -71,7 +74,7 @@ test("missing homepage metrics stay N/A while retaining reviewed source provenan
   assert.equal(qqq.observedAtLabel, "N/A");
   assert.equal(qqq.freshness.label, "N/A");
   assert.equal(qqq.qualityStatus, "missing");
-  assert.deepEqual(qqq.sources, ["AKShare aggregation adapters"]);
+  assert.deepEqual(qqq.sources, ["Alpaca Market Data API"]);
   const available = report.items.find((item) => item.metricId === "crypto.totalMarketCap");
   assert.notEqual(available.value, "N/A");
   assert.notEqual(available.dayChange, "N/A");
@@ -107,6 +110,9 @@ test("the sender retries one explicit rate limit without returning identifiers",
     delay: async (milliseconds) => delays.push(milliseconds),
   });
   assert.equal(calls.length, 2);
+  assert.equal(calls.every(({ url }) => url.startsWith("https://api.telegram.org/")), true);
+  assert.equal(calls.every(({ options }) => options.redirect === "error"), true);
+  assert.equal(calls.every(({ options }) => options.signal instanceof AbortSignal), true);
   assert.deepEqual(delays, [2000]);
   assert.equal(receipt.outcome, "accepted");
   assert.equal("messageId" in receipt, false);

@@ -1,5 +1,4 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
-import { dirname, resolve } from "node:path";
+import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import {
@@ -7,6 +6,9 @@ import {
   telegramPlainTextLength,
   validateTelegramMorningBrief,
 } from "./telegram-morning-brief-contract.mjs";
+
+const TELEGRAM_API_ORIGIN = "https://api.telegram.org";
+const MAX_TELEGRAM_RESPONSE_BYTES = 64 * 1024;
 
 export class TelegramDeliveryError extends Error {
   constructor(code, message) {
@@ -28,11 +30,50 @@ async function wait(milliseconds) {
   await new Promise((resolveDelay) => setTimeout(resolveDelay, milliseconds));
 }
 
+async function boundedResponseJson(response) {
+  const declaredLength = response.headers?.get?.("content-length") ?? null;
+  if (declaredLength != null) {
+    const length = Number(declaredLength);
+    if (!Number.isSafeInteger(length) || length < 0 || length > MAX_TELEGRAM_RESPONSE_BYTES) {
+      throw new TelegramDeliveryError("outcome_unknown", "Telegram returned an oversized response.");
+    }
+  }
+  if (!response.body) return null;
+  const reader = response.body.getReader();
+  const chunks = [];
+  let total = 0;
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      total += value.byteLength;
+      if (total > MAX_TELEGRAM_RESPONSE_BYTES) {
+        await reader.cancel();
+        throw new TelegramDeliveryError("outcome_unknown", "Telegram returned an oversized response.");
+      }
+      chunks.push(value);
+    }
+  } finally {
+    reader.releaseLock();
+  }
+  const bytes = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  try {
+    return JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes));
+  } catch {
+    throw new TelegramDeliveryError("outcome_unknown", "Telegram returned an unreadable response.");
+  }
+}
+
 async function postMessage({ token, chatId, html, fetchImpl, timeoutMs }) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
-    return await fetchImpl(`https://api.telegram.org/bot${token}/sendMessage`, {
+    const response = await fetchImpl(`${TELEGRAM_API_ORIGIN}/bot${token}/sendMessage`, {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({
@@ -41,8 +82,14 @@ async function postMessage({ token, chatId, html, fetchImpl, timeoutMs }) {
         parse_mode: "HTML",
         disable_web_page_preview: true,
       }),
+      redirect: "error",
       signal: controller.signal,
     });
+    return {
+      status: response.status,
+      ok: response.ok,
+      payload: await boundedResponseJson(response),
+    };
   } catch {
     throw new TelegramDeliveryError(
       "outcome_unknown",
@@ -75,12 +122,7 @@ export async function sendTelegramMorningBrief({
   let response = await postMessage({ token, chatId, html: report.telegramHtml, fetchImpl, timeoutMs });
   if (response.status === 429) {
     let retryAfter = 0;
-    try {
-      const payload = await response.json();
-      retryAfter = Number(payload?.parameters?.retry_after || 0);
-    } catch {
-      retryAfter = 0;
-    }
+    retryAfter = Number(response.payload?.parameters?.retry_after || 0);
     if (!Number.isInteger(retryAfter) || retryAfter < 1 || retryAfter > 30) {
       throw new TelegramDeliveryError("rate_limited", "Telegram rate limit did not provide a safe retry window.");
     }
@@ -97,12 +139,7 @@ export async function sendTelegramMorningBrief({
   if (!response.ok) {
     throw new TelegramDeliveryError("rejected", `Telegram rejected the request (HTTP ${response.status}).`);
   }
-  let payload;
-  try {
-    payload = await response.json();
-  } catch {
-    throw new TelegramDeliveryError("outcome_unknown", "Telegram returned an unreadable success response.");
-  }
+  const payload = response.payload;
   if (payload?.ok !== true) throw new TelegramDeliveryError("rejected", "Telegram rejected the request.");
   return {
     schemaVersion: 1,
@@ -114,32 +151,8 @@ export async function sendTelegramMorningBrief({
   };
 }
 
-function option(name, fallback = null) {
-  const index = process.argv.indexOf(name);
-  return index >= 0 ? process.argv[index + 1] : fallback;
-}
-
-async function main() {
-  const briefPath = resolve(option("--brief", ".artifacts/telegram-morning-brief/brief.json"));
-  const receiptPath = resolve(option("--receipt", ".artifacts/telegram-morning-brief/receipt.json"));
-  const report = JSON.parse(await readFile(briefPath, "utf8"));
-  const receipt = await sendTelegramMorningBrief({
-    report,
-    token: process.env.TELEGRAM_BOT_TOKEN,
-    chatId: process.env.TELEGRAM_CHAT_ID,
-  });
-  await mkdir(dirname(receiptPath), { recursive: true });
-  await writeFile(receiptPath, `${JSON.stringify(receipt, null, 2)}\n`, "utf8");
-  console.log(`Telegram accepted ${receipt.deliveryKey}; a redacted delivery receipt was created.`);
-}
-
 const invokedPath = process.argv[1] ? resolve(process.argv[1]) : "";
 if (invokedPath && fileURLToPath(import.meta.url) === invokedPath) {
-  main().catch((error) => {
-    const message = error instanceof TelegramDeliveryError
-      ? error.message
-      : "Telegram delivery failed before a safe receipt could be created.";
-    console.error(message);
-    process.exitCode = 1;
-  });
+  console.error("Telegram delivery is retired for the owner-only product boundary.");
+  process.exitCode = 1;
 }

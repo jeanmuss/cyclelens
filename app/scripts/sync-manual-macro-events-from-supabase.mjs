@@ -5,10 +5,15 @@ import {
   hasSupabaseManualEventsConfig,
   readManualEventsPayloadFromSupabase,
 } from "./manual-macro-events-store.mjs";
+import {
+  dataUseScopeFromEnvironment,
+  manualMacroEventsPathForScope,
+} from "./data-use-scope.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appRoot = resolve(__dirname, "..");
-const manualEventsPath = resolve(appRoot, "data", "manual-macro-events.json");
+const dataUseScope = dataUseScopeFromEnvironment(process.env, process.argv);
+const manualEventsPath = manualMacroEventsPathForScope(appRoot, dataUseScope);
 
 async function writeJsonAtomic(path, payload) {
   await mkdir(dirname(path), { recursive: true });
