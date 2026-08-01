@@ -59,7 +59,7 @@ test("Cloudflare Access JWT validation checks signature, issuer, audience, expir
   }, {
     fetchImpl: async (url, options) => {
       assert.equal(url, `${TEAM}/cdn-cgi/access/certs`);
-      assert.equal(options.redirect, "error");
+      assert.equal(options.redirect, "manual");
       assert.ok(options.signal instanceof AbortSignal);
       return new Response(JSON.stringify(fixture.jwks), { status: 200 });
     },
@@ -85,6 +85,40 @@ test("Cloudflare Access JWT validation checks signature, issuer, audience, expir
   }, {
     fetchImpl: async () => new Response(JSON.stringify(expired.jwks), { status: 200 }),
   }), { code: "access_token_expired" });
+});
+
+test("Cloudflare Access JWKS retrieval fails closed with bounded diagnostic codes", async () => {
+  const fixture = await jwtFixture();
+  const ownerActor = await actorForSubject("operator-test-subject");
+  const request = new Request("https://cyclelens-admin.pages.dev/", {
+    headers: { "Cf-Access-Jwt-Assertion": fixture.token },
+  });
+  const environment = {
+    CF_ACCESS_TEAM_DOMAIN: TEAM,
+    CF_ACCESS_AUD: AUDIENCE,
+    CF_ACCESS_ALLOWED_ACTORS: ownerActor,
+  };
+
+  await assert.rejects(validateAccessRequest(request, environment, {
+    fetchImpl: async () => new Response(null, {
+      status: 302,
+      headers: { location: "https://untrusted.example/certs" },
+    }),
+  }), { code: "access_keys_redirect" });
+
+  await assert.rejects(validateAccessRequest(request, environment, {
+    fetchImpl: async () => new Response("unavailable", { status: 503 }),
+  }), { code: "access_keys_http_error" });
+
+  const abortError = new Error("aborted");
+  abortError.name = "AbortError";
+  await assert.rejects(validateAccessRequest(request, environment, {
+    fetchImpl: async () => { throw abortError; },
+  }), { code: "access_keys_timeout" });
+
+  await assert.rejects(validateAccessRequest(request, environment, {
+    fetchImpl: async () => { throw new Error("network unavailable"); },
+  }), { code: "access_keys_unavailable" });
 });
 
 test("owner access boundary has no multi-user downgrade and admits exactly one configured actor", async () => {

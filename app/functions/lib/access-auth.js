@@ -102,50 +102,55 @@ function base64UrlJson(value) {
 async function fetchSigningKey(team, keyId, fetchImpl) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), ACCESS_KEYS_TIMEOUT_MS);
-  let response;
   try {
-    response = await fetchImpl(`${team}/cdn-cgi/access/certs`, {
-      headers: { accept: "application/json" },
-      cf: { cacheEverything: true, cacheTtl: 3600 },
-      redirect: "error",
-      signal: controller.signal,
-    });
-  } catch {
-    clearTimeout(timeout);
-    throw new AccessValidationError("access_keys_unavailable");
-  }
-  if (!response.ok) {
-    clearTimeout(timeout);
-    throw new AccessValidationError("access_keys_unavailable");
-  }
-  const declaredLength = Number(response.headers.get("content-length"));
-  if (Number.isFinite(declaredLength) && declaredLength > MAX_JWKS_BYTES) {
-    clearTimeout(timeout);
-    throw new AccessValidationError("access_keys_too_large");
-  }
-  let text;
-  try {
-    text = await limitedResponseText(response, MAX_JWKS_BYTES);
-  } catch (error) {
-    if (error instanceof AccessValidationError) throw error;
-    throw new AccessValidationError("access_keys_invalid");
+    let response;
+    try {
+      response = await fetchImpl(`${team}/cdn-cgi/access/certs`, {
+        headers: { accept: "application/json" },
+        cf: { cacheEverything: true, cacheTtl: 3600 },
+        redirect: "manual",
+        signal: controller.signal,
+      });
+    } catch (error) {
+      const code = error?.name === "AbortError"
+        ? "access_keys_timeout"
+        : "access_keys_unavailable";
+      throw new AccessValidationError(code);
+    }
+    if (response.type === "opaqueredirect" || (response.status >= 300 && response.status < 400)) {
+      throw new AccessValidationError("access_keys_redirect");
+    }
+    if (!response.ok) {
+      throw new AccessValidationError("access_keys_http_error");
+    }
+    const declaredLength = Number(response.headers.get("content-length"));
+    if (Number.isFinite(declaredLength) && declaredLength > MAX_JWKS_BYTES) {
+      throw new AccessValidationError("access_keys_too_large");
+    }
+    let text;
+    try {
+      text = await limitedResponseText(response, MAX_JWKS_BYTES);
+    } catch (error) {
+      if (error instanceof AccessValidationError) throw error;
+      throw new AccessValidationError("access_keys_invalid");
+    }
+    let payload;
+    try {
+      payload = JSON.parse(text);
+    } catch {
+      throw new AccessValidationError("access_keys_invalid");
+    }
+    const keys = Array.isArray(payload?.keys) ? payload.keys.slice(0, 20) : [];
+    const key = keys.find((candidate) => (
+      candidate?.kid === keyId
+      && candidate?.kty === "RSA"
+      && (!candidate.alg || candidate.alg === "RS256")
+    ));
+    if (!key) throw new AccessValidationError("access_signing_key_missing");
+    return key;
   } finally {
     clearTimeout(timeout);
   }
-  let payload;
-  try {
-    payload = JSON.parse(text);
-  } catch {
-    throw new AccessValidationError("access_keys_invalid");
-  }
-  const keys = Array.isArray(payload?.keys) ? payload.keys.slice(0, 20) : [];
-  const key = keys.find((candidate) => (
-    candidate?.kid === keyId
-    && candidate?.kty === "RSA"
-    && (!candidate.alg || candidate.alg === "RS256")
-  ));
-  if (!key) throw new AccessValidationError("access_signing_key_missing");
-  return key;
 }
 
 function expectedAudience(payload, audience) {
